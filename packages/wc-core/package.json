@@ -1,6 +1,6 @@
 {
   "name": "wc-core",
-  "version": "0.0.1-alpha.0",
+  "version": "0.0.1-alpha.1",
   "description": "Web components renderer core",
   "license": "MIT",
   "main": "index.umd.js",
