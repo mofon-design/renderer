@@ -1,0 +1,10 @@
+{
+  "command": {
+    "publish": {
+      "message": "release(%v): publish %s"
+    }
+  },
+  "npmClient": "npm",
+  "packages": ["packages/*"],
+  "version": "0.0.1-alpha.0"
+}
