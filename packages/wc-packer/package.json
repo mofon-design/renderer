@@ -42,9 +42,6 @@
     "url": "https://github.com/mofon-design/renderer/blob/master/packages/wc-packer"
   },
   "keywords": [
-    "component",
-    "components",
-    "webcomponent",
     "web-component",
     "packer"
   ]

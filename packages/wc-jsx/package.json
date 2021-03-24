@@ -22,9 +22,6 @@
     "url": "https://github.com/mofon-design/renderer/blob/master/packages/wc-jsx"
   },
   "keywords": [
-    "component",
-    "components",
-    "webcomponent",
     "web-component",
     "jsx"
   ]
