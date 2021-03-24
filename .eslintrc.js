@@ -3,15 +3,16 @@ const [OFF, ERROR] = [0, 2];
 module.exports = {
   extends: [require.resolve('@umijs/fabric/dist/eslint')],
   rules: {
-    'consistent-return': 0,
-    'no-bitwise': 0,
-    'no-continue': 0,
-    'no-nested-ternary': 0,
-    'no-restricted-syntax': 0,
-    'no-unused-expressions': 0,
-    'prefer-destructuring': 0,
-    'import/no-named-as-default': 0,
-    'react/no-unknown-property': 0,
+    'consistent-return': OFF,
+    'no-bitwise': OFF,
+    'no-continue': OFF,
+    'no-nested-ternary': OFF,
+    'no-param-reassign': OFF,
+    'no-restricted-syntax': OFF,
+    'no-unused-expressions': OFF,
+    'prefer-destructuring': OFF,
+    'import/no-named-as-default': OFF,
+    'react/no-unknown-property': OFF,
   },
   settings: {
     react: {

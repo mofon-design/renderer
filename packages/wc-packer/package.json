@@ -1,0 +1,51 @@
+{
+  "name": "wc-packer",
+  "version": "0.0.1-alpha.1",
+  "description": "Write web components in JSX",
+  "license": "MIT",
+  "main": "index.umd.js",
+  "esnext": "es/index.js",
+  "types": "src/index.ts",
+  "sideEffects": false,
+  "devDependencies": {
+    "@babel/core": "^7.13.0",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/preset-env": "^7.13.0",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-node-resolve": "^10.0.0",
+    "@types/babel__core": "^7.1.10",
+    "@types/babel__preset-env": "^7.9.0",
+    "@types/gulp": "^4.0.6",
+    "@types/prettier": "^2.2.3",
+    "@types/through2": "^2.0.36",
+    "del": "^5.1.0",
+    "gulp": "^4.0.2",
+    "prettier": "^2.1.0",
+    "rollup": "^2.42.3",
+    "through2": "^4.0.2",
+    "typescript": "^4.2.3",
+    "vinyl": "^2.2.1"
+  },
+  "files": [
+    "es",
+    "src",
+    "typings.d.ts",
+    "index.umd.js",
+    "index.umd.min.js"
+  ],
+  "bugs": {
+    "url": "https://github.com/mofon-design/renderer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mofon-design/renderer/blob/master/packages/wc-packer"
+  },
+  "keywords": [
+    "component",
+    "components",
+    "webcomponent",
+    "web-component",
+    "packer"
+  ]
+}
