@@ -1,6 +1,6 @@
 // Invoked on the commit-msg git hook by yorkie.
-import * as chalk from 'chalk';
-import * as fs from 'fs';
+import chalk from 'chalk';
+import fs from 'fs';
 
 const msgPath = process.env.GIT_PARAMS || '';
 const msg = fs.readFileSync(msgPath, 'utf-8').trim();

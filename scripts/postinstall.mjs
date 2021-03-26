@@ -1,5 +1,5 @@
-const isCI = require('is-ci');
-const installFrom = require('yorkie/src/install');
+import isCI from 'is-ci';
+import installFrom from 'yorkie/src/install.js';
 
 if (isCI && !process.env.HUSKY_IGNORE_CI && !process.env.YORKIE_IGNORE_CI) {
   console.log('CI detected, skipping Git hooks installation');

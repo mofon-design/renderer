@@ -1,0 +1,72 @@
+{
+  "root": true,
+  "parser": "babel-eslint-parser",
+  "extends": ["eslint:recommended", "prettier"],
+  "plugins": ["import", "prettier"],
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "module",
+    "requireConfigFile": false,
+    "babelOptions": {
+      "babelrc": false,
+      "presets": ["@babel/preset-env"],
+      "plugins": [
+        "@babel/plugin-transform-typescript",
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-proposal-class-static-block",
+        ["@babel/plugin-proposal-decorators", { "decoratorsBeforeExport": true }],
+        "@babel/plugin-proposal-do-expressions",
+        "@babel/plugin-proposal-export-default-from",
+        "@babel/plugin-proposal-optional-chaining",
+        "@babel/plugin-proposal-private-methods",
+        "@babel/plugin-proposal-private-property-in-object",
+        "@babel/plugin-proposal-throw-expressions",
+        "@babel/plugin-syntax-dynamic-import"
+      ]
+    }
+  },
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "rules": {
+    "global-require": "error",
+    "no-console": "error",
+    "no-empty": "off",
+    "no-unused-vars": "error",
+    "no-var": "error",
+    "prefer-const": "error",
+    "prettier/prettier": "error",
+    "import/no-dynamic-require": "error",
+    "import/no-extraneous-dependencies": "error"
+  },
+  "settings": {},
+  "overrides": [
+    {
+      "files": "scripts/**/*",
+      "rules": {
+        "no-console": "off"
+      }
+    },
+    {
+      "files": "packages/wc-bundler/**/*",
+      "rules": {
+        "global-require": "off",
+        "no-console": "off",
+        "import/no-dynamic-require": "off"
+      }
+    },
+    {
+      "files": "packages/*/bin/**/*",
+      "rules": {
+        "no-console": "off"
+      }
+    },
+    {
+      "files": "packages/*/test/**/*",
+      "env": {
+        "jest": true
+      }
+    }
+  ]
+}
