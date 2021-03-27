@@ -23,8 +23,11 @@ const propertyTypes = {
   rest: { type: 'single' },
   returnType: { type: 'single' },
   // others
+  expression: { type: 'single' },
+  nameType: { type: 'single' },
   typeAnnotation: { type: 'typeAnnotation' },
   typeName: { type: 'single' },
+  typeParameter: { type: 'single' },
   typeParameters: { type: 'typeParameters' },
   id: { type: 'id' },
 };
@@ -121,6 +124,11 @@ class Referencer extends OriginalReferencer {
     super.visitProperty(node);
   }
 
+  visitVariableDeclaration(variableTargetScope, type, node, index) {
+    this.visit(node.declarations[index].id.typeAnnotation);
+    super.visitVariableDeclaration(variableTargetScope, type, node, index);
+  }
+
   InterfaceDeclaration(node) {
     this._createScopeVariable(node, node.id);
 
@@ -180,12 +188,65 @@ class Referencer extends OriginalReferencer {
     this._visitDeclareX(node);
   }
 
+  TSCallSignatureDeclaration(node) {
+    this._createScopeVariable(node, node.id);
+
+    this._nestTypeParamScope(node);
+
+    // TS return types.
+    this._checkIdentifierOrVisit(node.returnType);
+
+    // Process parameter declarations.
+    for (let i = 0, iz = node.parameters.length; i < iz; ++i) {
+      this.visitPattern(node.parameters[i], { processRightHandNodes: true }, (pattern, info) => {
+        this.referencingDefaultValue(pattern, info.assignments, null, true);
+      });
+    }
+
+    // if there's a rest argument, add that
+    if (node.rest) {
+      this.visitPattern({ type: 'RestElement', argument: node.rest }, () => {});
+    }
+
+    this.close(node);
+  }
+
   TSDeclareFunction(node) {
-    this._visitDeclareX(node);
+    this._createScopeVariable(node, node.id);
+
+    this._nestTypeParamScope(node);
+
+    // TS return types.
+    this._checkIdentifierOrVisit(node.returnType);
+
+    // Process parameter declarations.
+    for (let i = 0, iz = node.params.length; i < iz; ++i) {
+      this.visitPattern(node.params[i], { processRightHandNodes: true }, (pattern, info) => {
+        this.referencingDefaultValue(pattern, info.assignments, null, true);
+      });
+    }
+
+    // if there's a rest argument, add that
+    if (node.rest) {
+      this.visitPattern({ type: 'RestElement', argument: node.rest }, () => {});
+    }
+
+    this.close(node);
   }
 
   TSDeclareMethod(node) {
     this._visitDeclareX(node);
+  }
+
+  TSExpressionWithTypeArguments(node) {
+    if (
+      node.expression?.type === 'Identifier' &&
+      Object.prototype.hasOwnProperty.call(TSLib, node.expression.name)
+    ) {
+      this._createScopeVariable(node, node.expression);
+    }
+
+    this._visitTypeAnnotation(node);
   }
 
   TSInterfaceDeclaration(node) {
@@ -199,6 +260,19 @@ class Referencer extends OriginalReferencer {
     if (typeParamScope) {
       this.close(node);
     }
+  }
+
+  TSMappedType(node) {
+    const parentScope = this.scopeManager.__currentScope;
+    const scope = new escope.Scope(this.scopeManager, 'type-parameters', parentScope, node, false);
+    this.scopeManager.__nestScope(scope);
+
+    const name = node.typeParameter;
+    scope.__define(name, new Definition('TypeParameter', name, name));
+
+    this._visitTypeAnnotation(node);
+
+    this.close(node);
   }
 
   TSTypeAliasDeclaration(node) {
@@ -220,6 +294,7 @@ class Referencer extends OriginalReferencer {
     ) {
       this._createScopeVariable(node, node.typeName);
     }
+
     this._visitTypeAnnotation(node);
   }
 

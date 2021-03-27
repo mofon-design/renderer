@@ -1,12 +1,18 @@
-import type { PluginItem as BabelPluginItem } from '@babel/core';
-import type { Options as BabelPresetEnv9Config } from '@babel/preset-env';
+import type {
+  PluginItem as BabelPluginItem,
+  TransformOptions as BabelTransformOptions,
+} from '@babel/core';
+import type {
+  ModuleOption as BabelPresetEnvModuleOption,
+  Options as BabelPresetEnv9Config,
+} from '@babel/preset-env';
 
 export interface BabelEnvConfig extends BabelPresetEnv9Config {
   browserslistEnv?: string;
   /**
    * Overrided by `BundleConfig.cjs` and `BundleConfig.esm`.
    */
-  modules?: never;
+  modules?: BabelPresetEnvModuleOption;
 }
 
 export const DefaultBabelEnvConfig: BabelEnvConfig;
@@ -192,25 +198,21 @@ export interface BabelTypeScriptConfig {
 
 export const DefaultBabelTypeScriptConfig: BabelTypeScriptConfig;
 
-export interface BabelConfig {
+export const DefaultBabelPresetsConfig: BabelPluginItem[];
+
+export const DefaultBabelPluginsConfig: BabelPluginItem[];
+
+export interface BabelConfig extends Omit<BabelTransformOptions, 'env'> {
   /**
    * Babel preset env config.
    *
    * @see [babel-preset-env](https://babeljs.io/docs/en/babel-preset-env)
    */
-  env?: BabelEnvConfig;
+  env?: boolean | BabelEnvConfig;
   /**
    * Babel preset minify config.
    */
   minify?: boolean | BabelMinifyConfig;
-  /**
-   * Extra babel plugins.
-   */
-  plugins?: BabelPluginItem[];
-  /**
-   * Extra babel presets.
-   */
-  presets?: BabelPluginItem[];
   /**
    * Enable transform TypeScript.
    *

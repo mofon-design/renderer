@@ -1,6 +1,6 @@
 import type { Chalk } from 'chalk';
 
-type ChalkColors = {
+export type ChalkColors = {
   [Key in keyof Chalk]: Chalk[Key] extends Chalk ? Key : never;
 }[keyof Chalk];
 

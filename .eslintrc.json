@@ -5,8 +5,7 @@
   "plugins": ["import", "prettier"],
   "parserOptions": {
     "ecmaVersion": 2021,
-    "sourceType": "module",
-    "requireConfigFile": false
+    "sourceType": "module"
   },
   "env": {
     "browser": true,

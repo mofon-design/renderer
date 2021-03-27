@@ -1,8 +1,4 @@
-import type * as chalk from 'chalk';
-
-type ChalkColors = {
-  [Key in keyof chalk.Chalk]: chalk.Chalk[Key] extends chalk.Chalk ? Key : never;
-}[keyof chalk.Chalk];
+import type { ChalkColors } from './allocateColor';
 
 const AvailableColors: ChalkColors[] = [
   'red',

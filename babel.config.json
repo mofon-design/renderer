@@ -1,7 +1,7 @@
 {
   "presets": ["@babel/preset-env"],
   "plugins": [
-    "@babel/plugin-syntax-typescript",
+    "@babel/plugin-transform-typescript",
     "@babel/plugin-proposal-class-properties",
     "@babel/plugin-proposal-class-static-block",
     ["@babel/plugin-proposal-decorators", { "decoratorsBeforeExport": false }],

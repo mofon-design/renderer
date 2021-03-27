@@ -1,5 +1,6 @@
 import type { TransformOptions } from '@babel/core';
 import { escapeRegExp } from 'lodash';
+import { transformBabelConfig } from '../config/transformBabelConfig';
 import { env } from './env';
 import { root } from './root';
 
@@ -9,8 +10,8 @@ export function registerBabel(options?: TransformOptions): void {
   if (registered) return;
 
   require('@babel/register')({
+    ...transformBabelConfig({ env: { modules: 'commonjs' }, typescript: true }),
     ...options,
-    babelrc: false,
     cache: !env.DISABLE_CLI_RUNTIME_CACHE,
     extensions: ['.tsx', '.ts', '.jsx', '.mjs', '.es'],
     ignore: [/node_modules/],

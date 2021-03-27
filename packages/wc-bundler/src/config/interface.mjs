@@ -1,3 +1,4 @@
+import type { PluginItem as BabelPluginItem } from '@babel/core';
 import { env, root } from '../utils';
 import type {
   BabelConfig,
@@ -59,7 +60,23 @@ export const DefaultBabelTypeScriptConfig: BabelTypeScriptConfig = {
   onlyRemoveTypeImports: false,
 };
 
+export const DefaultBabelPluginsConfig: BabelPluginItem[] = [
+  '@babel/plugin-proposal-class-properties',
+  '@babel/plugin-proposal-class-static-block',
+  ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: false }],
+  '@babel/plugin-proposal-do-expressions',
+  '@babel/plugin-proposal-export-default-from',
+  '@babel/plugin-proposal-optional-chaining',
+  '@babel/plugin-proposal-private-methods',
+  '@babel/plugin-proposal-private-property-in-object',
+  '@babel/plugin-proposal-throw-expressions',
+  '@babel/plugin-syntax-dynamic-import',
+];
+
+export const DefaultBabelPresetsConfig: BabelPluginItem[] = [];
+
 export const DefaultBabelConfig: BabelConfig = {
   env: DefaultBabelEnvConfig,
-  typescript: DefaultBabelTypeScriptConfig,
+  plugins: DefaultBabelPluginsConfig,
+  presets: DefaultBabelPresetsConfig,
 };

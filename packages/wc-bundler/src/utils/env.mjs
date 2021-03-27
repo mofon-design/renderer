@@ -1,7 +1,7 @@
 export const env = {
   DEBUG: envBoolean(process.env.DEBUG),
   DISABLE_CLI_RUNTIME_CACHE: envBoolean(process.env.DISABLE_CLI_RUNTIME_CACHE),
-};
+} as const;
 
 export function envBoolean(value: string | undefined): boolean {
   if (typeof value === 'string') {
