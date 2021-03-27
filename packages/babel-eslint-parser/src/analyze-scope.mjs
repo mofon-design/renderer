@@ -6,23 +6,7 @@ import OriginalReferencer from 'eslint-scope/lib/referencer';
 import { getKeys as fallback } from 'eslint-visitor-keys';
 import childVisitorKeys from './visitor-keys';
 
-const flowFlippedAliasKeys = t.FLIPPED_ALIAS_KEYS.Flow.concat([
-  'ArrayPattern',
-  'ClassDeclaration',
-  'ClassExpression',
-  'FunctionDeclaration',
-  'FunctionExpression',
-  'Identifier',
-  'ObjectPattern',
-  'RestElement',
-]);
-
-const visitorKeysMap = Object.entries(t.VISITOR_KEYS).reduce((acc, [key, value]) => {
-  if (!flowFlippedAliasKeys.includes(value)) {
-    acc[key] = value;
-  }
-  return acc;
-}, {});
+const visitorKeysMap = t.VISITOR_KEYS;
 
 const propertyTypes = {
   // loops
@@ -39,6 +23,7 @@ const propertyTypes = {
   returnType: { type: 'single' },
   // others
   typeAnnotation: { type: 'typeAnnotation' },
+  typeName: { type: 'single' },
   typeParameters: { type: 'typeParameters' },
   id: { type: 'id' },
 };
@@ -184,6 +169,39 @@ class Referencer extends OriginalReferencer {
 
   DeclareClass(node) {
     this._visitDeclareX(node);
+  }
+
+  TSDeclareFunction(node) {
+    this._visitDeclareX(node);
+  }
+
+  TSDeclareMethod(node) {
+    this._visitDeclareX(node);
+  }
+
+  TSInterfaceDeclaration(node) {
+    this._createScopeVariable(node, node.id);
+
+    const typeParamScope = this._nestTypeParamScope(node);
+
+    this._visitArray(node.extends);
+    this.visit(node.body);
+
+    if (typeParamScope) {
+      this.close(node);
+    }
+  }
+
+  TSTypeAliasDeclaration(node) {
+    this._createScopeVariable(node, node.id);
+
+    const typeParamScope = this._nestTypeParamScope(node);
+
+    this.visit(node.right);
+
+    if (typeParamScope) {
+      this.close(node);
+    }
   }
 
   // visit OptionalMemberExpression as a MemberExpression.

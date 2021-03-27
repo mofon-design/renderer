@@ -31,7 +31,7 @@ function convertNodes(ast, code) {
         delete node.loc.identifierName;
       }
 
-      if (path.isTypeParameter()) {
+      if (path.isTSTypeParameter() || path.isTypeParameter()) {
         node.type = 'Identifier';
         node.typeAnnotation = node.bound;
         delete node.bound;
@@ -39,15 +39,15 @@ function convertNodes(ast, code) {
 
       // flow: prevent "no-undef"
       // for "Component" in: "let x: React.Component"
-      if (path.isQualifiedTypeIdentifier()) {
+      if (path.isTSQualifiedName() || path.isQualifiedTypeIdentifier()) {
         delete node.id;
       }
       // for "b" in: "var a: { b: Foo }"
-      if (path.isObjectTypeProperty()) {
+      if (path.isTSPropertySignature() || path.isObjectTypeProperty()) {
         delete node.key;
       }
       // for "indexer" in: "var a: {[indexer: string]: number}"
-      if (path.isObjectTypeIndexer()) {
+      if (path.isTSIndexSignature() || path.isObjectTypeIndexer()) {
         delete node.id;
       }
       // for "param" in: "var a: { func(param: Foo): Bar };"
