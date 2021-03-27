@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.13.10",
+    "@types/babel__core": "^7.1.14",
     "dedent": "^0.7.0",
     "eslint": "^7.5.0"
   }

@@ -71,10 +71,12 @@ importers:
       semver: 7.3.4
     devDependencies:
       '@babel/core': 7.13.10
+      '@types/babel__core': 7.1.14
       dedent: 0.7.0
       eslint: 7.22.0
     specifiers:
       '@babel/core': 7.13.10
+      '@types/babel__core': ^7.1.14
       dedent: ^0.7.0
       eslint: ^7.5.0
       eslint-scope: 5.1.0
@@ -88,7 +90,7 @@ importers:
     specifiers: {}
   packages/babel-prettier-parser:
     dependencies:
-      '@babel/parser': 7.13.13
+      '@babel/core': 7.13.10
       escape-string-regexp: 4.0.0
       esutils: 2.0.3
       lodash: 4.17.21
@@ -96,9 +98,11 @@ importers:
       semver: 7.3.5
       string-width: 4.2.2
     devDependencies:
+      '@types/babel__core': 7.1.14
       prettier: 2.2.1
     specifiers:
-      '@babel/parser': 7.13.13
+      '@babel/core': 7.13.10
+      '@types/babel__core': ^7.1.14
       escape-string-regexp: 4.0.0
       esutils: 2.0.3
       lodash: 4.17.21
@@ -217,7 +221,7 @@ packages:
       '@babel/helper-compilation-targets': 7.13.10_@babel+core@7.13.10
       '@babel/helper-module-transforms': 7.13.12
       '@babel/helpers': 7.13.10
-      '@babel/parser': 7.13.12
+      '@babel/parser': 7.13.13
       '@babel/template': 7.12.13
       '@babel/traverse': 7.13.0
       '@babel/types': 7.13.12
@@ -430,7 +434,6 @@ packages:
     resolution:
       integrity: sha512-4T7Pb244rxH24yR116LAuJ+adxXXnHhZaLJjegJVKSdoNCe4x1eDBaud5YIcQFcqzsaD5BHvJw5BQ0AZapdCRw==
   /@babel/parser/7.13.13:
-    dev: false
     engines:
       node: '>=6.0.0'
     hasBin: true
@@ -1197,7 +1200,7 @@ packages:
   /@babel/template/7.12.13:
     dependencies:
       '@babel/code-frame': 7.12.13
-      '@babel/parser': 7.13.12
+      '@babel/parser': 7.13.13
       '@babel/types': 7.13.12
     resolution:
       integrity: sha512-/7xxiGA57xMo/P2GVvdEumr8ONhFOhfgq2ihK3h1e6THqzTAkHbkXgB0xI9yeTfIUoH3+oAeHhqm/I43OTbbjA==

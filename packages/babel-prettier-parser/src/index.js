@@ -1,15 +1,22 @@
 'use strict';
 
-const { parse } = require('@babel/parser');
+const { parseSync } = require('@babel/core');
 const createBabelParseError = require('./create-babel-parse-error');
 const postprocess = require('./parse-postprocess');
 
-module.exports = function babel(text, parsers, opts = {}) {
+function babel(text, parsers, opts = {}, parserOptions = {}) {
   const sourceType = opts.__babelSourceType === 'script' ? 'script' : 'module';
-  const ast = parse(text, { sourceType }); // TODO options
+  const ast = parseSync(text, { ...parserOptions, sourceType });
   const error = ast.errors.find((error) => shouldRethrowRecoveredError(error));
   if (!ast) throw createBabelParseError(error);
   return postprocess(ast, { ...opts, originalText: text });
+}
+
+module.exports = function createBabelParser(options) {
+  if (typeof options === 'string') return babel.apply(null, arguments);
+  return function wrapped() {
+    return babel.apply(null, [].concat(arguments).concat([options]));
+  };
 };
 
 const allowedMessages = new Set([

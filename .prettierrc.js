@@ -5,6 +5,9 @@ module.exports = {
   singleQuote: true,
   trailingComma: 'all',
   overrides: [
-    { files: '**/*.{js,mjs,ts,tsx}', options: require('babel-prettier-parser/src/index.js') },
+    {
+      files: '**/*.{js,mjs,ts,tsx}',
+      options: { parser: require('babel-prettier-parser/src/index.js') },
+    },
   ],
 };

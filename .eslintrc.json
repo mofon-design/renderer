@@ -1,29 +1,12 @@
 {
   "root": true,
   "parser": "babel-eslint-parser",
-  "extends": ["eslint:recommended", "prettier"],
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "plugins": ["import", "prettier"],
   "parserOptions": {
     "ecmaVersion": 2021,
     "sourceType": "module",
-    "requireConfigFile": false,
-    "babelOptions": {
-      "babelrc": false,
-      "presets": ["@babel/preset-env"],
-      "plugins": [
-        "@babel/plugin-transform-typescript",
-        "@babel/plugin-proposal-class-properties",
-        "@babel/plugin-proposal-class-static-block",
-        ["@babel/plugin-proposal-decorators", { "decoratorsBeforeExport": true }],
-        "@babel/plugin-proposal-do-expressions",
-        "@babel/plugin-proposal-export-default-from",
-        "@babel/plugin-proposal-optional-chaining",
-        "@babel/plugin-proposal-private-methods",
-        "@babel/plugin-proposal-private-property-in-object",
-        "@babel/plugin-proposal-throw-expressions",
-        "@babel/plugin-syntax-dynamic-import"
-      ]
-    }
+    "requireConfigFile": false
   },
   "env": {
     "browser": true,
