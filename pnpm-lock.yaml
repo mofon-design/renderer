@@ -13,10 +13,11 @@ importers:
       '@babel/plugin-proposal-private-property-in-object': 7.13.0_@babel+core@7.13.10
       '@babel/plugin-proposal-throw-expressions': 7.12.13_@babel+core@7.13.10
       '@babel/plugin-syntax-dynamic-import': 7.8.3_@babel+core@7.13.10
-      '@babel/plugin-transform-typescript': 7.13.0_@babel+core@7.13.10
+      '@babel/plugin-syntax-typescript': 7.12.13_@babel+core@7.13.10
       '@babel/preset-env': 7.13.12_@babel+core@7.13.10
       '@types/jest': 26.0.22
       babel-eslint-parser: link:packages/babel-eslint-parser
+      babel-prettier-parser: link:packages/babel-prettier-parser
       chalk: 4.1.0
       eslint: 7.22.0
       eslint-config-prettier: 8.1.0_eslint@7.22.0
@@ -44,10 +45,11 @@ importers:
       '@babel/plugin-proposal-private-property-in-object': 7.13.0
       '@babel/plugin-proposal-throw-expressions': 7.12.13
       '@babel/plugin-syntax-dynamic-import': 7.8.3
-      '@babel/plugin-transform-typescript': 7.13.0
+      '@babel/plugin-syntax-typescript': ^7.12.13
       '@babel/preset-env': 7.13.12
       '@types/jest': ^26.0.22
       babel-eslint-parser: workspace:*
+      babel-prettier-parser: workspace:*
       chalk: ^4.1.0
       eslint: ^7.22.0
       eslint-config-prettier: ^8.1.0
@@ -66,7 +68,7 @@ importers:
     dependencies:
       eslint-scope: 5.1.0
       eslint-visitor-keys: 1.3.0
-      semver: 7.3.5
+      semver: 7.3.4
     devDependencies:
       '@babel/core': 7.13.10
       dedent: 0.7.0
@@ -76,14 +78,34 @@ importers:
       dedent: ^0.7.0
       eslint: ^7.5.0
       eslint-scope: 5.1.0
-      eslint-visitor-keys: ^1.3.0
-      semver: ^7.3.4
+      eslint-visitor-keys: 1.3.0
+      semver: 7.3.4
   packages/babel-plugin-transform-wc-jsx:
     specifiers: {}
   packages/babel-plugin-transform-wc-jsx-pure-annotations:
     specifiers: {}
   packages/babel-preset-web-component:
     specifiers: {}
+  packages/babel-prettier-parser:
+    dependencies:
+      '@babel/parser': 7.13.13
+      escape-string-regexp: 4.0.0
+      esutils: 2.0.3
+      lodash: 4.17.21
+      outdent: 0.8.0
+      semver: 7.3.5
+      string-width: 4.2.2
+    devDependencies:
+      prettier: 2.2.1
+    specifiers:
+      '@babel/parser': 7.13.13
+      escape-string-regexp: 4.0.0
+      esutils: 2.0.3
+      lodash: 4.17.21
+      outdent: 0.8.0
+      prettier: ^2.2.1
+      semver: 7.3.5
+      string-width: 4.2.2
   packages/wc-bundler:
     dependencies:
       '@babel/core': 7.13.10
@@ -407,6 +429,13 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-4T7Pb244rxH24yR116LAuJ+adxXXnHhZaLJjegJVKSdoNCe4x1eDBaud5YIcQFcqzsaD5BHvJw5BQ0AZapdCRw==
+  /@babel/parser/7.13.13:
+    dev: false
+    engines:
+      node: '>=6.0.0'
+    hasBin: true
+    resolution:
+      integrity: sha512-OhsyMrqygfk5v8HmWwOzlYjJrtLaFhF34MrfG/Z73DgYCI6ojNUTUp2TYbtnjo8PegeJp12eamsNettCQjKjVw==
   /@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining/7.13.12_@babel+core@7.13.10:
     dependencies:
       '@babel/core': 7.13.10
@@ -1027,6 +1056,7 @@ packages:
       '@babel/helper-create-class-features-plugin': 7.13.11_@babel+core@7.13.10
       '@babel/helper-plugin-utils': 7.13.0
       '@babel/plugin-syntax-typescript': 7.12.13_@babel+core@7.13.10
+    dev: false
     peerDependencies:
       '@babel/core': ^7.0.0-0
     resolution:
@@ -4328,6 +4358,12 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-UpzcLCXolUWcNu5HtVMHYdXJjArjsF9C0aNnquZYY4uW/Vu0miy5YoWvbV345HauVvcAUnpRuhMMcqTcGOY2+w==
+  /escape-string-regexp/4.0.0:
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
   /escodegen/2.0.0:
     dependencies:
       esprima: 4.0.1
@@ -7704,6 +7740,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-0CWcCECdMVc2Rw3U5w9ZjqX6ga6ubk1xDVKxtBQPK7wis/0F2r9T6k4ydGYhecl7YUBxBVxhL5oisPsNxAPe2g==
+  /outdent/0.8.0:
+    dev: false
+    resolution:
+      integrity: sha512-KiOAIsdpUTcAXuykya5fnVVT+/5uS0Q1mrkRHcF89tpieSmY33O/tmc54CqwA+bfhbtEfZUNLHaPUiB9X3jt1A==
   /p-cancelable/1.1.0:
     dev: false
     engines:
@@ -8853,6 +8893,15 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-+GB6zVA9LWh6zovYQLALHwv5rb2PHGlJi3lfiqIHxR0uuwCgefcOJc59v9fv1w8GbStwxuuqqAjI9NMAOOgq1A==
+  /semver/7.3.4:
+    dependencies:
+      lru-cache: 6.0.0
+    dev: false
+    engines:
+      node: '>=10'
+    hasBin: true
+    resolution:
+      integrity: sha512-tCfb2WLjqFAtXn4KEdxIhalnRtoKFN7nAwj0B3ZXCbQloV2tq5eDbcTmT68JJD3nRJq24/XgxtQKFIpQdtvmVw==
   /semver/7.3.5:
     dependencies:
       lru-cache: 6.0.0
