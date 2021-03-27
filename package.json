@@ -29,7 +29,6 @@
     "@babel/preset-env": "7.13.12",
     "@types/jest": "^26.0.22",
     "babel-eslint-parser": "workspace:*",
-    "babel-prettier-parser": "workspace:*",
     "chalk": "^4.1.0",
     "eslint": "^7.22.0",
     "eslint-config-prettier": "^8.1.0",
@@ -41,6 +40,7 @@
     "lerna": "^4.0.0",
     "lint-staged": "^10.0.8",
     "prettier": "^2.1.0",
+    "prettier-plugin-babel": "workspace:*",
     "typescript": "^4.2.3",
     "wc-bundler": "workspace:*",
     "yorkie": "^2.0.0"

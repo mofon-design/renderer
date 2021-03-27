@@ -1,7 +1,7 @@
 {
-  "name": "babel-preset-web-component",
+  "name": "prettier-plugin-babel",
   "version": "0.0.1-alpha.1",
-  "description": "Babel preset for all Web Component plugins",
+  "description": "Prettier parser that allows for parsing of experimental syntax transformed by Babel",
   "author": "imhele <work@imhele.com>",
   "license": "MIT",
   "main": "index.umd.js",
@@ -12,23 +12,24 @@
       "node": true
     }
   },
-  "files": [
-    "es",
-    "src",
-    "typings.d.ts",
-    "index.umd.js",
-    "index.umd.min.js"
-  ],
   "bugs": {
     "url": "https://github.com/mofon-design/renderer/issues"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/mofon-design/renderer.git",
-    "directory": "packages/babel-preset-web-component"
+    "directory": "packages/babel-prettier-parser"
   },
   "keywords": [
-    "web-component",
-    "babel-preset"
-  ]
+    "babel",
+    "prettier",
+    "plugin"
+  ],
+  "dependencies": {
+    "babel-prettier-parser": "workspace:*",
+    "jest-docblock": "26.0.0"
+  },
+  "peerDependencies": {
+    "prettier": "^2.2.1"
+  }
 }

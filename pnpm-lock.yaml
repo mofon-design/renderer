@@ -17,7 +17,6 @@ importers:
       '@babel/preset-env': 7.13.12_@babel+core@7.13.10
       '@types/jest': 26.0.22
       babel-eslint-parser: link:packages/babel-eslint-parser
-      babel-prettier-parser: link:packages/babel-prettier-parser
       chalk: 4.1.0
       eslint: 7.22.0
       eslint-config-prettier: 8.1.0_eslint@7.22.0
@@ -29,6 +28,7 @@ importers:
       lerna: 4.0.0
       lint-staged: 10.5.4
       prettier: 2.2.1
+      prettier-plugin-babel: link:packages/prettier-plugin-babel
       typescript: 4.2.3
       wc-bundler: link:packages/wc-bundler
       yorkie: 2.0.0
@@ -49,7 +49,6 @@ importers:
       '@babel/preset-env': 7.13.12
       '@types/jest': ^26.0.22
       babel-eslint-parser: workspace:*
-      babel-prettier-parser: workspace:*
       chalk: ^4.1.0
       eslint: ^7.22.0
       eslint-config-prettier: ^8.1.0
@@ -61,6 +60,7 @@ importers:
       lerna: ^4.0.0
       lint-staged: ^10.0.8
       prettier: ^2.1.0
+      prettier-plugin-babel: workspace:*
       typescript: ^4.2.3
       wc-bundler: workspace:*
       yorkie: ^2.0.0
@@ -110,6 +110,13 @@ importers:
       prettier: ^2.2.1
       semver: 7.3.5
       string-width: 4.2.2
+  packages/prettier-plugin-babel:
+    dependencies:
+      babel-prettier-parser: link:../babel-prettier-parser
+      jest-docblock: 26.0.0
+    specifiers:
+      babel-prettier-parser: workspace:*
+      jest-docblock: 26.0.0
   packages/wc-bundler:
     dependencies:
       '@babel/core': 7.13.10
@@ -4149,7 +4156,6 @@ packages:
     resolution:
       integrity: sha512-oSyFlqaTHCItVRGK5RmrmjB+CmaMOW7IaNA/kdxqhoa6d17j/5ce9O9eWXmV/KEdRwqpQA+Vqe8a8Bsybu4YnA==
   /detect-newline/3.1.0:
-    dev: true
     engines:
       node: '>=8'
     resolution:
@@ -6157,7 +6163,6 @@ packages:
   /jest-docblock/26.0.0:
     dependencies:
       detect-newline: 3.1.0
-    dev: true
     engines:
       node: '>= 10.14.2'
     resolution:

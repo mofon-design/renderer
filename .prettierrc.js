@@ -4,10 +4,6 @@ module.exports = {
   proseWrap: 'never',
   singleQuote: true,
   trailingComma: 'all',
-  overrides: [
-    {
-      files: '**/*.{js,mjs,ts,tsx}',
-      options: { parser: require('babel-prettier-parser/src/index.js') },
-    },
-  ],
+  plugins: ['./packages/prettier-plugin-babel/src/index.js'],
+  overrides: [{ files: '**/*.{js,mjs,ts,tsx}', options: { parser: 'babel-es' } }],
 };
