@@ -60,6 +60,17 @@ function convertNodes(ast, code) {
         delete node.isType;
       }
 
+      // as const
+      if (path.isTSAsExpression() && node.typeAnnotation?.type === 'TSTypeReference') {
+        if (
+          node.typeAnnotation.typeName?.type === 'Identifier' &&
+          node.typeAnnotation.typeName.name === 'const'
+        ) {
+          node.typeAnnotation.type = 'TSConstKeyword';
+          delete node.typeAnnotation.typeName;
+        }
+      }
+
       // template string range fixes
       if (path.isTemplateLiteral()) {
         for (let i = 0; i < node.quasis.length; i++) {
