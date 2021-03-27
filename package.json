@@ -48,12 +48,13 @@
     "*.{md,json}": [
       "prettier --write"
     ],
-    "*.js?(x)": [
+    "*.{js,mjs,jsx}": [
+      "eslint",
       "prettier --write"
     ],
-    "packages/*.ts?(x)": [
+    "*.{ts,tsx}": [
       "eslint",
-      "prettier --parser=typescript --write"
+      "prettier --write"
     ]
   },
   "engines": {
