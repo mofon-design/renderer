@@ -1,12 +1,16 @@
 {
   "name": "wc-core",
   "version": "0.0.1-alpha.1",
-  "description": "Web components renderer core",
+  "description": "Web Component renderer core",
+  "author": "imhele <work@imhele.com>",
   "license": "MIT",
   "main": "index.umd.js",
   "esnext": "es/index.js",
   "types": "src/index.ts",
   "sideEffects": false,
+  "dependencies": {
+    "@babel/runtime": "7.13.10"
+  },
   "files": [
     "es",
     "src",
@@ -19,7 +23,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mofon-design/renderer/blob/master/packages/wc-core"
+    "url": "https://github.com/mofon-design/renderer.git",
+    "directory": "packages/wc-core"
   },
   "keywords": [
     "web-component",

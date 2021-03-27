@@ -2,11 +2,16 @@
   "name": "babel-preset-web-component",
   "version": "0.0.1-alpha.1",
   "description": "Babel preset for all Web Component plugins",
+  "author": "imhele <work@imhele.com>",
   "license": "MIT",
   "main": "index.umd.js",
   "esnext": "es/index.js",
   "types": "src/index.ts",
-  "sideEffects": false,
+  "eslintConfig": {
+    "env": {
+      "node": true
+    }
+  },
   "files": [
     "es",
     "src",
@@ -19,7 +24,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mofon-design/renderer/blob/master/packages/babel-preset-web-component"
+    "url": "https://github.com/mofon-design/renderer.git",
+    "directory": "packages/babel-preset-web-component"
   },
   "keywords": [
     "web-component",

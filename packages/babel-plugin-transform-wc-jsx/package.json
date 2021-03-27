@@ -1,12 +1,17 @@
 {
   "name": "babel-plugin-transform-wc-jsx",
   "version": "0.0.1-alpha.1",
-  "description": "Turn JSX into WC function calls",
+  "description": "Turn JSX into Web Component function calls",
+  "author": "imhele <work@imhele.com>",
   "license": "MIT",
   "main": "index.umd.js",
   "esnext": "es/index.js",
   "types": "src/index.ts",
-  "sideEffects": false,
+  "eslintConfig": {
+    "env": {
+      "node": true
+    }
+  },
   "files": [
     "es",
     "src",
@@ -19,7 +24,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mofon-design/renderer/blob/master/packages/babel-plugin-transform-wc-jsx"
+    "url": "https://github.com/mofon-design/renderer.git",
+    "directory": "packages/babel-plugin-transform-wc-jsx"
   },
   "keywords": [
     "web-component",

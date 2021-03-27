@@ -1,12 +1,16 @@
 {
   "name": "wc-jsx",
   "version": "0.0.1-alpha.1",
-  "description": "Write web components in JSX",
+  "description": "Write Web Component in JSX",
+  "author": "imhele <work@imhele.com>",
   "license": "MIT",
   "main": "index.umd.js",
   "esnext": "es/index.js",
   "types": "src/index.ts",
   "sideEffects": false,
+  "dependencies": {
+    "@babel/runtime": "7.13.10"
+  },
   "files": [
     "es",
     "src",
@@ -19,7 +23,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mofon-design/renderer/blob/master/packages/wc-jsx"
+    "url": "https://github.com/mofon-design/renderer.git",
+    "directory": "packages/wc-jsx"
   },
   "keywords": [
     "web-component",
