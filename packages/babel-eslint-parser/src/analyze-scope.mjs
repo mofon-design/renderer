@@ -1,4 +1,5 @@
 import { types as t } from '@babel/core';
+import { esnext_full as TSLib } from '@typescript-eslint/scope-manager/dist/lib/esnext.full';
 import escope from 'eslint-scope';
 import { Definition } from 'eslint-scope/lib/definition';
 import OriginalPatternVisitor from 'eslint-scope/lib/pattern-visitor';
@@ -205,11 +206,21 @@ class Referencer extends OriginalReferencer {
 
     const typeParamScope = this._nestTypeParamScope(node);
 
-    this.visit(node.right);
+    this.visit(node.typeAnnotation);
 
     if (typeParamScope) {
       this.close(node);
     }
+  }
+
+  TSTypeReference(node) {
+    if (
+      node.typeName?.type === 'Identifier' &&
+      Object.prototype.hasOwnProperty.call(TSLib, node.typeName.name)
+    ) {
+      this._createScopeVariable(node, node.typeName);
+    }
+    this._visitTypeAnnotation(node);
   }
 
   // visit OptionalMemberExpression as a MemberExpression.
