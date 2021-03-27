@@ -61,14 +61,13 @@ function convertNodes(ast, code) {
       }
 
       // as const
-      if (path.isTSAsExpression() && node.typeAnnotation?.type === 'TSTypeReference') {
-        if (
-          node.typeAnnotation.typeName?.type === 'Identifier' &&
-          node.typeAnnotation.typeName.name === 'const'
-        ) {
-          node.typeAnnotation.type = 'TSConstKeyword';
-          delete node.typeAnnotation.typeName;
-        }
+      if (
+        path.isTSTypeReference() &&
+        node.typeName?.type === 'Identifier' &&
+        node.typeName.name === 'const'
+      ) {
+        node.type = 'TSConstKeyword';
+        delete node.typeName;
       }
 
       // template string range fixes

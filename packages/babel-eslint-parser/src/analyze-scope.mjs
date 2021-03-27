@@ -64,6 +64,14 @@ class Referencer extends OriginalReferencer {
     if (options.processRightHandNodes) {
       visitor.rightHandNodes.forEach(this.visit, this);
     }
+
+    // Visit properties in ObjectPattern which includes RestElement
+    if (node.type === 'ObjectPattern' && node.properties.length > 1) {
+      const lastElement = node.properties[node.properties.length - 1];
+      if (lastElement.type === 'RestElement') {
+        this._visitArray(node.properties.slice(0, -1));
+      }
+    }
   }
 
   // inherits.

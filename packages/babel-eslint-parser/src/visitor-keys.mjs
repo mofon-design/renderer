@@ -12,6 +12,7 @@ export const newTypes = {
   PropertyDefinition: t.VISITOR_KEYS.ClassProperty,
   // todo: remove this when Acorn supports class properties
   PrivateIdentifier: [],
+  TSConstKeyword: [],
 };
 
 // AST Types that shares `"type"` property with Babel but have different shape
