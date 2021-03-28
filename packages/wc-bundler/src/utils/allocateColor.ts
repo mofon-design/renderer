@@ -1,4 +1,8 @@
-import type { ChalkColors } from './allocateColor';
+import type { Chalk } from 'chalk';
+
+type ChalkColors = {
+  [Key in keyof Chalk]: Chalk[Key] extends Chalk ? Key : never;
+}[keyof Chalk];
 
 const AvailableColors: ChalkColors[] = [
   'red',
@@ -18,7 +22,7 @@ const AvailableColors: ChalkColors[] = [
 
 export function allocateColor(token: string): ChalkColors {
   if (allocateColor.allocatedMap[token] === undefined) {
-    const color = allocateColor.availableColors.shift()!;
+    const color = allocateColor.availableColors.shift() ?? AvailableColors[0];
     allocateColor.availableColors.push(color);
     allocateColor.allocatedMap[token] = color;
   }

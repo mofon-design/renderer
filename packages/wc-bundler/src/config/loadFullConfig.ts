@@ -5,7 +5,7 @@ import { loadModuleByBabel } from '../utils';
 import type { BundleConfig } from './interface';
 
 export function loadFullConfig(): BundleConfig {
-  let config: any;
+  let config: unknown;
   let abspath: string | undefined;
 
   for (const filename of loadFullConfig.filenames) {
@@ -20,7 +20,7 @@ export function loadFullConfig(): BundleConfig {
     } catch {}
   }
 
-  return config; // TODO validate config
+  return config as BundleConfig; // TODO validate config
 }
 
 loadFullConfig.filenames = ['rc', '.config']

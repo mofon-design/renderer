@@ -6,6 +6,7 @@ import type {
   ModuleOption as BabelPresetEnvModuleOption,
   Options as BabelPresetEnv9Config,
 } from '@babel/preset-env';
+import { env, root } from '../utils';
 
 export interface BabelEnvConfig extends BabelPresetEnv9Config {
   browserslistEnv?: string;
@@ -15,7 +16,25 @@ export interface BabelEnvConfig extends BabelPresetEnv9Config {
   modules?: BabelPresetEnvModuleOption;
 }
 
-export const DefaultBabelEnvConfig: BabelEnvConfig;
+export function DefaultBabelEnvConfig(): BabelEnvConfig {
+  return {
+    browserslistEnv: undefined,
+    bugfixes: true,
+    configPath: root,
+    debug: env.DEBUG,
+    ignoreBrowserslistConfig: true,
+    loose: false,
+    shippedProposals: false,
+    spec: false,
+    targets: {
+      Edge: '79',
+      Firefox: '63',
+      Chrome: '54',
+      Safari: '10.1',
+    },
+    useBuiltIns: false,
+  };
+}
 
 export interface BabelMinifyPlugins {
   /**
@@ -145,7 +164,32 @@ export interface BabelMinifyConfig extends BabelMinifyPlugins {
   keepFnName?: boolean;
 }
 
-export const DefaultBabelMinifyConfig: BabelMinifyConfig;
+export function DefaultBabelMinifyConfig(): BabelMinifyConfig {
+  return {
+    booleans: true,
+    builtIns: true,
+    consecutiveAdds: true,
+    deadcode: true,
+    evaluate: true,
+    flipComparisons: true,
+    guards: true,
+    infinity: true,
+    mangle: true,
+    memberExpressions: true,
+    mergeVars: true,
+    numericLiterals: true,
+    propertyLiterals: true,
+    regexpConstructors: true,
+    removeConsole: false,
+    removeDebugger: false,
+    removeUndefined: true,
+    replace: true,
+    simplify: true,
+    simplifyComparisons: true,
+    typeConstructors: true,
+    undefinedToVoid: true,
+  };
+}
 
 export interface BabelTypeScriptConfig {
   /**
@@ -196,13 +240,38 @@ export interface BabelTypeScriptConfig {
   onlyRemoveTypeImports?: boolean;
 }
 
-export const DefaultBabelTypeScriptConfig: BabelTypeScriptConfig;
+export function DefaultBabelTypeScriptConfig(): BabelTypeScriptConfig {
+  return {
+    allExtensions: false,
+    allowDeclareFields: true,
+    allowNamespaces: true,
+    jsxPragma: 'WC',
+    jsxPragmaFrag: 'WC.Fragment',
+    isTSX: false,
+    onlyRemoveTypeImports: false,
+  };
+}
 
-export const DefaultBabelPresetsConfig: BabelPluginItem[];
+export function DefaultBabelPluginsConfig(): BabelPluginItem[] {
+  return [
+    '@babel/plugin-proposal-class-properties',
+    '@babel/plugin-proposal-class-static-block',
+    ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: false }],
+    '@babel/plugin-proposal-do-expressions',
+    '@babel/plugin-proposal-export-default-from',
+    '@babel/plugin-proposal-optional-chaining',
+    '@babel/plugin-proposal-private-methods',
+    '@babel/plugin-proposal-private-property-in-object',
+    '@babel/plugin-proposal-throw-expressions',
+    '@babel/plugin-syntax-dynamic-import',
+  ];
+}
 
-export const DefaultBabelPluginsConfig: BabelPluginItem[];
+export function DefaultBabelPresetsConfig(): BabelPluginItem[] {
+  return [];
+}
 
-export interface BabelConfig extends Omit<BabelTransformOptions, 'env'> {
+export interface BuiltinBabelPresetsConfig {
   /**
    * Babel preset env config.
    *
@@ -221,7 +290,32 @@ export interface BabelConfig extends Omit<BabelTransformOptions, 'env'> {
   typescript?: boolean | BabelTypeScriptConfig;
 }
 
-export const DefaultBabelConfig: BabelConfig;
+export type ResolvedBuiltinBabelPresetsConfig = {
+  [Key in keyof BuiltinBabelPresetsConfig]: Exclude<BuiltinBabelPresetsConfig[Key], boolean>;
+};
+
+export function DefaultBuiltinBabelPresetsConfig(): ResolvedBuiltinBabelPresetsConfig {
+  return { env: DefaultBabelEnvConfig() };
+}
+
+export const BuiltinBabelPresetsNameMap: Readonly<
+  Record<keyof BuiltinBabelPresetsConfig, BabelPluginItem>
+> = {
+  env: '@babel/preset-env',
+  minify: 'babel-preset-minify',
+  typescript: '@babel/preset-typescript',
+};
+
+export interface BabelConfig
+  extends Omit<BabelTransformOptions, 'env'>,
+    BuiltinBabelPresetsConfig {}
+
+export function DefaultBabelConfig(): BabelConfig {
+  return Object.assign(DefaultBuiltinBabelPresetsConfig(), {
+    plugins: DefaultBabelPluginsConfig(),
+    presets: DefaultBabelPresetsConfig(),
+  });
+}
 
 export interface BundleIOConfig {
   /**
@@ -235,6 +329,14 @@ export interface BundleIOConfig {
    * If TypeScript file exists, 'tsconfig.json' should be provided at root directory of project.
    */
   entry?: string | string[];
+  /**
+   * Specify output directory.
+   *
+   * @default
+   * `${entry.split('.', 1)[0] ?? ''}${extname}` // .js | .esm.js | .umd.js | .umd.min.js
+   * `${pkgdir}/{module}` // module: es | lib
+   */
+  outdir?: string;
   /**
    * Specify output file(path) without extname.
    *

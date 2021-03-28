@@ -9,14 +9,21 @@ let registered = false;
 export function registerBabel(options?: TransformOptions): void {
   if (registered) return;
 
-  require('@babel/register')({
-    ...transformBabelConfig({ env: { modules: 'commonjs' }, typescript: true }),
-    ...options,
+  const override = {
     cache: !env.DISABLE_CLI_RUNTIME_CACHE,
     extensions: ['.tsx', '.ts', '.jsx', '.mjs', '.es'],
     ignore: [/node_modules/],
     only: [new RegExp(`^${escapeRegExp(root)}`, 'i')],
-  });
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  require('@babel/register')(
+    Object.assign(
+      transformBabelConfig({ env: { modules: 'commonjs' }, typescript: true }),
+      options,
+      override,
+    ),
+  );
 
   registered = true;
 }

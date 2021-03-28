@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.13.10",
-    "@babel/node": "^7.13.12",
+    "@babel/node": "7.13.12",
     "@babel/plugin-proposal-class-properties": "7.13.0",
     "@babel/plugin-proposal-class-static-block": "7.13.11",
     "@babel/plugin-proposal-decorators": "7.13.5",
@@ -28,6 +28,8 @@
     "@babel/plugin-transform-typescript": "7.13.0",
     "@babel/preset-env": "7.13.12",
     "@types/jest": "^26.0.22",
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
     "babel-eslint-parser": "workspace:*",
     "chalk": "^4.1.0",
     "eslint": "^7.22.0",
@@ -49,11 +51,7 @@
     "*.{md,json}": [
       "prettier --write"
     ],
-    "*.{js,mjs,jsx}": [
-      "eslint",
-      "prettier --write"
-    ],
-    "*.{ts,tsx}": [
+    "*.{js,mjs,jsx,ts,tsx}": [
       "eslint",
       "prettier --write"
     ]
