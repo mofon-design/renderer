@@ -35,7 +35,6 @@
     "prettier": "2.2.1",
     "rimraf": "3.0.2",
     "signale": "1.4.0",
-    "slash2": "2.0.0",
     "temp-dir": "2.0.0",
     "through2": "4.0.2",
     "update-notifier": "5.1.0",

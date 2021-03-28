@@ -6,7 +6,7 @@ import type {
   ModuleOption as BabelPresetEnvModuleOption,
   Options as BabelPresetEnv9Config,
 } from '@babel/preset-env';
-import { env, root } from '../utils';
+import { detectFile, env, root } from '../utils';
 
 export interface BabelEnvConfig extends BabelPresetEnv9Config {
   browserslistEnv?: string;
@@ -295,7 +295,10 @@ export type ResolvedBuiltinBabelPresetsConfig = {
 };
 
 export function DefaultBuiltinBabelPresetsConfig(): ResolvedBuiltinBabelPresetsConfig {
-  return { env: DefaultBabelEnvConfig() };
+  return {
+    env: DefaultBabelEnvConfig(),
+    typescript: detectFile('tsconfig.json') ? DefaultBabelTypeScriptConfig() : undefined,
+  };
 }
 
 export const BuiltinBabelPresetsNameMap: Readonly<
@@ -319,7 +322,7 @@ export function DefaultBabelConfig(): BabelConfig {
 
 export interface BundleIOConfig {
   /**
-   * Specify entry file(s).
+   * Specify entry file(s) or directory(s).
    *
    * @default
    * ['src/index.tsx', 'src/index.ts', 'src/index.jsx', 'src/index.js'].find(p => exists(p))
@@ -329,6 +332,13 @@ export interface BundleIOConfig {
    * If TypeScript file exists, 'tsconfig.json' should be provided at root directory of project.
    */
   entry?: string | string[];
+  /**
+   * Exclude pattern(s).
+   *
+   * @default
+   * ['{demo,e2e,fixture,spec,test}?(s)/**', '{demo,e2e,fixture,spec,test}.*']
+   */
+  excludes?: string | string[];
   /**
    * Specify output directory.
    *

@@ -151,7 +151,6 @@ importers:
       prettier: 2.2.1
       rimraf: 3.0.2
       signale: 1.4.0
-      slash2: 2.0.0
       temp-dir: 2.0.0
       through2: 4.0.2
       update-notifier: 5.1.0
@@ -201,7 +200,6 @@ importers:
       prettier: 2.2.1
       rimraf: 3.0.2
       signale: 1.4.0
-      slash2: 2.0.0
       temp-dir: 2.0.0
       through2: 4.0.2
       types-lib: workspace:*
@@ -9144,12 +9142,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
-  /slash2/2.0.0:
-    dev: false
-    engines:
-      node: '>=6'
-    resolution:
-      integrity: sha512-7ElvBydJPi3MHU/KEOblFSbO/skl4Z69jKkFCpYIYVOMSIZsKi4gYU43HGeZPmjxCXrHekoDAAewphPQNnsqtA==
   /slice-ansi/3.0.0:
     dependencies:
       ansi-styles: 4.3.0
