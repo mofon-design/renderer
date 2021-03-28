@@ -1,3 +1,4 @@
+/// <reference path="any.d.ts" />
 /// <reference path="es.d.ts" />
 /// <reference path="readonly.d.ts" />
 /// <reference path="unknown.d.ts" />

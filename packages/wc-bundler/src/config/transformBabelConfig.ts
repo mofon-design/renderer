@@ -1,5 +1,4 @@
 import type { TransformOptions as BabelTransformOptions } from '@babel/core';
-import { loadOptions } from '@babel/core';
 import type { BabelConfig, ResolvedBuiltinBabelPresetsConfig } from './interface';
 import {
   BuiltinBabelPresetsNameMap,
@@ -24,11 +23,6 @@ const BuiltinPresetConfig: Required<ResolvedBuiltinBabelPresetsConfig> = {
     return DefaultBabelTypeScriptConfig();
   },
 };
-
-export function loadBabelConfig(...configs: t.Readonly<BabelConfig>[]): BabelTransformOptions;
-export function loadBabelConfig(): BabelTransformOptions {
-  return loadOptions(transformBabelConfig.apply(null, arguments as never)) as BabelTransformOptions;
-}
 
 export function transformBabelConfig(...configs: t.Readonly<BabelConfig>[]): BabelTransformOptions;
 export function transformBabelConfig(): BabelTransformOptions {
