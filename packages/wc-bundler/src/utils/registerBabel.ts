@@ -1,7 +1,7 @@
 import type { TransformOptions } from '@babel/core';
-import { escapeRegExp } from 'lodash';
-import { transformBabelConfig } from '../config/transformBabelConfig';
+import { transformBabelConfig } from '../config';
 import { env } from './env';
+import { escapeRegExp } from './escapeRegExp';
 import { root } from './root';
 
 let registered = false;
@@ -13,7 +13,7 @@ export function registerBabel(options?: TransformOptions): void {
     cache: !env.DISABLE_CLI_RUNTIME_CACHE,
     extensions: ['.tsx', '.ts', '.jsx', '.mjs', '.es'],
     ignore: [/node_modules/],
-    only: [new RegExp(`^${escapeRegExp(root)}`, 'i')],
+    only: [RegExp(`^${escapeRegExp(root)}`, 'i')],
   };
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires

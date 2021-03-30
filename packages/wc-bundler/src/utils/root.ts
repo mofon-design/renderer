@@ -1,1 +1,3 @@
-export const root = process.cwd();
+import { slash } from './slash';
+
+export const root = slash(process.cwd());

@@ -3,4 +3,6 @@
 /// <reference path="readonly.d.ts" />
 /// <reference path="unknown.d.ts" />
 
-declare namespace t {}
+declare namespace t {
+  type ArgsType<T extends AnyFunction> = T extends (...args: infer Args) => void ? Args : never;
+}

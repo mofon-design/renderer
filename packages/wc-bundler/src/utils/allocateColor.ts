@@ -21,14 +21,23 @@ const AvailableColors: ChalkColors[] = [
 ];
 
 export function allocateColor(token: string): ChalkColors {
-  if (allocateColor.allocatedMap[token] === undefined) {
-    const color = allocateColor.availableColors.shift() ?? AvailableColors[0];
+  let color = allocateColor.allocatedMap.get(token);
+
+  if (color === undefined) {
+    if (allocateColor.allocatedMap.size > allocateColor.maxsize) {
+      allocateColor.allocatedMap.forEach((_value, key) => {
+        if (Math.random() > 0.8) allocateColor.allocatedMap.delete(key);
+      });
+    }
+
+    color = allocateColor.availableColors.shift() ?? AvailableColors[0];
     allocateColor.availableColors.push(color);
-    allocateColor.allocatedMap[token] = color;
+    allocateColor.allocatedMap.set(token, color);
   }
 
-  return allocateColor.allocatedMap[token];
+  return color;
 }
 
 allocateColor.availableColors = AvailableColors;
-allocateColor.allocatedMap = Object.create(null) as Record<string, ChalkColors>;
+allocateColor.allocatedMap = new Map<string, ChalkColors>(null);
+allocateColor.maxsize = 1000 * 1000;

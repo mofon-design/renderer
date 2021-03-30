@@ -1,4 +1,5 @@
 import type { TransformOptions as BabelTransformOptions } from '@babel/core';
+import { iterargs } from '../../utils';
 import type { BabelConfig, ResolvedBuiltinBabelPresetsConfig } from './interface';
 import {
   BuiltinBabelPresetsNameMap,
@@ -24,19 +25,21 @@ const BuiltinPresetConfig: Required<ResolvedBuiltinBabelPresetsConfig> = {
   },
 };
 
+export function transformBabelConfig(configs: t.Readonly<BabelConfig>[]): BabelTransformOptions;
 export function transformBabelConfig(...configs: t.Readonly<BabelConfig>[]): BabelTransformOptions;
 export function transformBabelConfig(): BabelTransformOptions {
   const merged: BabelTransformOptions = {};
   const builtinpreset = DefaultBuiltinBabelPresetsConfig();
   const repeatable = { plugins: DefaultBabelPluginsConfig(), presets: DefaultBabelPresetsConfig() };
 
-  for (const config of arguments) {
+  for (const config of iterargs<t.Readonly<BabelConfig>>(arguments)) {
     for (const key in config) {
       if (!isKey.call(config, key)) continue;
 
       if (isKey.call(BuiltinPresetConfig, key)) {
         if (config[key] === undefined) {
           // ignore void preset config
+          // e.g. typescript: if !detectFile('tsconfig.json') then undefined
         } else if (!config[key]) {
           builtinpreset[key] = undefined;
         } else {
