@@ -5,6 +5,8 @@ import type {
 import type {
   ModuleOption as BabelPresetEnvModuleOption,
   Options as BabelPresetEnv9Config,
+  Target as BabelTarget,
+  TargetsOptions as BabelTargetsOptions,
 } from '@babel/preset-env';
 import { join } from 'path';
 import { detectFile, env, isRoot, resolveModuleByBabel, root } from '../../utils';
@@ -15,6 +17,7 @@ export interface BabelEnvConfig extends BabelPresetEnv9Config {
    * Overrided by `BundleConfig.cjs` and `BundleConfig.esm`.
    */
   modules?: BabelPresetEnvModuleOption;
+  targets?: BabelTargetsOptions | { [key in Lowercase<BabelTarget>]: string };
 }
 
 export function DefaultBabelEnvConfig(): BabelEnvConfig {
@@ -28,10 +31,10 @@ export function DefaultBabelEnvConfig(): BabelEnvConfig {
     shippedProposals: false,
     spec: false,
     targets: {
-      Edge: '79',
-      Firefox: '63',
-      Chrome: '54',
-      Safari: '10.1',
+      edge: '79',
+      firefox: '63',
+      chrome: '54',
+      safari: '10.1',
     },
     useBuiltIns: false,
   };

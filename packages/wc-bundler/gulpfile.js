@@ -9,4 +9,4 @@ require('@babel/register')({
 const { task } = require('gulp');
 const { core } = require('./src/core/index');
 
-task('default', core());
+task('default', core({ babel: { typescript: true } }));

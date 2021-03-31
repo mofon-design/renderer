@@ -1,7 +1,7 @@
 import { TaskFunction, dest, src, series } from 'gulp';
 import { BundleIOConfig, loadBundleIOConfig } from '../config';
 import { createExtnamePipeline } from '../pipelines';
-import { defineLazyLoadProperty, del, plumber } from '../utils';
+import { defineLazyLoadProperty, del, env, plumber } from '../utils';
 
 export function withIO(
   config: t.Readonly<BundleIOConfig> | undefined,
@@ -13,7 +13,9 @@ export function withIO(
       return del(ref.config.outdir);
     },
     function io() {
-      return pipe(src(ref.config.entry).pipe(plumber()))
+      let stream = src(ref.config.entry);
+      if (!env.DEBUG) stream = stream.pipe(plumber());
+      return pipe(stream)
         .pipe(createExtnamePipeline(ref.config.extname))
         .pipe(dest(ref.config.outdir));
     },

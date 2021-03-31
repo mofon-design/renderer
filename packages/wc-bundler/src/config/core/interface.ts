@@ -62,17 +62,15 @@ export interface CoreTaskConfig {
 }
 
 export type ResolvedCoreTaskConfig = {
-  [Key in keyof CoreTaskConfig]: WithResolvedCoreSharedConfig<
-    NonNullable<Exclude<CoreTaskConfig[Key], boolean>>
-  >;
+  [Key in keyof CoreTaskConfig]: Exclude<CoreTaskConfig[Key], boolean>;
 };
 
 export const DefaultCoreTaskConfigMap: Required<ResolvedCoreTaskConfig> = {
   get cjs() {
-    return Object.assign(DefaultCommonJSModuleConfig(), DefaultCoreSharedConfigMap);
+    return DefaultCommonJSModuleConfig();
   },
   get esm() {
-    return Object.assign(DefaultECMAScriptModuleConfig(), DefaultCoreSharedConfigMap);
+    return DefaultECMAScriptModuleConfig();
   },
 };
 

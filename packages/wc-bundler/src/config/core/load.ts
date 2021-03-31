@@ -70,5 +70,18 @@ export function loadCoreConfig(): ResolvedCoreConfig {
 
   lazy.forEach((effect) => effect());
 
+  for (const key in DefaultCoreTaskConfigMap) {
+    if (!isKey.call(DefaultCoreTaskConfigMap, key)) continue;
+    const source = merged[key] as t.UnknownRecord | undefined;
+    if (source !== undefined) {
+      for (const sharedKey in DefaultCoreSharedConfigMap) {
+        if (!isKey.call(DefaultCoreSharedConfigMap, sharedKey)) continue;
+        if (!isKey.call(source, sharedKey) || source[sharedKey] === undefined) {
+          source[sharedKey] = merged[sharedKey].concat();
+        }
+      }
+    }
+  }
+
   return merged;
 }

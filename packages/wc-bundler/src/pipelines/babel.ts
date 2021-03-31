@@ -21,7 +21,9 @@ export function createBabelPipeline(): BabelPipelineTransform {
   const args = Array.from(arguments);
   const tranform = obj(proxyBabelTransformer as TransformFunction) as BabelPipelineTransform;
   defineLazyLoadProperty(tranform, BabelPipelineTransformOptionsSymbol, () => {
-    return loadBabelConfig.apply(null, args);
+    const resolved = loadBabelConfig.apply(null, args);
+    if (env.DEBUG) signale.debug('Resolved babel config: ', resolved);
+    return resolved;
   });
   return tranform;
 }
@@ -41,8 +43,9 @@ export function BabelTransformer(
   callback: TransformCallback,
   options: TransformOptions,
 ): void {
-  assertInstance(chunk.contents, Buffer);
+  if (chunk.isDirectory()) return callback(null);
   if (env.DEBUG) signale.debug(`[babel] Transforming (${chunk.path})`);
+  assertInstance(chunk.contents, Buffer);
   transform(
     chunk.contents.toString(encode),
     Object.assign({}, options, { filename: chunk.path }),

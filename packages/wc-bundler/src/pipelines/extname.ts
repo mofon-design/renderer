@@ -11,11 +11,10 @@ export interface ExtnamePipelineTransform extends Transform {
 
 export function createExtnamePipeline(extname: string): ExtnamePipelineTransform {
   const tranform = obj(proxyExtnameTransformer as TransformFunction) as ExtnamePipelineTransform;
-  (Object.defineProperty as t.Object.defineProperty)(
-    tranform,
-    ExtnamePipelineConfigSymbol,
-    extname,
-  );
+  (Object.defineProperty as t.Object.defineProperty)(tranform, ExtnamePipelineConfigSymbol, {
+    configurable: true,
+    value: extname,
+  });
   return tranform;
 }
 

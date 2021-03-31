@@ -10,7 +10,7 @@ export function esm(config?: t.Readonly<ECMAScriptModuleConfig>): TaskFunction {
   return withIO(config, function esm(upstream) {
     const resolved = loadECMAScriptModuleConfig(config);
     const babelConfigs = resolved.babel ? asArray(resolved.babel) : [];
-    babelConfigs.push({ env: { modules: 'auto' } });
+    babelConfigs.push({ env: { modules: false } });
     signale.start('Transform to ECMAScript module');
     return upstream.pipe(createBabelPipeline(babelConfigs));
   });
