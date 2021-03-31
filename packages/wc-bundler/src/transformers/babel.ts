@@ -8,10 +8,10 @@ import { assertInstance } from '../utils';
 export function createBabelTransformer(options: TransformOptions) {
   return function proxyBabelTransformer(
     chunk: File,
-    enc: BufferEncoding,
+    encode: BufferEncoding,
     callback: TransformCallback,
   ): void {
-    BabelTransformer(chunk, enc, callback, options);
+    BabelTransformer(chunk, encode, callback, options);
   };
 }
 
@@ -22,7 +22,11 @@ export function BabelTransformer(
   options: TransformOptions,
 ): void {
   assertInstance(chunk.contents, Buffer);
-  transform(chunk.contents.toString(encode), options, babelTransformCallback);
+  transform(
+    chunk.contents.toString(encode),
+    { ...options, filename: chunk.path },
+    babelTransformCallback,
+  );
 
   function babelTransformCallback(error: unknown, result: BabelFileResult | null): void {
     if (error || !result?.code) {

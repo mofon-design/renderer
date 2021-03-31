@@ -38,6 +38,6 @@ export function allocateColor(token: string): ChalkColors {
   return color;
 }
 
-allocateColor.availableColors = AvailableColors;
-allocateColor.allocatedMap = new Map<string, ChalkColors>(null);
 allocateColor.maxsize = 1000 * 1000;
+allocateColor.availableColors = AvailableColors.concat();
+allocateColor.allocatedMap = new Map<string, ChalkColors>(null);

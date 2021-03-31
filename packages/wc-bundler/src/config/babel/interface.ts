@@ -6,7 +6,8 @@ import type {
   ModuleOption as BabelPresetEnvModuleOption,
   Options as BabelPresetEnv9Config,
 } from '@babel/preset-env';
-import { detectFile, env, root } from '../../utils';
+import { join } from 'path';
+import { detectFile, env, isRoot, resolveModuleByBabel, root } from '../../utils';
 
 export interface BabelEnvConfig extends BabelPresetEnv9Config {
   browserslistEnv?: string;
@@ -164,7 +165,7 @@ export interface BabelMinifyConfig extends BabelMinifyPlugins {
   keepFnName?: boolean;
 }
 
-export function DefaultBabelMinifyConfig(): BabelMinifyConfig {
+export function DefaultBabelMinifyPluginsConfig(): Required<BabelMinifyPlugins> {
   return {
     booleans: true,
     builtIns: true,
@@ -189,6 +190,14 @@ export function DefaultBabelMinifyConfig(): BabelMinifyConfig {
     typeConstructors: true,
     undefinedToVoid: true,
   };
+}
+
+DefaultBabelMinifyPluginsConfig.readonly = DefaultBabelMinifyPluginsConfig() as t.Readonly<
+  Required<BabelMinifyPlugins>
+>;
+
+export function DefaultBabelMinifyConfig(): BabelMinifyConfig {
+  return DefaultBabelMinifyPluginsConfig();
 }
 
 export interface BabelTypeScriptConfig {
@@ -309,13 +318,38 @@ export const BuiltinBabelPresetsNameMap: Readonly<
   typescript: '@babel/preset-typescript',
 };
 
-export interface BabelConfig
-  extends Omit<BabelTransformOptions, 'env'>,
-    BuiltinBabelPresetsConfig {}
+export interface BabelConfig extends Omit<BabelTransformOptions, 'env'>, BuiltinBabelPresetsConfig {
+  /**
+   * Specify whether or not to use .babelrc and .babelignore files.
+   *
+   * @default false
+   */
+  babelrc: boolean | null;
+  /**
+   * The config file to load Babel's config from.
+   * `false` will disable searching for config files.
+   *
+   * @default
+   * require.resolve('./babel.config') ??
+   * require.resolve('./.babelrc') ??
+   * require.resolve(path.join(root, './babel.config')) ??
+   * require.resolve(path.join(root, './.babelrc'))
+   */
+  configFile?: string | boolean | null;
+}
 
 export function DefaultBabelConfig(): BabelConfig {
-  return Object.assign(DefaultBuiltinBabelPresetsConfig(), {
+  const extra: BabelConfig = {
+    babelrc: false,
+    configFile:
+      resolveModuleByBabel('./babel.config') ??
+      resolveModuleByBabel('./.babelrc') ??
+      (isRoot()
+        ? undefined
+        : resolveModuleByBabel(join(root, './babel.config')) ??
+          resolveModuleByBabel(join(root, './.babelrc'))),
     plugins: DefaultBabelPluginsConfig(),
     presets: DefaultBabelPresetsConfig(),
-  });
+  };
+  return Object.assign(DefaultBuiltinBabelPresetsConfig(), extra);
 }

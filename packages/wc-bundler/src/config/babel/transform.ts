@@ -5,6 +5,7 @@ import {
   BuiltinBabelPresetsNameMap,
   DefaultBabelEnvConfig,
   DefaultBabelMinifyConfig,
+  DefaultBabelMinifyPluginsConfig,
   DefaultBabelPluginsConfig,
   DefaultBabelPresetsConfig,
   DefaultBabelTypeScriptConfig,
@@ -23,6 +24,24 @@ const BuiltinPresetConfig: Required<ResolvedBuiltinBabelPresetsConfig> = {
   get typescript() {
     return DefaultBabelTypeScriptConfig();
   },
+};
+
+const TransformBuiltinPresetConfig: {
+  [Key in keyof ResolvedBuiltinBabelPresetsConfig]-?: (
+    config: NonNullable<ResolvedBuiltinBabelPresetsConfig[Key]>,
+  ) => void;
+} = {
+  env() {},
+  minify(config) {
+    if (config.only?.length) {
+      for (const key in config) {
+        if (!isKey.call(config, key)) continue;
+        if (!isKey.call(DefaultBabelMinifyPluginsConfig.readonly, key)) continue;
+        if (!config.only.includes(key)) delete config[key];
+      }
+    }
+  },
+  typescript() {},
 };
 
 export function transformBabelConfig(configs: t.Readonly<BabelConfig>[]): BabelTransformOptions;
@@ -55,7 +74,10 @@ export function transformBabelConfig(): BabelTransformOptions {
   }
 
   for (const key in builtinpreset) {
-    if (isKey.call(builtinpreset, key)) {
+    if (isKey.call(builtinpreset, key) && builtinpreset[key] !== undefined) {
+      TransformBuiltinPresetConfig[key](
+        builtinpreset[key] as NonNullable<ResolvedBuiltinBabelPresetsConfig[typeof key]>,
+      );
       repeatable.presets.unshift([BuiltinBabelPresetsNameMap[key], builtinpreset[key]]);
     }
   }
