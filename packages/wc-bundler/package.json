@@ -7,9 +7,6 @@
   "main": "index.umd.js",
   "esnext": "es/index.js",
   "types": "src/index.ts",
-  "bin": {
-    "wc-bundler": "./bin/wc-bundler.js"
-  },
   "dependencies": {
     "@babel/core": "7.13.10",
     "@babel/parser": "7.13.12",
@@ -28,12 +25,12 @@
     "@babel/register": "7.13.8",
     "babel-preset-minify": "0.5.1",
     "chalk": "4.1.0",
+    "del": "6.0.0",
     "glob": "7.1.6",
     "gulp": "4.0.2",
     "gulp-if": "3.0.0",
     "gulp-plumber": "1.2.1",
     "prettier": "2.2.1",
-    "rimraf": "3.0.2",
     "signale": "1.4.0",
     "temp-dir": "2.0.0",
     "through2": "4.0.2",

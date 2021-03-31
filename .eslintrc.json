@@ -18,6 +18,8 @@
     "no-unused-vars": "error",
     "no-var": "error",
     "prefer-const": "error",
+    "prefer-rest-params": "off",
+    "prefer-spread": "off",
     "prettier/prettier": "error",
     "import/no-dynamic-require": "error",
     "import/no-extraneous-dependencies": "error"
@@ -35,7 +37,11 @@
       ],
       "rules": {
         "no-empty": "off",
-        "@typescript-eslint/no-empty-interface": "off"
+        "prefer-rest-params": "off",
+        "prefer-spread": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-empty-interface": "off",
+        "@typescript-eslint/no-unused-vars": "error"
       }
     },
     {

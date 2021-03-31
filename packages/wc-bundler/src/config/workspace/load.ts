@@ -26,7 +26,8 @@ export function loadWorkspaceConfig(
     }
   }
 
-  const pathset = new Set([process.cwd()]);
+  const cwd = slash(process.cwd());
+  const pathset = new Set([cwd]);
 
   for (const patterns of ptnsets) {
     const paths = patterns.reduce<string[]>((paths, pattern) => {
@@ -51,7 +52,7 @@ export function loadWorkspaceConfig(
     namePathMap.set(name, (namePathMap.get(name) || new Set()).add(abspath));
   }
 
-  if (!pathNameMap.size) throw new Error(`Workspace empty (${process.cwd()})`);
+  if (!pathNameMap.size) throw new Error(`Workspace empty (${cwd})`);
 
   if (pathNameMap.size === 1) return transformPathNameMap(pathNameMap)[0];
 

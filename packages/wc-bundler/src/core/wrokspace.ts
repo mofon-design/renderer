@@ -1,5 +1,6 @@
 import * as chalk from 'chalk';
-import { TaskFunction, parallel, series, task } from 'gulp';
+import type { TaskFunction } from 'gulp';
+import { parallel, series, task } from 'gulp';
 import * as signale from 'signale';
 import type { ResolvedWorkspaceConfig, WorkspaceConfig, WorkspacePackageInfo } from '../config';
 import { loadWorkspaceConfig } from '../config';
