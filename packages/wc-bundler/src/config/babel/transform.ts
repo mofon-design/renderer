@@ -62,7 +62,7 @@ export function transformBabelConfig(): BabelTransformOptions {
         } else if (!config[key]) {
           builtinpreset[key] = undefined;
         } else {
-          if (!isKey.call(builtinpreset, key)) builtinpreset[key] = BuiltinPresetConfig[key];
+          if (builtinpreset[key] === undefined) builtinpreset[key] = BuiltinPresetConfig[key];
           if (typeof config[key] === 'object') Object.assign(builtinpreset[key], config[key]);
         }
       } else if (isKey.call(repeatable, key)) {

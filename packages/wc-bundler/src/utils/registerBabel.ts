@@ -21,7 +21,6 @@ export function registerBabel(options?: TransformOptions): void {
     only: [RegExp(`^${escapeRegExp(root)}`, 'i')],
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   require('@babel/register')(Object.assign(fallback, options, override));
 
   registered = true;

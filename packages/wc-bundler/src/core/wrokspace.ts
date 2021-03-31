@@ -1,10 +1,9 @@
-import * as chalk from 'chalk';
 import type { TaskFunction } from 'gulp';
 import { parallel, series, task } from 'gulp';
 import * as signale from 'signale';
 import type { ResolvedWorkspaceConfig, WorkspaceConfig, WorkspacePackageInfo } from '../config';
 import { loadWorkspaceConfig } from '../config';
-import { allocateColor } from '../utils';
+import { allocateColor, chalk } from '../utils';
 
 export interface WorkspaceTask extends TaskFunction {
   (done: t.ArgsType<TaskFunction>[0], pkg: WorkspacePackageInfo): ReturnType<TaskFunction>;
@@ -12,7 +11,10 @@ export interface WorkspaceTask extends TaskFunction {
 
 export type WorkspaceTasks = WorkspaceTask | string | (WorkspaceTask | string)[];
 
-export function workspace(config: WorkspaceConfig, tasks: WorkspaceTasks): TaskFunction {
+export function workspace(
+  config: WorkspaceConfig | undefined,
+  tasks: WorkspaceTasks,
+): TaskFunction {
   tasks = [tasks].flat(1);
   const combined =
     tasks.length === 1 ? (typeof tasks[0] === 'string' ? task(tasks[0]) : tasks[0]) : series(tasks);

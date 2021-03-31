@@ -45,7 +45,7 @@ export function BabelTransformer(
   if (env.DEBUG) signale.debug(`[babel] Transforming (${chunk.path})`);
   transform(
     chunk.contents.toString(encode),
-    { ...options, filename: chunk.path },
+    Object.assign({}, options, { filename: chunk.path }),
     babelTransformCallback,
   );
 

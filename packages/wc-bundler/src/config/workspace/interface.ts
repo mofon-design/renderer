@@ -37,3 +37,7 @@ export interface WorkspacePackageInfo {
 export type ResolvedWorkspaceConfig =
   | ['series' | 'parallel', ResolvedWorkspaceConfig[]]
   | WorkspacePackageInfo;
+
+export function DefaultWorkspaceConfig(): WorkspaceConfig {
+  return {};
+}

@@ -1,6 +1,6 @@
 {
   "root": true,
-  "parser": "babel-eslint-parser",
+  "parser": "@babel/eslint-parser",
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "plugins": ["import", "prettier"],
   "parserOptions": {
@@ -55,7 +55,8 @@
       "rules": {
         "global-require": "off",
         "no-console": "off",
-        "import/no-dynamic-require": "off"
+        "import/no-dynamic-require": "off",
+        "@typescript-eslint/no-var-requires": "off"
       }
     },
     {

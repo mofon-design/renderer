@@ -1,10 +1,11 @@
 import { sync as globSync } from 'glob';
 import { basename, join, resolve } from 'path';
-import { loadModuleByBabel, slash } from '../../utils';
+import { asArray, loadModuleByBabel, slash } from '../../utils';
 import type { ResolvedWorkspaceConfig, WorkspaceConfig, WorkspacePackageInfo } from './interface';
+import { DefaultWorkspaceConfig } from './interface';
 
 export function loadWorkspaceConfig(
-  config: t.Readonly<WorkspaceConfig> = {},
+  config: t.Readonly<WorkspaceConfig> = DefaultWorkspaceConfig(),
 ): ResolvedWorkspaceConfig {
   const ptnsets: (readonly string[])[] = [];
 
@@ -95,8 +96,4 @@ export function loadWorkspaceConfig(
 
 function transformPathNameMap(map: Map<string, string>): WorkspacePackageInfo[] {
   return Array.from(map).map((entry) => ({ abspath: entry[0], name: entry[1] }));
-}
-
-function asArray(pattern: string | readonly string[]): readonly string[] {
-  return Array.isArray(pattern) ? pattern : [pattern];
 }
