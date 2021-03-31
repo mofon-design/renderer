@@ -1,7 +1,7 @@
 import { sync as globSync } from 'glob';
 import { basename, join, resolve } from 'path';
 import { loadModuleByBabel, slash } from '../../utils';
-import type { ResolvedWorkspaceConfig, WorkspaceConfig } from './interface';
+import type { ResolvedWorkspaceConfig, WorkspaceConfig, WorkspacePackageInfo } from './interface';
 
 export function loadWorkspaceConfig(
   config: t.Readonly<WorkspaceConfig> = {},
@@ -26,7 +26,7 @@ export function loadWorkspaceConfig(
     }
   }
 
-  let pathset: Set<string> | undefined;
+  const pathset = new Set([process.cwd()]);
 
   for (const patterns of ptnsets) {
     const paths = patterns.reduce<string[]>((paths, pattern) => {
@@ -35,17 +35,10 @@ export function loadWorkspaceConfig(
       return paths.concat(globSync(pattern, { absolute: true, ignore: config.ignore }));
     }, []);
 
-    if (!pathset) {
-      pathset = new Set(paths);
-      continue;
-    }
-
     const omit = new Set(pathset);
     paths.forEach((p) => omit.delete(p));
     omit.forEach((p) => (pathset as Set<string>).delete(p));
   }
-
-  if (!pathset) return [];
 
   const pathNameMap = new Map<string, string>();
   const namePathMap = new Map<string, Set<string>>();
@@ -58,18 +51,28 @@ export function loadWorkspaceConfig(
     namePathMap.set(name, (namePathMap.get(name) || new Set()).add(abspath));
   }
 
-  const pkgs: ResolvedWorkspaceConfig = [];
+  if (!pathNameMap.size) throw new Error(`Workspace empty (${process.cwd()})`);
 
-  for (const pattern of asArray(config.top ?? [])) {
+  if (pathNameMap.size === 1) return transformPathNameMap(pathNameMap)[0];
+
+  if (!Array.isArray(config.series)) {
+    return [config.series ? 'series' : 'parallel', transformPathNameMap(pathNameMap)];
+  }
+
+  const series: ResolvedWorkspaceConfig[] = [];
+
+  for (const pattern of config.series) {
     const abspaths = namePathMap.get(pattern);
 
     if (abspaths !== undefined) {
       namePathMap.delete(pattern);
       abspaths.forEach((abspath) => {
         pathNameMap.delete(abspath);
-        pkgs.push({ abspath, name: pattern });
+        series.push({ abspath, name: pattern });
       });
     } else {
+      const pkgs: WorkspacePackageInfo[] = [];
+
       globSync(pattern, { absolute: true, ignore: config.ignore }).forEach((abspath) => {
         const name = pathNameMap.get(abspath);
         if (name === undefined) return;
@@ -77,14 +80,20 @@ export function loadWorkspaceConfig(
         namePathMap.get(name)?.delete(abspath);
         pkgs.push({ abspath, name });
       });
+
+      if (pkgs.length) {
+        series.push(pkgs.length === 1 ? pkgs[0] : ['parallel', pkgs]);
+      }
     }
   }
 
-  for (const [abspath, name] of pathNameMap) {
-    pkgs.push({ abspath, name });
-  }
+  series.push(['parallel', transformPathNameMap(pathNameMap)]);
 
-  return pkgs;
+  return ['series', series];
+}
+
+function transformPathNameMap(map: Map<string, string>): WorkspacePackageInfo[] {
+  return Array.from(map).map((entry) => ({ abspath: entry[0], name: entry[1] }));
 }
 
 function asArray(pattern: string | readonly string[]): readonly string[] {

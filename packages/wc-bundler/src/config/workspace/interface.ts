@@ -22,8 +22,18 @@ export interface WorkspaceConfig {
   packages?: string | string[];
   /**
    * Bring the packages under the specified name or path to the top, and ensure their order.
+   * Glob patterns are supported. Set to `false` will exec tasks in parallel.
+   *
+   * @default false
    */
-  top?: string[];
+  series?: string[] | boolean;
 }
 
-export type ResolvedWorkspaceConfig = { abspath: string; name: string }[];
+export interface WorkspacePackageInfo {
+  abspath: string;
+  name: string;
+}
+
+export type ResolvedWorkspaceConfig =
+  | ['series' | 'parallel', ResolvedWorkspaceConfig[]]
+  | WorkspacePackageInfo;

@@ -324,7 +324,7 @@ export interface BabelConfig extends Omit<BabelTransformOptions, 'env'>, Builtin
    *
    * @default false
    */
-  babelrc: boolean | null;
+  babelrc?: boolean | null;
   /**
    * The config file to load Babel's config from.
    * `false` will disable searching for config files.

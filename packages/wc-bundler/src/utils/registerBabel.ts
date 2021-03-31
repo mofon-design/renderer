@@ -9,6 +9,11 @@ let registered = false;
 export function registerBabel(options?: TransformOptions): void {
   if (registered) return;
 
+  const fallback = transformBabelConfig({
+    env: { targets: { node: process.version } },
+    typescript: true,
+  });
+
   const override = {
     cache: !env.DISABLE_CLI_RUNTIME_CACHE,
     extensions: ['.tsx', '.ts', '.jsx', '.mjs', '.es'],
@@ -17,13 +22,7 @@ export function registerBabel(options?: TransformOptions): void {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  require('@babel/register')(
-    Object.assign(
-      transformBabelConfig({ env: { modules: 'commonjs' }, typescript: true }),
-      options,
-      override,
-    ),
-  );
+  require('@babel/register')(Object.assign(fallback, options, override));
 
   registered = true;
 }
