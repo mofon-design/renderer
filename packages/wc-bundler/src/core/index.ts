@@ -6,6 +6,7 @@ import { loadCoreConfig } from '../config';
 import { env } from '../utils';
 import { cjs } from './cjs';
 import { esm } from './esm';
+import { umd } from './umd';
 import { workspace } from './wrokspace';
 
 export function core(config: t.Readonly<CoreConfig> = {}): TaskFunction {
@@ -16,6 +17,7 @@ export function core(config: t.Readonly<CoreConfig> = {}): TaskFunction {
 
     if (resolved.cjs) tasks.push(cjs(resolved.cjs));
     if (resolved.esm) tasks.push(esm(resolved.esm));
+    if (resolved.umd) tasks.push(umd(resolved.umd));
 
     if (resolved.workspace) {
       return workspace(resolved.workspace, tasks).apply(null, arguments as never);

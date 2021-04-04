@@ -3,6 +3,7 @@ import type { CommonJSModuleConfig } from '../cjs';
 import { DefaultCommonJSModuleConfig } from '../cjs';
 import type { ECMAScriptModuleConfig } from '../esm';
 import { DefaultECMAScriptModuleConfig } from '../esm';
+import type { UMDModuleConfig } from '../umd';
 import type { WorkspaceConfig } from '../workspace';
 import { DefaultWorkspaceConfig } from '../workspace';
 
@@ -59,6 +60,10 @@ export interface CoreTaskConfig {
    * Enable ECMAScript module output.
    */
   esm?: boolean | ECMAScriptModuleConfig;
+  /**
+   * Enable UMD module output.
+   */
+  umd?: boolean | UMDModuleConfig;
 }
 
 export type ResolvedCoreTaskConfig = {
@@ -72,6 +77,9 @@ export const DefaultCoreTaskConfigMap: Required<ResolvedCoreTaskConfig> = {
   get esm() {
     return DefaultECMAScriptModuleConfig();
   },
+  get umd() {
+    return {};
+  },
 };
 
 export interface CoreConfig extends CoreGroupedConfig, CoreSharedConfig, CoreTaskConfig {}
@@ -82,10 +90,5 @@ export interface ResolvedCoreConfig
     ResolvedCoreTaskConfig {}
 
 export function DefaultCoreConfig(): ResolvedCoreConfig {
-  return Object.assign(
-    {},
-    DefaultCoreGroupedConfigMap,
-    DefaultCoreSharedConfigMap,
-    DefaultCoreTaskConfigMap,
-  );
+  return Object.assign({}, DefaultCoreGroupedConfigMap, DefaultCoreSharedConfigMap);
 }

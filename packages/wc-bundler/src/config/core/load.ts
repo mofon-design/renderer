@@ -23,7 +23,7 @@ export function loadCoreConfig(): ResolvedCoreConfig {
         if (config[key] === undefined) {
           // ignore void config
         } else if (!config[key]) {
-          merged[key] === undefined;
+          merged[key] = undefined;
         } else {
           if (merged[key] === undefined) merged[key] = DefaultCoreGroupedConfigMap[key];
           if (typeof config[key] === 'object') Object.assign(merged[key], config[key]);
@@ -32,7 +32,7 @@ export function loadCoreConfig(): ResolvedCoreConfig {
         if (config[key] === undefined) {
           // ignore void config
         } else if (!config[key]) {
-          merged[key] === undefined;
+          merged[key] = undefined;
         } else {
           if (merged[key] === undefined) merged[key] = DefaultCoreTaskConfigMap[key];
           if (typeof config[key] === 'object') {
