@@ -38,8 +38,8 @@ const BuiltinRollupPluginConfigGetters: Required<ResolvedBuiltinRollupPluginsCon
   },
 };
 
-export function loadRollupConfig(configs: t.Readonly<RollupConfig>[]): RollupOptions;
-export function loadRollupConfig(...configs: t.Readonly<RollupConfig>[]): RollupOptions;
+export function loadRollupConfig(configs: t.Readonly<RollupConfig[]>): RollupOptions;
+export function loadRollupConfig(...configs: t.Readonly<RollupConfig[]>): RollupOptions;
 export function loadRollupConfig(): RollupOptions {
   const merged: RollupOptions = {};
   const plugins: RollupPlugin[] = [];
