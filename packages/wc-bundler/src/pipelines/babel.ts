@@ -22,7 +22,6 @@ export function createBabelPipeline(): BabelPipelineTransform {
   const tranform = obj(proxyBabelTransformer as TransformFunction) as BabelPipelineTransform;
   defineLazyLoadProperty(tranform, BabelPipelineTransformOptionsSymbol, () => {
     const resolved = loadBabelConfig.apply(null, args);
-    if (env.DEBUG) signale.debug('Resolved babel config: ', resolved);
     return resolved;
   });
   return tranform;

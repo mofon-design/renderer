@@ -14,7 +14,7 @@ import {
 
 const isKey = Object.prototype.hasOwnProperty as t.Object.prototype.hasOwnProperty;
 
-const BuiltinPresetConfig: Required<ResolvedBuiltinBabelPresetsConfig> = {
+const BuiltinPresetConfigGetters: Required<ResolvedBuiltinBabelPresetsConfig> = {
   get env() {
     return DefaultBabelEnvConfig();
   },
@@ -55,14 +55,15 @@ export function transformBabelConfig(): BabelTransformOptions {
     for (const key in config) {
       if (!isKey.call(config, key)) continue;
 
-      if (isKey.call(BuiltinPresetConfig, key)) {
+      if (isKey.call(BuiltinPresetConfigGetters, key)) {
         if (config[key] === undefined) {
           // ignore void preset config
           // e.g. typescript: if !detectFile('tsconfig.json') then undefined
         } else if (!config[key]) {
           builtinpreset[key] = undefined;
         } else {
-          if (builtinpreset[key] === undefined) builtinpreset[key] = BuiltinPresetConfig[key];
+          if (builtinpreset[key] === undefined)
+            builtinpreset[key] = BuiltinPresetConfigGetters[key];
           if (typeof config[key] === 'object') Object.assign(builtinpreset[key], config[key]);
         }
       } else if (isKey.call(repeatable, key)) {
