@@ -37,6 +37,9 @@ export function loadUMDModuleConfig(
     babel.unshift({ env: { useBuiltIns: 'entry' } });
     merged.rollup.babel = loadBabelConfig(babel) as RollupBabelConfig;
 
+    if (merged.rollup.babel.babelHelpers === undefined)
+      merged.rollup.babel.babelHelpers = 'bundled';
+
     if (typeof config.rollupBabel === 'object')
       Object.assign(merged.rollup.babel, config.rollupBabel);
 
