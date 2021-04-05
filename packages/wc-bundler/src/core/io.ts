@@ -9,10 +9,10 @@ export function withIO(
 ): TaskFunction {
   const ref = defineLazyLoadProperty({}, 'config', () => loadBundleIOConfig(config));
   return series(
-    function clean() {
+    function cleanTask() {
       return del(ref.config.outdir);
     },
-    function io() {
+    function ioTask() {
       const enablePlumber = !env.DEBUG;
       let stream = src(ref.config.entry);
       if (enablePlumber) stream = stream.pipe(plumber(onerror));

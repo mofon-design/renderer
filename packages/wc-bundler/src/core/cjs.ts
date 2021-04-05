@@ -7,7 +7,7 @@ import { asArray } from '../utils';
 import { withIO } from './io';
 
 export function cjs(config?: t.Readonly<CommonJSModuleConfig>): TaskFunction {
-  return withIO(config, function cjs(upstream) {
+  return withIO(config, function cjsTask(upstream) {
     const resolved = loadCommonJSModuleConfig(config);
     const babelConfigs = resolved.babel ? asArray(resolved.babel) : [];
     babelConfigs.push({ env: { modules: 'cjs' } });

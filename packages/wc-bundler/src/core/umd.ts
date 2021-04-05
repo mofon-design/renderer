@@ -6,7 +6,7 @@ import { loadUMDModuleConfig } from '../config';
 import { env } from '../utils';
 
 export function umd(config?: t.Readonly<UMDModuleConfig>): TaskFunction {
-  return async function umd() {
+  return async function umdTask() {
     signale.start('Transform to UMD module');
     const resolved = loadUMDModuleConfig(config);
     if (env.DEBUG) signale.debug(resolved);

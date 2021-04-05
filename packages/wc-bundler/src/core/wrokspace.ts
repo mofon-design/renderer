@@ -12,7 +12,7 @@ export interface WorkspaceTask extends TaskFunction {
 export type WorkspaceTasks = WorkspaceTask | string | (WorkspaceTask | string)[];
 
 export function workspace(
-  config: WorkspaceConfig | undefined,
+  config: t.Readonly<WorkspaceConfig> | undefined,
   tasks: WorkspaceTasks,
 ): TaskFunction {
   tasks = [tasks].flat(1);
