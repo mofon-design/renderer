@@ -1,5 +1,20 @@
 {
   "name": "types-lib",
   "version": "0.0.1-alpha.1",
-  "typings": "index.d.ts"
+  "author": "imhele <work@imhele.com>",
+  "license": "MIT",
+  "typings": "index.d.ts",
+  "sideEffects": false,
+  "bugs": {
+    "url": "https://github.com/mofon-design/renderer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mofon-design/renderer.git",
+    "directory": "packages/types-lib"
+  },
+  "keywords": [
+    "types",
+    "lib"
+  ]
 }

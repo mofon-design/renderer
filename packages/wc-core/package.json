@@ -5,19 +5,12 @@
   "author": "imhele <work@imhele.com>",
   "license": "MIT",
   "main": "index.umd.js",
-  "esnext": "es/index.js",
+  "module": "es/index.js",
   "types": "src/index.ts",
   "sideEffects": false,
   "dependencies": {
     "@babel/runtime": "7.13.10"
   },
-  "files": [
-    "es",
-    "src",
-    "typings.d.ts",
-    "index.umd.js",
-    "index.umd.min.js"
-  ],
   "bugs": {
     "url": "https://github.com/mofon-design/renderer/issues"
   },
