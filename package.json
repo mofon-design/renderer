@@ -6,16 +6,15 @@
   "license": "MIT",
   "scripts": {
     "publish": "lerna publish",
-    "postinstall": "babel-node scripts/postinstall.mjs"
+    "postinstall": "node scripts/postinstall/index.js"
   },
   "gitHooks": {
     "pre-commit": "lint-staged",
-    "commit-msg": "babel-node scripts/verifyCommit.mjs"
+    "commit-msg": "node scripts/verifyCommit.mjs"
   },
   "devDependencies": {
     "@babel/core": "7.13.10",
     "@babel/eslint-parser": "^7.13.14",
-    "@babel/node": "7.13.12",
     "@babel/plugin-proposal-class-properties": "7.13.0",
     "@babel/plugin-proposal-class-static-block": "7.13.11",
     "@babel/plugin-proposal-decorators": "7.13.5",

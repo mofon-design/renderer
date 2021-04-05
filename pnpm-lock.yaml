@@ -3,7 +3,6 @@ importers:
     devDependencies:
       '@babel/core': 7.13.10
       '@babel/eslint-parser': 7.13.14_034a79b673b214252be02f5b7224dec9
-      '@babel/node': 7.13.12_@babel+core@7.13.10
       '@babel/plugin-proposal-class-properties': 7.13.0_@babel+core@7.13.10
       '@babel/plugin-proposal-class-static-block': 7.13.11_@babel+core@7.13.10
       '@babel/plugin-proposal-decorators': 7.13.5_@babel+core@7.13.10
@@ -38,7 +37,6 @@ importers:
     specifiers:
       '@babel/core': 7.13.10
       '@babel/eslint-parser': ^7.13.14
-      '@babel/node': 7.13.12
       '@babel/plugin-proposal-class-properties': 7.13.0
       '@babel/plugin-proposal-class-static-block': 7.13.11
       '@babel/plugin-proposal-decorators': 7.13.5
@@ -472,21 +470,6 @@ packages:
       js-tokens: 4.0.0
     resolution:
       integrity: sha512-5aPpe5XQPzflQrFwL1/QoeHkP2MsA4JCntcXHRhEsdsfPVkvPi2w7Qix4iV7t5S/oC9OodGrggd8aco1g3SZFg==
-  /@babel/node/7.13.12_@babel+core@7.13.10:
-    dependencies:
-      '@babel/core': 7.13.10
-      '@babel/register': 7.13.8_@babel+core@7.13.10
-      commander: 4.1.1
-      core-js: 3.9.1
-      node-environment-flags: 1.0.6
-      regenerator-runtime: 0.13.7
-      v8flags: 3.2.0
-    dev: true
-    hasBin: true
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    resolution:
-      integrity: sha512-5+7atyeHEXNz795xEquNRNBXTb9a1Kr6nrvnKWhG0d8Q9BseNCj9dacqSSCN1fI/JUpkRZQBfsmUBR2NX98s1g==
   /@babel/parser/7.13.12:
     engines:
       node: '>=6.0.0'
@@ -1247,6 +1230,7 @@ packages:
       make-dir: 2.1.0
       pirates: 4.0.1
       source-map-support: 0.5.19
+    dev: false
     peerDependencies:
       '@babel/core': ^7.0.0-0
     resolution:
@@ -4207,12 +4191,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
-  /commander/4.1.1:
-    dev: true
-    engines:
-      node: '>= 6'
-    resolution:
-      integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==
   /commander/6.2.1:
     dev: true
     engines:
@@ -4220,6 +4198,7 @@ packages:
     resolution:
       integrity: sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==
   /commondir/1.0.1:
+    dev: false
     resolution:
       integrity: sha1-3dgA2gxmEnOTzKWVDqloo6rxJTs=
   /compare-func/2.0.0:
@@ -4405,11 +4384,6 @@ packages:
       semver: 7.0.0
     resolution:
       integrity: sha512-jXAirMQxrkbiiLsCx9bQPJFA6llDadKMpYrBJQJ3/c4/vsPP/fAf29h24tviRlvwUL6AmY5CHLu2GvjuYviQqA==
-  /core-js/3.9.1:
-    dev: true
-    requiresBuild: true
-    resolution:
-      integrity: sha512-gSjRvzkxQc1zjM/5paAmL4idJBFzuJoo+jDjF1tStYFMV2ERfD02HhahhCGXUyHxQRG4yFKVSdO6g62eoRMcDg==
   /core-util-is/1.0.2:
     resolution:
       integrity: sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
@@ -5450,6 +5424,7 @@ packages:
       commondir: 1.0.1
       make-dir: 2.1.0
       pkg-dir: 3.0.0
+    dev: false
     engines:
       node: '>=6'
     resolution:
@@ -5472,6 +5447,7 @@ packages:
   /find-up/3.0.0:
     dependencies:
       locate-path: 3.0.0
+    dev: false
     engines:
       node: '>=6'
     resolution:
@@ -6143,6 +6119,7 @@ packages:
   /homedir-polyfill/1.0.3:
     dependencies:
       parse-passwd: 1.0.0
+    dev: false
     engines:
       node: '>=0.10.0'
     resolution:
@@ -7678,6 +7655,7 @@ packages:
     dependencies:
       p-locate: 3.0.0
       path-exists: 3.0.0
+    dev: false
     engines:
       node: '>=6'
     resolution:
@@ -8184,13 +8162,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
-  /node-environment-flags/1.0.6:
-    dependencies:
-      object.getownpropertydescriptors: 2.1.2
-      semver: 5.7.1
-    dev: true
-    resolution:
-      integrity: sha512-5Evy2epuL+6TM0lCQGpFIj6KwiEsGh1SrHUhTbNX+sLbBtjidPZFAnVK9y5yU1+h//RitLbRHTIMyxQPtxMdHw==
   /node-fetch/2.6.1:
     dev: true
     engines:
@@ -8663,6 +8634,7 @@ packages:
   /p-locate/3.0.0:
     dependencies:
       p-limit: 2.3.0
+    dev: false
     engines:
       node: '>=6'
     resolution:
@@ -8828,6 +8800,7 @@ packages:
     resolution:
       integrity: sha512-3YHlOa/JgH6Mnpr05jP9eDG254US9ek25LyIxZlDItp2iJtwyaXQb57lBYLdT3MowkUFYEV2XXNAYIPlESvJlA==
   /parse-passwd/1.0.0:
+    dev: false
     engines:
       node: '>=0.10.0'
     resolution:
@@ -9014,6 +8987,7 @@ packages:
   /pkg-dir/3.0.0:
     dependencies:
       find-up: 3.0.0
+    dev: false
     engines:
       node: '>=6'
     resolution:
@@ -11052,6 +11026,7 @@ packages:
   /v8flags/3.2.0:
     dependencies:
       homedir-polyfill: 1.0.3
+    dev: false
     engines:
       node: '>= 0.10'
     resolution:
