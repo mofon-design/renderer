@@ -1,7 +1,9 @@
-import type { RollupOptions, Plugin as RollupPlugin } from 'rollup';
+import type { Plugin as RollupPlugin } from 'rollup';
 import { asArray, iterargs } from '../../utils';
 import {
   DefaultRollupBabelConfig,
+  DefaultRollupConfig,
+  ResolvedRollupConfig,
   ResolvedBuiltinRollupPluginsConfig,
   RollupConfig,
 } from './interface';
@@ -38,11 +40,11 @@ const BuiltinRollupPluginConfigGetters: Required<ResolvedBuiltinRollupPluginsCon
   },
 };
 
-export function loadRollupConfig(configs: t.Readonly<RollupConfig[]>): RollupOptions;
-export function loadRollupConfig(...configs: t.Readonly<RollupConfig[]>): RollupOptions;
-export function loadRollupConfig(): RollupOptions {
-  const merged: RollupOptions = {};
+export function loadRollupConfig(configs: t.Readonly<RollupConfig[]>): ResolvedRollupConfig;
+export function loadRollupConfig(...configs: t.Readonly<RollupConfig[]>): ResolvedRollupConfig;
+export function loadRollupConfig(): ResolvedRollupConfig {
   const plugins: RollupPlugin[] = [];
+  const merged: ResolvedRollupConfig = DefaultRollupConfig();
   const builtinplugins = DefaultBuiltinRollupPluginsConfig();
 
   for (const config of iterargs<t.Readonly<RollupConfig>>(arguments)) {
@@ -60,9 +62,12 @@ export function loadRollupConfig(): RollupOptions {
           if (typeof config[key] === 'object') Object.assign(builtinplugins[key], config[key]);
         }
       } else if (key === 'plugins') {
-        plugins.push.apply(plugins, asArray(config[key] || []) as RollupPlugin[]);
+        plugins.push.apply(plugins, asArray(config.plugins || []) as RollupPlugin[]);
+      } else if (key === 'output') {
+        if (config.output && merged.output) Object.assign(merged.output, config.output);
+        else merged.output = config.output as NonNullable<RollupConfig['output']>;
       } else {
-        (merged as t.UnknownRecord)[key] = config[key];
+        (merged as t.AnyRecord)[key] = config[key];
       }
     }
   }

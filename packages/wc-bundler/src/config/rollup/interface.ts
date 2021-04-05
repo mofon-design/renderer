@@ -8,10 +8,16 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import url from '@rollup/plugin-url';
-import type { RollupOptions, Plugin as RollupPlugin } from 'rollup';
+import { resolve } from 'path';
+import type {
+  RollupOptions,
+  OutputOptions as RollupOutputOptions,
+  Plugin as RollupPlugin,
+} from 'rollup';
+import * as signale from 'signale';
 import type { Options as RollupTerserConfig } from 'rollup-plugin-terser';
 import { terser } from 'rollup-plugin-terser';
-import { env } from '../../utils';
+import { detectFile, env } from '../../utils';
 
 export type RollupCommonJSConfig = typeof cjs extends (options?: infer Options) => unknown
   ? Options
@@ -179,4 +185,36 @@ export const BuiltinRollupPluginsMap: {
   ) => RollupPlugin;
 } = { babel, cjs, json, nodeResolve, terser, url };
 
-export interface RollupConfig extends RollupOptions, BuiltinRollupPluginsConfig {}
+export interface RollupConfig extends RollupOptions, BuiltinRollupPluginsConfig {
+  output?: RollupOutputOptions;
+}
+
+export interface ResolvedRollupConfig
+  extends Required<Pick<RollupOptions, 'input' | 'output'>>,
+    Omit<RollupOptions, 'input' | 'output'> {
+  output: RollupOutputOptions;
+}
+
+const DefaultEntries = [
+  'src/index.tsx',
+  'src/index.ts',
+  'src/index.jsx',
+  'src/index.js',
+  'src/index.mjs',
+];
+
+export function DefaultRollupConfig(): ResolvedRollupConfig {
+  let file = 'index.umd.js';
+
+  try {
+    const main = require(resolve('package.json'))?.main;
+    if (typeof main === 'string' && main) file = main;
+  } catch (error) {
+    if (env.DEBUG) signale.error(error);
+  }
+
+  return {
+    input: DefaultEntries.find((entry) => detectFile(entry)) || 'src/index',
+    output: { file, format: 'umd' },
+  };
+}

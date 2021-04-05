@@ -11,7 +11,7 @@ export function umd(config?: t.Readonly<UMDModuleConfig>): TaskFunction {
     const resolved = loadUMDModuleConfig(config);
     if (env.DEBUG) signale.debug(resolved);
     const bundle = await rollup(resolved);
-    await bundle.write(resolved.output as t.AnyRecord);
+    await bundle.write(resolved.output);
     await bundle.close();
   };
 }

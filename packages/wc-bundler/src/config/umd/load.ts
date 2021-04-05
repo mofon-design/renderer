@@ -1,8 +1,7 @@
-import type { RollupOptions } from 'rollup';
 import { asArray } from '../../utils';
 import { loadBabelConfig } from '../babel';
 import { DefaultCoreSharedConfigMap } from '../core';
-import type { RollupBabelConfig } from '../rollup';
+import type { ResolvedRollupConfig, RollupBabelConfig } from '../rollup';
 import { loadRollupConfig } from '../rollup';
 import type { UMDModuleConfig } from './interface';
 import { DefaultUMDModuleConfig } from './interface';
@@ -12,7 +11,9 @@ const isKey = Object.prototype.hasOwnProperty as t.Object.prototype.hasOwnProper
 const BabelExtensionsWithTypeScriptFiles = ['.js', '.jsx', '.es6', '.es', '.mjs', '.ts', '.tsx'];
 const NodeResolveExtensionsWithTypeScriptFiles = ['.mjs', '.js', '.json', '.node', '.ts', '.tsx'];
 
-export function loadUMDModuleConfig(config: t.Readonly<UMDModuleConfig> = {}): RollupOptions {
+export function loadUMDModuleConfig(
+  config: t.Readonly<UMDModuleConfig> = {},
+): ResolvedRollupConfig {
   const merged = DefaultUMDModuleConfig();
 
   for (const key in config) {
@@ -22,23 +23,18 @@ export function loadUMDModuleConfig(config: t.Readonly<UMDModuleConfig> = {}): R
       if (key !== 'babel') merged[key] = config[key];
     } else if (key === 'rollupBabel') {
       // ignore additional config
-    } else if (key === 'output') {
-      if (config.output && merged.rollup.output) {
-        Object.assign(merged.rollup.output, config.output);
-      } else {
-        merged.rollup.output = config.output as UMDModuleConfig['output'];
-      }
     } else {
-      (merged.rollup as t.UnknownRecord)[key] = config[key];
+      (merged.rollup as t.AnyRecord)[key] = config[key];
     }
   }
 
   if (config.rollupBabel === undefined || config.rollupBabel) {
-    const babel = asArray(config.babel || []);
+    const babel = asArray(config.babel || []).concat();
     const typescript = babel.reduce((prev, curr) => {
       return curr.typescript === undefined ? prev : !!curr.typescript;
     }, false);
 
+    babel.unshift({ env: { useBuiltIns: 'entry' } });
     merged.rollup.babel = loadBabelConfig(babel) as RollupBabelConfig;
 
     if (typeof config.rollupBabel === 'object')
