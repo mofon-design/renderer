@@ -21,7 +21,7 @@
     "plugin"
   ],
   "dependencies": {
-    "babel-prettier-parser": "workspace:*",
+    "babel-prettier-parser": "^0.0.1-alpha.1",
     "jest-docblock": "26.0.0"
   },
   "peerDependencies": {

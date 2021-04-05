@@ -42,7 +42,7 @@
     "lint-staged": "^10.0.8",
     "prettier": "^2.1.0",
     "typescript": "^4.2.3",
-    "wc-bundler": "workspace:*",
+    "wc-bundler": "latest",
     "yorkie": "^2.0.0"
   },
   "lint-staged": {
