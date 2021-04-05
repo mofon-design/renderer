@@ -1,6 +1,6 @@
 {
   "name": "babel-preset-web-component",
-  "version": "0.0.1-alpha.1",
+  "version": "0.2.0-alpha.0",
   "description": "Babel preset for all Web Component plugins",
   "author": "imhele <work@imhele.com>",
   "license": "MIT",

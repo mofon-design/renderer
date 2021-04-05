@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-transform-wc-jsx",
-  "version": "0.0.1-alpha.1",
+  "version": "0.2.0-alpha.0",
   "description": "Turn JSX into Web Component function calls",
   "author": "imhele <work@imhele.com>",
   "license": "MIT",
