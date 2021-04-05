@@ -18,7 +18,6 @@ importers:
       '@types/jest': 26.0.22
       '@typescript-eslint/eslint-plugin': 4.19.0_f26dcf5ec38a04241b14c26bc931244e
       '@typescript-eslint/parser': 4.19.0_eslint@7.22.0+typescript@4.2.3
-      babel-eslint-parser: link:packages/babel-eslint-parser
       chalk: 4.1.0
       eslint: 7.22.0
       eslint-config-prettier: 8.1.0_eslint@7.22.0
@@ -30,7 +29,6 @@ importers:
       lerna: 4.0.0
       lint-staged: 10.5.4
       prettier: 2.2.1
-      prettier-plugin-babel: link:packages/prettier-plugin-babel
       typescript: 4.2.3
       wc-bundler: link:packages/wc-bundler
       yorkie: 2.0.0
@@ -52,7 +50,6 @@ importers:
       '@types/jest': ^26.0.22
       '@typescript-eslint/eslint-plugin': ^4.19.0
       '@typescript-eslint/parser': ^4.19.0
-      babel-eslint-parser: workspace:*
       chalk: ^4.1.0
       eslint: ^7.22.0
       eslint-config-prettier: ^8.1.0
@@ -64,7 +61,6 @@ importers:
       lerna: ^4.0.0
       lint-staged: ^10.0.8
       prettier: ^2.1.0
-      prettier-plugin-babel: workspace:*
       typescript: ^4.2.3
       wc-bundler: workspace:*
       yorkie: ^2.0.0
