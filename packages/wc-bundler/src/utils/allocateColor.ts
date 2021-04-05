@@ -1,4 +1,5 @@
 import type { Chalk } from 'chalk';
+import { CLIRuntimeCache } from './CLIRuntimeCache';
 
 type ChalkColors = {
   [Key in keyof Chalk]: Chalk[Key] extends Chalk ? Key : never;
@@ -20,24 +21,23 @@ const AvailableColors: ChalkColors[] = [
   'cyanBright',
 ];
 
-export function allocateColor(token: string): ChalkColors {
-  let color = allocateColor.allocatedMap.get(token);
-
-  if (color === undefined) {
-    if (allocateColor.allocatedMap.size > allocateColor.maxsize) {
-      allocateColor.allocatedMap.forEach((_value, key) => {
-        if (Math.random() > 0.8) allocateColor.allocatedMap.delete(key);
-      });
+const cache = new CLIRuntimeCache(new Map<string, ChalkColors>(), function flush(filter) {
+  this.value.forEach((value, key) => {
+    if (filter()) {
+      this.value.delete(key);
+      this.used -= value.length + key.length;
     }
+  });
+});
 
-    color = allocateColor.availableColors.shift() ?? AvailableColors[0];
-    allocateColor.availableColors.push(color);
-    allocateColor.allocatedMap.set(token, color);
-  }
+export function allocateColor(token: string): ChalkColors {
+  const allocated = cache.value.get(token);
+  if (allocated !== undefined) return allocated;
 
-  return color;
+  const next = allocateColor.availableColors.shift() || AvailableColors[0];
+  allocateColor.availableColors.push(next);
+  if (cache.use(token.length + next.length)) cache.value.set(token, next);
+  return next;
 }
 
-allocateColor.maxsize = 1000 * 1000;
 allocateColor.availableColors = AvailableColors.concat();
-allocateColor.allocatedMap = new Map<string, ChalkColors>(null);

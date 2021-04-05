@@ -1,23 +1,57 @@
-import type { PathLike } from 'fs';
 import { stat, statSync } from 'fs';
+import { resolve } from 'path';
+import { CLIRuntimeCache } from './CLIRuntimeCache';
 
-export function detectFile(path: PathLike): boolean;
-export function detectFile(path: PathLike, sync: false): Promise<boolean>;
-export function detectFile(path: PathLike, sync = true): boolean | Promise<boolean> {
+const cache = new CLIRuntimeCache(new Map<string, boolean>(), function flush(filter) {
+  this.value.forEach((_value, key) => {
+    if (filter()) {
+      this.value.delete(key);
+      this.used -= key.length;
+    }
+  });
+});
+
+export function detectFile(path: string): boolean;
+export function detectFile(path: string, sync: false): Promise<boolean>;
+export function detectFile(path: string, sync = true): boolean | Promise<boolean> {
+  path = resolve(path);
+
   if (sync) {
+    if (cache.value.has(path)) {
+      return cache.value.get(path) || false;
+    }
+
+    let isFile = false;
     try {
-      return statSync(path).isFile();
+      isFile = statSync(path).isFile();
     } catch {}
-    return false;
+
+    if (cache.use(path.length)) {
+      cache.value.set(path, isFile);
+    }
+
+    return isFile;
+  }
+
+  if (cache.value.has(path)) {
+    return Promise.resolve(cache.value.get(path) || false);
   }
 
   return new Promise<boolean>((resolve) => {
     stat(path, function statCallback(error, stats) {
-      if (error) return resolve(false);
-      try {
-        return resolve(stats.isFile());
-      } catch {}
-      resolve(false);
+      let isFile = false;
+
+      if (!error) {
+        try {
+          isFile = stats.isFile();
+        } catch {}
+      }
+
+      if (cache.use(path.length)) {
+        cache.value.set(path, isFile);
+      }
+
+      resolve(isFile);
     });
   });
 }
