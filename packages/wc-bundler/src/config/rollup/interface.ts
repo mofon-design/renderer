@@ -8,16 +8,17 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import url from '@rollup/plugin-url';
-import { resolve } from 'path';
+import { basename, resolve } from 'path';
 import type {
   RollupOptions,
+  InputOption as RollupInputOptions,
   OutputOptions as RollupOutputOptions,
   Plugin as RollupPlugin,
 } from 'rollup';
 import * as signale from 'signale';
 import type { Options as RollupTerserConfig } from 'rollup-plugin-terser';
 import { terser } from 'rollup-plugin-terser';
-import { detectFile, env } from '../../utils';
+import { detectFile, env, pascalCase } from '../../utils';
 
 export type RollupCommonJSConfig = typeof cjs extends (options?: infer Options) => unknown
   ? Options
@@ -186,12 +187,27 @@ export const BuiltinRollupPluginsMap: {
 } = { babel, cjs, json, nodeResolve, terser, url };
 
 export interface RollupConfig extends RollupOptions, BuiltinRollupPluginsConfig {
+  input?: RollupInputOptions;
   output?: RollupOutputOptions;
 }
 
-export interface ResolvedRollupConfig
-  extends Required<Pick<RollupOptions, 'input' | 'output'>>,
-    Omit<RollupOptions, 'input' | 'output'> {
+export interface ResolvedRollupConfig extends Omit<RollupOptions, 'input' | 'output'> {
+  /**
+   * Specify entry file.
+   *
+   * @default
+   * 'src/index.{tsx,ts,jsx,js,mjs}'
+   */
+  input: RollupInputOptions;
+  /**
+   * Specify output options.
+   *
+   * @default
+   * const { main } = require('package.json');
+   * const base = basename(main || '').split('.').find((f) => f.length > 0);
+   * const name = base && /[^a-z_]/i.test(base) ? PascalCase(base) : base?.toUpperCase();
+   * const output = { file: main || 'index.umd.js', format: 'umd', name };
+   */
   output: RollupOutputOptions;
 }
 
@@ -205,16 +221,27 @@ const DefaultEntries = [
 
 export function DefaultRollupConfig(): ResolvedRollupConfig {
   let file = 'index.umd.js';
+  let name: string | undefined;
 
   try {
-    const main = require(resolve('package.json'))?.main;
-    if (typeof main === 'string' && main) file = main;
+    const pkg: t.UnknownRecord | null = require(resolve('package.json'));
+
+    if (typeof pkg === 'object' && pkg) {
+      if (typeof pkg.main === 'string' && pkg.main) {
+        const base = basename(pkg.main)
+          .split('.')
+          .find((fragment) => fragment.length > 0);
+
+        file = pkg.main;
+        name = base && /[^a-z_]/i.test(base) ? pascalCase(base) : base?.toUpperCase();
+      }
+    }
   } catch (error) {
     if (env.DEBUG) signale.error(error);
   }
 
   return {
     input: DefaultEntries.find((entry) => detectFile(entry)) || 'src/index',
-    output: { file, format: 'umd' },
+    output: { file, format: 'umd', name },
   };
 }

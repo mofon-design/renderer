@@ -154,6 +154,8 @@ importers:
       gulp: 4.0.2
       gulp-if: 3.0.0
       gulp-plumber: 1.2.1
+      lodash.upperfirst: 4.3.1
+      lodash.words: 4.2.0
       prettier: 2.2.1
       rollup: 2.44.0
       rollup-plugin-terser: 7.0.2_rollup@2.44.0
@@ -167,7 +169,8 @@ importers:
       '@types/babel__preset-env': 7.9.1
       '@types/gulp': 4.0.8
       '@types/gulp-plumber': 0.0.32
-      '@types/lodash.escaperegexp': 4.1.6
+      '@types/lodash.upperfirst': 4.3.6
+      '@types/lodash.words': 4.2.6
       '@types/signale': 1.4.1
       '@types/through2': 2.0.36
       '@types/vinyl': 2.0.4
@@ -197,8 +200,9 @@ importers:
       '@types/babel__core': ^7.1.14
       '@types/babel__preset-env': ^7.9.1
       '@types/gulp': ^4.0.8
-      '@types/gulp-plumber': 0.0.32
-      '@types/lodash.escaperegexp': ^4.1.6
+      '@types/gulp-plumber': ^0.0.32
+      '@types/lodash.upperfirst': ^4.3.6
+      '@types/lodash.words': ^4.2.6
       '@types/signale': ^1.4.1
       '@types/through2': ^2.0.36
       '@types/vinyl': ^2.0.4
@@ -209,6 +213,8 @@ importers:
       gulp: 4.0.2
       gulp-if: 3.0.0
       gulp-plumber: 1.2.1
+      lodash.upperfirst: 4.3.1
+      lodash.words: 4.2.0
       prettier: 2.2.1
       rollup: 2.44.0
       rollup-plugin-terser: 7.0.2
@@ -2615,7 +2621,7 @@ packages:
       integrity: sha512-anKkLmZZ+xm4p8JWBf4hElkM4XR+EZeA2M9BAkkTldmcyDY4mbdIJnRghDJH3Ov5ooY7/UAoENtmdMSkaAd7Cw==
   /@types/gulp-plumber/0.0.32:
     dependencies:
-      '@types/node': 14.14.35
+      '@types/node': 14.14.37
     dev: true
     resolution:
       integrity: sha512-upPVrIjFivRIHS80b6ApIYafvyToiH/AoCR1r2b2ObKrbRY8C2bF+vFwQ72lSu6jLnLIKHkmAW5CWPXczUz3Wg==
@@ -2658,12 +2664,18 @@ packages:
     dev: true
     resolution:
       integrity: sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
-  /@types/lodash.escaperegexp/4.1.6:
+  /@types/lodash.upperfirst/4.3.6:
     dependencies:
       '@types/lodash': 4.14.168
     dev: true
     resolution:
-      integrity: sha512-uENiqxLlqh6RzeE1cC6Z2gHqakToN9vKlTVCFkSVjAfeMeh2fY0916tHwJHeeKs28qB/hGYvKuampGYH5QDVCw==
+      integrity: sha512-op4ctKkT1eD/Nt8MCPlN7O2IQrYWIcH1rOPHM86SKzbliLG50eVXM6+qzkdxtBV7DZb3W/1Up2+k43WK9F0Bgg==
+  /@types/lodash.words/4.2.6:
+    dependencies:
+      '@types/lodash': 4.14.168
+    dev: true
+    resolution:
+      integrity: sha512-MWePHiAcHOSGTqETPZmAXCmxzuGMNjqcraczCieGSv1Z1gZrke86gfJ5Mll1jI2/LMlhu1mhulg0/dgH6a/dMg==
   /@types/lodash/4.14.168:
     dev: true
     resolution:
@@ -7696,6 +7708,14 @@ packages:
     dev: true
     resolution:
       integrity: sha512-stgLz+i3Aa9mZgnjr/O+v9ruKZsPsndy7qPZOchbqk2cnTU1ZaldKK+v7m54WoKIyxiuMZTKT2H81F8BeAc3ZQ==
+  /lodash.upperfirst/4.3.1:
+    dev: false
+    resolution:
+      integrity: sha1-E2Xt9DFIBIHvDRxolXpe2Z1J984=
+  /lodash.words/4.2.0:
+    dev: false
+    resolution:
+      integrity: sha1-Xs/q+Oz4rKqODIOGKV8Zk8nPQDY=
   /lodash/4.17.21:
     resolution:
       integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==

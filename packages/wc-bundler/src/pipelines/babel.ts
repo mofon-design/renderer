@@ -52,7 +52,7 @@ export function BabelTransformer(
   );
 
   function babelTransformCallback(error: unknown, result: BabelFileResult | null): void {
-    if (error || !result?.code) {
+    if (error || typeof result?.code !== 'string') {
       signale.error(`Transform failed: ${chunk.path}`);
       if (error) signale.error(error);
       callback(error);

@@ -59,15 +59,16 @@ export interface CoreTaskConfig {
    * Enable CommonJS module output.
    *
    * @default
-   * !/(\.umd\.js|\.mjs)$/.test(require('package.json').main)
+   * const { main, type } = require('package.json');
+   * const cjs = typeof type === 'string' ? type === 'commonjs' : !/(\.umd\.js|\.mjs)$/.test(main);
    */
   cjs?: boolean | CommonJSModuleConfig;
   /**
    * Enable ECMAScript module output.
    *
    * @default
-   * require('package.json').module ||
-   * require('package.json').main.endsWith('.mjs')
+   * const { main, module, type } = require('package.json');
+   * const esm = type === 'module' || typeof module === 'string' || main.endsWith('.mjs');
    */
   esm?: boolean | ECMAScriptModuleConfig;
   /**
@@ -114,14 +115,19 @@ export function DefaultCoreTaskConfig(): ResolvedCoreTaskConfig {
   }
 
   if (pkg) {
-    if (typeof pkg.main === 'string') {
+    if (typeof pkg.type === 'string') {
+      const type = pkg.type.toLowerCase();
+      if (type === 'commonjs') config.cjs = DefaultCoreTaskConfigMap.cjs;
+      else if (type === 'module') config.esm = DefaultCoreTaskConfigMap.esm;
+    } else if (typeof pkg.main === 'string') {
       if (pkg.main.endsWith('.umd.js')) config.umd = DefaultCoreTaskConfigMap.umd;
       else if (pkg.main.endsWith('.mjs')) config.esm = DefaultCoreTaskConfigMap.esm;
       else config.cjs = DefaultCoreTaskConfigMap.cjs;
     }
 
-    if (config.esm === undefined && typeof pkg.module === 'string')
+    if (config.esm === undefined && typeof pkg.module === 'string') {
       config.esm = DefaultCoreTaskConfigMap.esm;
+    }
   }
 
   return config;
