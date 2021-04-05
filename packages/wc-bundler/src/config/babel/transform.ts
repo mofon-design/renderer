@@ -45,7 +45,7 @@ const TransformBuiltinPresetConfig: {
 };
 
 export function transformBabelConfig(configs: t.Readonly<BabelConfig[]>): BabelTransformOptions;
-export function transformBabelConfig(...configs: t.Readonly<BabelConfig[]>): BabelTransformOptions;
+export function transformBabelConfig(...configs: t.Readonly<BabelConfig>[]): BabelTransformOptions;
 export function transformBabelConfig(): BabelTransformOptions {
   const merged: BabelTransformOptions = {};
   const builtinpreset = DefaultBuiltinBabelPresetsConfig();

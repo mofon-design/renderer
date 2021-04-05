@@ -2,6 +2,7 @@ import { resolve } from 'path';
 import * as signale from 'signale';
 import { env } from '../../utils';
 import type { BabelConfig } from '../babel';
+import { DefaultBuiltinBabelPresetsConfig } from '../babel';
 import type { CommonJSModuleConfig } from '../cjs';
 import { DefaultCommonJSModuleConfig } from '../cjs';
 import type { ECMAScriptModuleConfig } from '../esm';
@@ -50,7 +51,7 @@ export type ResolvedCoreSharedConfig = {
 
 export const DefaultCoreSharedConfigMap: ResolvedCoreSharedConfig = {
   get babel() {
-    return [];
+    return [DefaultBuiltinBabelPresetsConfig()];
   },
 };
 

@@ -9,10 +9,9 @@ import {
 
 const isKey = Object.prototype.hasOwnProperty as t.Object.prototype.hasOwnProperty;
 
-export function loadCoreConfig(configs: t.Readonly<CoreConfig>[]): ResolvedCoreConfig;
+export function loadCoreConfig(configs: t.Readonly<CoreConfig[]>): ResolvedCoreConfig;
 export function loadCoreConfig(...configs: t.Readonly<CoreConfig>[]): ResolvedCoreConfig;
 export function loadCoreConfig(): ResolvedCoreConfig {
-  const lazy: (() => void)[] = [];
   const merged = DefaultCoreConfig();
 
   for (const config of iterargs<t.Readonly<CoreConfig>>(arguments)) {
@@ -37,22 +36,17 @@ export function loadCoreConfig(): ResolvedCoreConfig {
           if (merged[key] === undefined) merged[key] = DefaultCoreTaskConfigMap[key];
           if (typeof config[key] === 'object') {
             const source = config[key] as NonNullable<ResolvedCoreTaskConfig[typeof key]>;
+            const target = merged[key] as NonNullable<ResolvedCoreTaskConfig[typeof key]>;
 
             for (const subkey in source) {
               if (!isKey.call(source, subkey)) continue;
+
               if (isKey.call(DefaultCoreSharedConfigMap, subkey)) {
-                if (source[subkey]) {
-                  const ref = asArray(source[subkey] as t.AnyArray);
-                  // lazy merge shared config
-                  lazy.push(() => {
-                    const target = merged[key];
-                    if (target !== undefined) {
-                      target[subkey] = (merged[subkey] as t.AnyArray).concat(ref);
-                    }
-                  });
-                }
+                target[subkey] = ([] as t.AnyArray)
+                  .concat(target[subkey] || [])
+                  .concat(source[subkey] || []);
               } else {
-                (merged[key] as t.UnknownRecord)[subkey] = source[subkey];
+                target[subkey] = source[subkey];
               }
             }
           }
@@ -68,16 +62,14 @@ export function loadCoreConfig(): ResolvedCoreConfig {
     }
   }
 
-  lazy.forEach((effect) => effect());
-
   for (const key in DefaultCoreTaskConfigMap) {
     if (!isKey.call(DefaultCoreTaskConfigMap, key)) continue;
-    const source = merged[key] as t.UnknownRecord | undefined;
-    if (source !== undefined) {
+
+    const target = merged[key] as t.UnknownRecord | undefined;
+    if (target !== undefined) {
       for (const sharedKey in DefaultCoreSharedConfigMap) {
-        if (!isKey.call(DefaultCoreSharedConfigMap, sharedKey)) continue;
-        if (!isKey.call(source, sharedKey) || source[sharedKey] === undefined) {
-          source[sharedKey] = merged[sharedKey].concat();
+        if (isKey.call(DefaultCoreSharedConfigMap, sharedKey)) {
+          target[sharedKey] = (merged[sharedKey] as t.AnyArray).concat(target[sharedKey] || []);
         }
       }
     }

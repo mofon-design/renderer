@@ -5,7 +5,7 @@
   "description": "Web components renderer",
   "license": "MIT",
   "scripts": {
-    "publish": "lerna publish",
+    "publish": "wc-bundler && lerna publish",
     "postinstall": "node scripts/postinstall/index.js"
   },
   "gitHooks": {

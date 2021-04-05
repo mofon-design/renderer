@@ -41,7 +41,7 @@ const BuiltinRollupPluginConfigGetters: Required<ResolvedBuiltinRollupPluginsCon
 };
 
 export function loadRollupConfig(configs: t.Readonly<RollupConfig[]>): ResolvedRollupConfig;
-export function loadRollupConfig(...configs: t.Readonly<RollupConfig[]>): ResolvedRollupConfig;
+export function loadRollupConfig(...configs: t.Readonly<RollupConfig>[]): ResolvedRollupConfig;
 export function loadRollupConfig(): ResolvedRollupConfig {
   const plugins: RollupPlugin[] = [];
   const merged: ResolvedRollupConfig = DefaultRollupConfig();

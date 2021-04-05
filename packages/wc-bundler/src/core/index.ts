@@ -9,18 +9,20 @@ import { esm } from './esm';
 import { umd } from './umd';
 import { workspace } from './wrokspace';
 
-export function core(config: t.Readonly<CoreConfig> = {}): TaskFunction {
-  return function coreTask(done): ReturnType<TaskFunction> {
-    if (config.workspace === undefined || config.workspace) {
-      const task = core({ ...config, workspace: false });
-      const workspaceConfig =
-        typeof config.workspace === 'object' && config.workspace ? config.workspace : undefined;
+export function core(configs: t.Readonly<CoreConfig[]>): TaskFunction;
+export function core(...configs: t.Readonly<CoreConfig>[]): TaskFunction;
+export function core(): TaskFunction {
+  const configs = Array.from(arguments) as t.Readonly<CoreConfig>[];
 
-      return workspace(workspaceConfig, task).apply(null, arguments as never);
+  return function coreTask(done): ReturnType<TaskFunction> {
+    const resolved = loadCoreConfig.apply(null, configs);
+    if (env.DEBUG) signale.debug('Resolved core config: ', resolved);
+
+    if (resolved.workspace) {
+      const task = core(resolved, { workspace: false });
+      return workspace(resolved.workspace, task).apply(null, arguments as never);
     }
 
-    const resolved = loadCoreConfig(config);
-    if (env.DEBUG) signale.debug('Resolved core config: ', resolved);
     const tasks: TaskFunction[] = [];
 
     if (resolved.cjs) tasks.push(cjs(resolved.cjs));
