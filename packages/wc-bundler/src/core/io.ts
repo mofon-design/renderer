@@ -13,11 +13,16 @@ export function withIO(
       return del(ref.config.outdir);
     },
     function io() {
+      const enablePlumber = !env.DEBUG;
       let stream = src(ref.config.entry);
-      if (!env.DEBUG) stream = stream.pipe(plumber());
-      return pipe(stream)
-        .pipe(createExtnamePipeline(ref.config.extname))
-        .pipe(dest(ref.config.outdir));
+      if (enablePlumber) stream = stream.pipe(plumber(onerror));
+      stream = pipe(stream).pipe(createExtnamePipeline(ref.config.extname));
+      if (enablePlumber) stream = stream.pipe(plumber.stop());
+      return stream.pipe(dest(ref.config.outdir));
     },
   );
+}
+
+function onerror() {
+  if (!process.exitCode) process.exitCode = 1;
 }

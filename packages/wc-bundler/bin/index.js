@@ -17,12 +17,15 @@ module.exports = new Promise((resolve, reject) => {
   function done(error) {
     error ? reject(error) : resolve();
   }
+}).catch((error) => {
+  require('signale').error(error);
+  if (!process.exitCode) process.exitCode = 1;
 });
 
 function loadCore() {
-  if (require('fs').existsSync(require('wc-bundler/package.json').main)) {
+  try {
     return require('wc-bundler').core;
-  }
+  } catch {}
 
   require('signale').info(
     '`wc-bundler` has not been built yet, try to load the uncompiled source code...',
