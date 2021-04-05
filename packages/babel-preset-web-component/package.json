@@ -7,11 +7,6 @@
   "main": "index.umd.js",
   "esnext": "es/index.js",
   "types": "src/index.ts",
-  "eslintConfig": {
-    "env": {
-      "node": true
-    }
-  },
   "files": [
     "es",
     "src",

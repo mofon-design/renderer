@@ -46,8 +46,17 @@
     },
     {
       "files": "scripts/**/*",
+      "env": {
+        "node": true
+      },
       "rules": {
         "no-console": "off"
+      }
+    },
+    {
+      "files": "packages/{babel-*,prettier-*,wc-bundler}/**/*",
+      "env": {
+        "node": true
       }
     },
     {
