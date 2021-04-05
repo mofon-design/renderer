@@ -27,8 +27,7 @@ export function loadWorkspaceConfig(
     }
   }
 
-  const cwd = slash(process.cwd());
-  const pathset = new Set([cwd]);
+  let pathset: Set<string> | undefined;
 
   for (const patterns of ptnsets) {
     const paths = patterns.reduce<string[]>((paths, pattern) => {
@@ -37,13 +36,20 @@ export function loadWorkspaceConfig(
       return paths.concat(globSync(pattern, { absolute: true, ignore: config.ignore }));
     }, []);
 
-    const omit = new Set(pathset);
-    paths.forEach((p) => omit.delete(p));
-    omit.forEach((p) => (pathset as Set<string>).delete(p));
+    if (pathset === undefined) {
+      pathset = new Set(paths);
+    } else {
+      const omit = new Set(pathset);
+      for (const abspath of paths) omit.delete(abspath);
+      for (const abspath of omit) pathset.delete(abspath);
+    }
   }
 
+  const cwd = slash(process.cwd());
   const pathNameMap = new Map<string, string>();
   const namePathMap = new Map<string, Set<string>>();
+
+  if (pathset === undefined) pathset = new Set([cwd]);
 
   for (const abspath of pathset) {
     const pkg = loadModuleByBabel(join(abspath, 'package.json')) as t.UnknownRecord;
