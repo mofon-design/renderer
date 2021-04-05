@@ -1,3 +1,6 @@
+import { resolve } from 'path';
+import * as signale from 'signale';
+import { env } from '../../utils';
 import type { BabelConfig } from '../babel';
 import type { CommonJSModuleConfig } from '../cjs';
 import { DefaultCommonJSModuleConfig } from '../cjs';
@@ -54,14 +57,24 @@ export const DefaultCoreSharedConfigMap: ResolvedCoreSharedConfig = {
 export interface CoreTaskConfig {
   /**
    * Enable CommonJS module output.
+   *
+   * @default
+   * !/(\.umd\.js|\.mjs)$/.test(require('package.json').main)
    */
   cjs?: boolean | CommonJSModuleConfig;
   /**
    * Enable ECMAScript module output.
+   *
+   * @default
+   * require('package.json').module ||
+   * require('package.json').main.endsWith('.mjs')
    */
   esm?: boolean | ECMAScriptModuleConfig;
   /**
    * Enable UMD module output.
+   *
+   * @default
+   * require('package.json').main.endsWith('.umd.js')
    */
   umd?: boolean | UMDModuleConfig;
 }
@@ -89,6 +102,35 @@ export interface ResolvedCoreConfig
     ResolvedCoreSharedConfig,
     ResolvedCoreTaskConfig {}
 
+export function DefaultCoreTaskConfig(): ResolvedCoreTaskConfig {
+  const config: ResolvedCoreTaskConfig = {};
+  let pkg: t.UnknownRecord | null = null;
+
+  try {
+    pkg = require(resolve('package.json'));
+    if (typeof pkg !== 'object') pkg = null;
+  } catch (error) {
+    if (env.DEBUG) signale.error(error);
+  }
+
+  if (pkg) {
+    if (typeof pkg.main === 'string') {
+      if (pkg.main.endsWith('.umd.js')) config.umd = DefaultCoreTaskConfigMap.umd;
+      else if (pkg.main.endsWith('.mjs')) config.esm = DefaultCoreTaskConfigMap.esm;
+      else config.cjs = DefaultCoreTaskConfigMap.cjs;
+    }
+
+    if (config.esm === undefined && typeof pkg.module === 'string')
+      config.esm = DefaultCoreTaskConfigMap.esm;
+  }
+
+  return config;
+}
+
 export function DefaultCoreConfig(): ResolvedCoreConfig {
-  return Object.assign({}, DefaultCoreGroupedConfigMap, DefaultCoreSharedConfigMap);
+  return Object.assign(
+    DefaultCoreTaskConfig(),
+    DefaultCoreGroupedConfigMap,
+    DefaultCoreSharedConfigMap,
+  );
 }

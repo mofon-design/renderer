@@ -1,4 +1,4 @@
-import { dirname, resolve } from 'path';
+import { dirname, extname, resolve } from 'path';
 import * as signale from 'signale';
 import { env } from '../../utils';
 import type { CoreSharedConfig } from '../core';
@@ -7,10 +7,19 @@ import { DefaultBundleIOConfig } from '../io';
 
 export interface CommonJSModuleConfig extends BundleIOConfig, CoreSharedConfig {
   /**
+   * Specify extname of output file.
+   *
+   * @default
+   * const { main } = require('package.json');
+   * const extname = typeof main === 'string' ? (path.extname(main) || '.js') : '.js';
+   */
+  extname?: string;
+  /**
    * Specify output directory.
    *
    * @default
-   * path.dirname(require('package.json').main) || 'lib/'
+   * const { main } = require('package.json');
+   * const outdir = typeof main === 'string' ? path.dirname(main) : 'lib/';
    */
   outdir?: string;
 }
@@ -20,14 +29,22 @@ export interface ResolvedCommonJSModuleConfig
     Omit<CommonJSModuleConfig, keyof BundleIOConfig> {}
 
 export function DefaultCommonJSModuleConfig(): ResolvedCommonJSModuleConfig {
-  let outdir = 'lib/';
+  const config: ResolvedCommonJSModuleConfig = DefaultBundleIOConfig();
+
+  config.outdir = 'lib/';
 
   try {
-    const main = require(resolve('package.json'))?.main;
-    if (typeof main === 'string') outdir = dirname(main);
+    const pkg: t.UnknownRecord | null = require(resolve('package.json'));
+
+    if (typeof pkg === 'object' && pkg) {
+      if (typeof pkg.main === 'string') {
+        config.outdir = dirname(pkg.main);
+        config.extname = extname(pkg.main) || '.js';
+      }
+    }
   } catch (error) {
     if (env.DEBUG) signale.error(error);
   }
 
-  return Object.assign(DefaultBundleIOConfig(), { outdir });
+  return config;
 }

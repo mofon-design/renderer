@@ -1,4 +1,4 @@
-import { dirname, resolve } from 'path';
+import { dirname, extname, resolve } from 'path';
 import * as signale from 'signale';
 import { env } from '../../utils';
 import type { CoreSharedConfig } from '../core';
@@ -7,10 +7,27 @@ import { DefaultBundleIOConfig } from '../io';
 
 export interface ECMAScriptModuleConfig extends BundleIOConfig, CoreSharedConfig {
   /**
+   * Specify extname of output file.
+   *
+   * @default
+   * const { main, module } = require('package.json');
+   * const extname = typeof module === 'string'
+   *   ? (path.extname(module) || '.js')
+   *   : typeof main === 'string' && main.endsWith('.mjs')
+   *   ? '.mjs'
+   *   : '.js';
+   */
+  extname?: string;
+  /**
    * Specify output directory.
    *
    * @default
-   * path.dirname(require('package.json').module) || 'es/'
+   * const { main, module } = require('package.json');
+   * const outdir = typeof module === 'string'
+   *   ? path.dirname(module)
+   *   : typeof main === 'string' && main.endsWith('.mjs')
+   *   ? path.dirname(main)
+   *   : 'es/';
    */
   outdir?: string;
 }
@@ -20,14 +37,25 @@ export interface ResolvedECMAScriptModuleConfig
     Omit<ECMAScriptModuleConfig, keyof BundleIOConfig> {}
 
 export function DefaultECMAScriptModuleConfig(): ResolvedECMAScriptModuleConfig {
-  let outdir = 'es/';
+  const config: ResolvedECMAScriptModuleConfig = DefaultBundleIOConfig();
+
+  config.outdir = 'es/';
 
   try {
-    const module = require(resolve('package.json'))?.module;
-    if (typeof module === 'string') outdir = dirname(module);
+    const pkg: t.UnknownRecord | null = require(resolve('package.json'));
+
+    if (typeof pkg === 'object' && pkg) {
+      if (typeof pkg.module === 'string') {
+        config.outdir = dirname(pkg.module);
+        config.extname = extname(pkg.module) || '.js';
+      } else if (typeof pkg.main === 'string' && pkg.main.endsWith('.mjs')) {
+        config.extname = '.mjs';
+        config.outdir = dirname(pkg.main);
+      }
+    }
   } catch (error) {
     if (env.DEBUG) signale.error(error);
   }
 
-  return Object.assign(DefaultBundleIOConfig(), { outdir });
+  return config;
 }
