@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import * as signale from 'signale';
+import signale from 'signale';
 import { env } from '../../utils';
 import type { BabelConfig } from '../babel';
 import { DefaultBuiltinBabelPresetsConfig } from '../babel';

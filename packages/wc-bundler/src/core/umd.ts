@@ -1,6 +1,6 @@
 import type { TaskFunction } from 'gulp';
 import { rollup } from 'rollup';
-import * as signale from 'signale';
+import signale from 'signale';
 import type { UMDModuleConfig } from '../config';
 import { loadUMDModuleConfig } from '../config';
 import { env } from '../utils';

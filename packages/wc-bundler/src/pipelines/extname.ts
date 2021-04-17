@@ -1,7 +1,7 @@
 import type { Transform } from 'stream';
 import type { TransformCallback, TransformFunction } from 'through2';
 import { obj } from 'through2';
-import type * as File from 'vinyl';
+import type File from 'vinyl';
 
 export const ExtnamePipelineConfigSymbol = Symbol('BundleIOConfig');
 

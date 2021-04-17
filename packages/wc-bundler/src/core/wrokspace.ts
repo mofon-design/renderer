@@ -1,9 +1,10 @@
+import chalk from 'chalk';
 import type { TaskFunction } from 'gulp';
 import { parallel, series, task } from 'gulp';
-import * as signale from 'signale';
+import signale from 'signale';
 import type { ResolvedWorkspaceConfig, WorkspaceConfig, WorkspacePackageInfo } from '../config';
 import { loadWorkspaceConfig } from '../config';
-import { allocateColor, chalk } from '../utils';
+import { allocateColor } from '../utils';
 
 export interface WorkspaceTask extends TaskFunction {
   (done: t.ArgsType<TaskFunction>[0], pkg: WorkspacePackageInfo): ReturnType<TaskFunction>;
@@ -30,7 +31,8 @@ function createWorkspaceTask(resolved: ResolvedWorkspaceConfig, task: WorkspaceT
   const workspaceTask = function workspaceTask(done: t.ArgsType<TaskFunction>[0]) {
     const { abspath, name } = resolved;
     process.chdir(abspath);
-    signale.start(`${chalk[allocateColor(name)].bold(name)} (${abspath})`);
+    const scopeName = chalk[allocateColor(name)].bold(name);
+    signale.start(`${scopeName} (${abspath})`);
     return task(done, resolved);
   };
 

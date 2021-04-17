@@ -1,5 +1,5 @@
 import type { TaskFunction } from 'gulp';
-import * as signale from 'signale';
+import signale from 'signale';
 import type { CommonJSModuleConfig } from '../config';
 import { loadCommonJSModuleConfig } from '../config';
 import { createBabelPipeline } from '../pipelines';

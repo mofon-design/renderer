@@ -1,6 +1,6 @@
 import type { TaskFunction } from 'gulp';
 import { parallel } from 'gulp';
-import * as signale from 'signale';
+import signale from 'signale';
 import type { CoreConfig } from '../config';
 import { loadCoreConfig } from '../config';
 import { env } from '../utils';
@@ -30,7 +30,7 @@ export function core(): TaskFunction {
     if (resolved.umd) tasks.push(umd(resolved.umd));
 
     if (!tasks.length) {
-      signale.info(`Non task found in ${process.cwd()}`);
+      signale.info(`No task found in ${process.cwd()}`);
       return done();
     }
 

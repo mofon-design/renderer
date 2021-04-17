@@ -1,7 +1,8 @@
+import del from 'del';
 import { TaskFunction, dest, src, series } from 'gulp';
 import { BundleIOConfig, loadBundleIOConfig } from '../config';
 import { createExtnamePipeline } from '../pipelines';
-import { defineLazyLoadProperty, del, env, plumber } from '../utils';
+import { defineLazyLoadProperty, env, plumber } from '../utils';
 
 export function withIO(
   config: t.Readonly<BundleIOConfig> | undefined,

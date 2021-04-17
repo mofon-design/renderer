@@ -1,10 +1,10 @@
 import type { BabelFileResult, TransformOptions } from '@babel/core';
 import { transform } from '@babel/core';
-import * as signale from 'signale';
+import signale from 'signale';
 import type { Transform } from 'stream';
 import type { TransformCallback, TransformFunction } from 'through2';
 import { obj } from 'through2';
-import type * as File from 'vinyl';
+import type File from 'vinyl';
 import type { BabelConfig } from '../config';
 import { loadBabelConfig } from '../config';
 import { assertInstance, defineLazyLoadProperty, env } from '../utils';

@@ -1,5 +1,5 @@
 import { dirname, extname, resolve } from 'path';
-import * as signale from 'signale';
+import signale from 'signale';
 import { env } from '../../utils';
 import type { CoreSharedConfig } from '../core';
 import type { BundleIOConfig } from '../io';

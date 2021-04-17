@@ -3,6 +3,7 @@
     "alwaysStrict": true,
     "baseUrl": ".",
     "declaration": true,
+    "esModuleInterop": true,
     "experimentalDecorators": false,
     "importHelpers": false,
     "jsx": "react-jsx",

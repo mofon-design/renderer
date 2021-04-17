@@ -15,7 +15,7 @@ import type {
   OutputOptions as RollupOutputOptions,
   Plugin as RollupPlugin,
 } from 'rollup';
-import * as signale from 'signale';
+import signale from 'signale';
 import type { Options as RollupTerserConfig } from 'rollup-plugin-terser';
 import { terser } from 'rollup-plugin-terser';
 import { detectFile, env, pascalCase } from '../../utils';
