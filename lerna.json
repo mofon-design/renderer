@@ -5,6 +5,6 @@
     }
   },
   "npmClient": "npm",
-  "packages": ["packages/!(babel-eslint-parser|babel-prettier-parser|prettier-plugin-babel)"],
+  "packages": ["packages/*"],
   "version": "0.2.0"
 }

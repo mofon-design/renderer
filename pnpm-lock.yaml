@@ -64,61 +64,12 @@ importers:
       typescript: ^4.2.3
       wc-bundler: latest
       yorkie: ^2.0.0
-  packages/babel-eslint-parser:
-    dependencies:
-      '@typescript-eslint/scope-manager': 4.19.0
-      eslint-scope: 5.1.0
-      eslint-visitor-keys: 1.3.0
-      semver: 7.3.4
-    devDependencies:
-      '@babel/core': 7.13.10
-      '@types/babel__core': 7.1.14
-      dedent: 0.7.0
-      eslint: 7.22.0
-    specifiers:
-      '@babel/core': 7.13.10
-      '@types/babel__core': ^7.1.14
-      '@typescript-eslint/scope-manager': 4.19.0
-      dedent: ^0.7.0
-      eslint: ^7.5.0
-      eslint-scope: 5.1.0
-      eslint-visitor-keys: 1.3.0
-      semver: 7.3.4
   packages/babel-plugin-transform-wc-jsx:
     specifiers: {}
   packages/babel-plugin-transform-wc-jsx-pure-annotations:
     specifiers: {}
   packages/babel-preset-web-component:
     specifiers: {}
-  packages/babel-prettier-parser:
-    dependencies:
-      '@babel/core': 7.13.10
-      escape-string-regexp: 4.0.0
-      esutils: 2.0.3
-      lodash: 4.17.21
-      outdent: 0.8.0
-      semver: 7.3.5
-      string-width: 4.2.2
-    devDependencies:
-      '@types/babel__core': 7.1.14
-      prettier: 2.2.1
-    specifiers:
-      '@babel/core': 7.13.10
-      '@types/babel__core': ^7.1.14
-      escape-string-regexp: 4.0.0
-      esutils: 2.0.3
-      lodash: 4.17.21
-      outdent: 0.8.0
-      prettier: ^2.2.1
-      semver: 7.3.5
-      string-width: 4.2.2
-  packages/prettier-plugin-babel:
-    dependencies:
-      babel-prettier-parser: link:../babel-prettier-parser
-      jest-docblock: 26.0.0
-    specifiers:
-      babel-prettier-parser: workspace:*
-      jest-docblock: 26.0.0
   packages/types-lib:
     specifiers: {}
   packages/wc-bundler:
@@ -217,7 +168,7 @@ importers:
       signale: 1.4.0
       temp-dir: 2.0.0
       through2: 4.0.2
-      types-lib: workspace:*
+      types-lib: ^0.2.0-alpha.0
       typescript: ^4.2.3
       update-notifier: 5.1.0
       yargs-parser: 20.2.7
@@ -2835,11 +2786,13 @@ packages:
     dependencies:
       '@typescript-eslint/types': 4.19.0
       '@typescript-eslint/visitor-keys': 4.19.0
+    dev: true
     engines:
       node: ^8.10.0 || ^10.13.0 || >=11.10.1
     resolution:
       integrity: sha512-GGy4Ba/hLXwJXygkXqMzduqOMc+Na6LrJTZXJWVhRrSuZeXmu8TAnniQVKgj8uTRKe4igO2ysYzH+Np879G75g==
   /@typescript-eslint/types/4.19.0:
+    dev: true
     engines:
       node: ^8.10.0 || ^10.13.0 || >=11.10.1
     resolution:
@@ -2868,6 +2821,7 @@ packages:
     dependencies:
       '@typescript-eslint/types': 4.19.0
       eslint-visitor-keys: 2.0.0
+    dev: true
     engines:
       node: ^8.10.0 || ^10.13.0 || >=11.10.1
     resolution:
@@ -4680,6 +4634,7 @@ packages:
     resolution:
       integrity: sha512-oSyFlqaTHCItVRGK5RmrmjB+CmaMOW7IaNA/kdxqhoa6d17j/5ce9O9eWXmV/KEdRwqpQA+Vqe8a8Bsybu4YnA==
   /detect-newline/3.1.0:
+    dev: true
     engines:
       node: '>=8'
     resolution:
@@ -4929,12 +4884,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-UpzcLCXolUWcNu5HtVMHYdXJjArjsF9C0aNnquZYY4uW/Vu0miy5YoWvbV345HauVvcAUnpRuhMMcqTcGOY2+w==
-  /escape-string-regexp/4.0.0:
-    dev: false
-    engines:
-      node: '>=10'
-    resolution:
-      integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
   /escodegen/2.0.0:
     dependencies:
       esprima: 4.0.1
@@ -5015,15 +4964,6 @@ packages:
         optional: true
     resolution:
       integrity: sha512-Rq3jkcFY8RYeQLgk2cCwuc0P7SEFwDravPhsJZOQ5N4YI4DSg50NyqJ/9gdZHzQlHf8MvafSesbNJCcP/FF6pQ==
-  /eslint-scope/5.1.0:
-    dependencies:
-      esrecurse: 4.3.0
-      estraverse: 4.3.0
-    dev: false
-    engines:
-      node: '>=8.0.0'
-    resolution:
-      integrity: sha512-iiGRvtxWqgtx5m8EyQUJihBloE4EnYeGE/bz1wSPwJE6tZuJUtHlhqDM4Xj2ukE8Dyy1+HCZ4hE0fzIVMzb58w==
   /eslint-scope/5.1.1:
     dependencies:
       esrecurse: 4.3.0
@@ -5042,11 +4982,13 @@ packages:
     resolution:
       integrity: sha512-w94dQYoauyvlDc43XnGB8lU3Zt713vNChgt4EWwhXAP2XkBvndfxF0AgIqKOOasjPIPzj9JqgwkwbCYD0/V3Zg==
   /eslint-visitor-keys/1.3.0:
+    dev: true
     engines:
       node: '>=4'
     resolution:
       integrity: sha512-6J72N8UNa462wa/KFODt/PJ3IU60SDpC3QXC1Hjc1BXXpfL2C9R5+AU7jhe0F6GREqVMh4Juu+NY7xn+6dipUQ==
   /eslint-visitor-keys/2.0.0:
+    dev: true
     engines:
       node: '>=10'
     resolution:
@@ -5124,16 +5066,19 @@ packages:
   /esrecurse/4.3.0:
     dependencies:
       estraverse: 5.2.0
+    dev: true
     engines:
       node: '>=4.0'
     resolution:
       integrity: sha512-KmfKL3b6G+RXvP8N1vr3Tq1kL/oCFgn2NYXEtqP8/L3pKapUA4G8cFVaoF3SU323CD4XypR/ffioHmkti6/Tag==
   /estraverse/4.3.0:
+    dev: true
     engines:
       node: '>=4.0'
     resolution:
       integrity: sha512-39nnKffWz8xN1BU/2c79n9nB9HDzo0niYUqx6xyqUnyoAnQyyWpOTdZEeiCch8BBu515t4wp9ZmgVfVhn9EBpw==
   /estraverse/5.2.0:
+    dev: true
     engines:
       node: '>=4.0'
     resolution:
@@ -6917,6 +6862,7 @@ packages:
   /jest-docblock/26.0.0:
     dependencies:
       detect-newline: 3.1.0
+    dev: true
     engines:
       node: '>= 10.14.2'
     resolution:
@@ -8604,10 +8550,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-0CWcCECdMVc2Rw3U5w9ZjqX6ga6ubk1xDVKxtBQPK7wis/0F2r9T6k4ydGYhecl7YUBxBVxhL5oisPsNxAPe2g==
-  /outdent/0.8.0:
-    dev: false
-    resolution:
-      integrity: sha512-KiOAIsdpUTcAXuykya5fnVVT+/5uS0Q1mrkRHcF89tpieSmY33O/tmc54CqwA+bfhbtEfZUNLHaPUiB9X3jt1A==
   /p-cancelable/1.1.0:
     dev: false
     engines:
@@ -9841,15 +9783,6 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-+GB6zVA9LWh6zovYQLALHwv5rb2PHGlJi3lfiqIHxR0uuwCgefcOJc59v9fv1w8GbStwxuuqqAjI9NMAOOgq1A==
-  /semver/7.3.4:
-    dependencies:
-      lru-cache: 6.0.0
-    dev: false
-    engines:
-      node: '>=10'
-    hasBin: true
-    resolution:
-      integrity: sha512-tCfb2WLjqFAtXn4KEdxIhalnRtoKFN7nAwj0B3ZXCbQloV2tq5eDbcTmT68JJD3nRJq24/XgxtQKFIpQdtvmVw==
   /semver/7.3.5:
     dependencies:
       lru-cache: 6.0.0
