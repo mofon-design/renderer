@@ -1,6 +1,6 @@
 {
   "name": "wc-core",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Web Component renderer core",
   "author": "imhele <work@imhele.com>",
   "license": "MIT",
