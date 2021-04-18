@@ -16,18 +16,18 @@ export function withIO<Renderer extends typeof ListrRenderer>(
 ): ListrTask<Listr2Ctx> {
   return {
     title: 'Cleaning up...',
-    task: async function IOTask(_ctx, task) {
+    task: async function IOTask(_ctx, self) {
       hideDEP0097();
 
       const resolved = loadBundleIOConfig(config);
       await del(resolved.outdir);
-      task.title = 'Start IO task...';
+      self.title = 'Start IO task...';
       return new Promise<void>((resolve, reject) => {
         series(() => {
           const enablePlumber = !env.DEBUG;
           let stream = src(resolved.entry);
           if (enablePlumber) stream = stream.pipe(plumber(onerror));
-          stream = pipe(stream, task).pipe(createExtnamePipeline(resolved.extname));
+          stream = pipe(stream, self).pipe(createExtnamePipeline(resolved.extname));
           if (enablePlumber) stream = stream.pipe(plumber.stop());
           return stream.pipe(dest(resolved.outdir));
         })((error) => (error ? reject(error) : resolve()));
