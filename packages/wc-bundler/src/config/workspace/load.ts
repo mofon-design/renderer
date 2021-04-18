@@ -47,7 +47,6 @@ export function loadWorkspaceConfig(
 
   const cwd = slash(process.cwd());
   const pathNameMap = new Map<string, string>();
-  const namePathMap = new Map<string, Set<string>>();
 
   if (pathset === undefined) pathset = new Set([cwd]);
 
@@ -56,48 +55,11 @@ export function loadWorkspaceConfig(
     const name =
       typeof pkg === 'object' && typeof pkg?.name === 'string' ? pkg.name : basename(abspath);
     pathNameMap.set(abspath, name);
-    namePathMap.set(name, (namePathMap.get(name) || new Set()).add(abspath));
   }
 
-  if (!pathNameMap.size) throw new Error(`Workspace empty (${cwd})`);
+  // if (!pathNameMap.size) throw new Error(`Workspace empty (${cwd})`);
 
-  if (pathNameMap.size === 1) return transformPathNameMap(pathNameMap)[0];
-
-  if (!Array.isArray(config.series)) {
-    return [config.series ? 'series' : 'parallel', transformPathNameMap(pathNameMap)];
-  }
-
-  const series: ResolvedWorkspaceConfig[] = [];
-
-  for (const pattern of config.series) {
-    const abspaths = namePathMap.get(pattern);
-
-    if (abspaths !== undefined) {
-      namePathMap.delete(pattern);
-      abspaths.forEach((abspath) => {
-        pathNameMap.delete(abspath);
-        series.push({ abspath, name: pattern });
-      });
-    } else {
-      const pkgs: WorkspacePackageInfo[] = [];
-
-      globSync(pattern, { absolute: true, ignore: config.ignore }).forEach((abspath) => {
-        const name = pathNameMap.get(abspath);
-        if (name === undefined) return;
-        pathNameMap.delete(abspath);
-        namePathMap.get(name)?.delete(abspath);
-        pkgs.push({ abspath, name });
-      });
-
-      if (pkgs.length) {
-        series.push(pkgs.length === 1 ? pkgs[0] : ['parallel', pkgs]);
-      }
-    }
-  }
-
-  series.push(['parallel', transformPathNameMap(pathNameMap)]);
-
-  return ['series', series];
+  return transformPathNameMap(pathNameMap);
 }
 
 function transformPathNameMap(map: Map<string, string>): WorkspacePackageInfo[] {

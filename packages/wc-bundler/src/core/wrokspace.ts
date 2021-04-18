@@ -1,42 +1,46 @@
 import chalk from 'chalk';
-import type { TaskFunction } from 'gulp';
-import { parallel, series, task } from 'gulp';
-import signale from 'signale';
-import type { ResolvedWorkspaceConfig, WorkspaceConfig, WorkspacePackageInfo } from '../config';
+import type { ListrTask } from 'listr2';
+import type { ResolvedWorkspaceConfig, WorkspaceConfig } from '../config';
 import { loadWorkspaceConfig } from '../config';
 import { allocateColor } from '../utils';
 
-export interface WorkspaceTask extends TaskFunction {
-  (done: t.ArgsType<TaskFunction>[0], pkg: WorkspacePackageInfo): ReturnType<TaskFunction>;
+declare global {
+  interface Listr2Ctx {
+    workspaces?: ResolvedWorkspaceConfig;
+  }
 }
-
-export type WorkspaceTasks = WorkspaceTask | string | (WorkspaceTask | string)[];
 
 export function workspace(
   config: t.Readonly<WorkspaceConfig> | undefined,
-  tasks: WorkspaceTasks,
-): TaskFunction {
-  tasks = [tasks].flat(1);
-  const combined =
-    tasks.length === 1 ? (typeof tasks[0] === 'string' ? task(tasks[0]) : tasks[0]) : series(tasks);
-  return createWorkspaceTask(loadWorkspaceConfig(config), combined);
-}
+  final: ListrTask<Listr2Ctx> | ListrTask<Listr2Ctx>[],
+): ListrTask<Listr2Ctx>[] {
+  return [
+    {
+      title: 'Detecting packages at current workspace...',
+      task(ctx) {
+        ctx.workspaces = loadWorkspaceConfig(config);
+      },
+    },
+    {
+      title: 'Running tasks for each package...',
+      skip(ctx) {
+        if (!ctx.workspaces?.length) return `No package found at ${process.cwd()}`;
+        return false;
+      },
+      task(ctx, task) {
+        if (!ctx.workspaces?.length) return;
 
-function createWorkspaceTask(resolved: ResolvedWorkspaceConfig, task: WorkspaceTask): TaskFunction {
-  if (Array.isArray(resolved)) {
-    const combine = resolved[0] === 'series' ? series : parallel;
-    return combine(resolved[1].map((item) => createWorkspaceTask(item, task)));
-  }
-
-  const workspaceTask = function workspaceTask(done: t.ArgsType<TaskFunction>[0]) {
-    const { abspath, name } = resolved;
-    process.chdir(abspath);
-    const scopeName = chalk[allocateColor(name)].bold(name);
-    signale.start(`${scopeName} (${abspath})`);
-    return task(done, resolved);
-  };
-
-  workspaceTask.displayName = `workspace:${resolved.name}`;
-
-  return workspaceTask;
+        const tasks: ListrTask<Listr2Ctx>[] = ctx.workspaces.map(({ abspath, name }) => {
+          return {
+            title: `${chalk[allocateColor(name)].bold(name)} (${abspath})`,
+            task: function workspaceTask(_ctx, task) {
+              process.chdir(abspath);
+              return task.newListr(final, { concurrent: true });
+            },
+          };
+        });
+        return task.newListr(tasks, { concurrent: false });
+      },
+    },
+  ];
 }

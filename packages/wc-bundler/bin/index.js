@@ -1,19 +1,11 @@
 #!/usr/bin/env node
 /* eslint-disable import/no-extraneous-dependencies */
 
-module.exports = new Promise((resolve, reject) => {
-  require('gulp').series(loadCore()())(done);
-
-  function done(error) {
-    if (!error) return resolve();
-    require('signale').error(error);
-    reject(error);
-  }
-});
+module.exports = loadCore()();
 
 function loadCore() {
   try {
-    return require('wc-bundler').core;
+    return require('wc-bundler').bin;
   } catch {}
 
   require('signale').info(
@@ -26,5 +18,5 @@ function loadCore() {
     ],
     extensions: ['.tsx', '.ts', '.jsx', '.mjs', '.es'],
   });
-  return require('wc-bundler/src').core;
+  return require('wc-bundler/src').bin;
 }

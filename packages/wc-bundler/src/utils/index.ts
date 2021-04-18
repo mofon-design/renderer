@@ -13,3 +13,4 @@ export * from './pascalCase';
 export * from './registerBabel';
 export * from './root';
 export * from './slash';
+export * from './tmpdir';
