@@ -5,7 +5,7 @@ import type { TaskWrapper } from 'listr2/dist/lib/task-wrapper';
 import type { BundleIOConfig } from '../config';
 import { loadBundleIOConfig } from '../config';
 import { createExtnamePipeline } from '../pipelines';
-import { env, plumber } from '../utils';
+import { env, hideDEP0097, plumber } from '../utils';
 
 export function withIO<Renderer extends typeof ListrRenderer>(
   config: t.Readonly<BundleIOConfig> | undefined,
@@ -17,6 +17,8 @@ export function withIO<Renderer extends typeof ListrRenderer>(
   return {
     title: 'Cleaning up...',
     task: async function IOTask(_ctx, task) {
+      hideDEP0097();
+
       const resolved = loadBundleIOConfig(config);
       await del(resolved.outdir);
       task.title = 'Start IO task...';

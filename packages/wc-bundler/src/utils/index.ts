@@ -7,6 +7,7 @@ export * from './detectFile';
 export * from './env';
 export * from './escapeRegExp';
 export * from './export';
+export * from './hideDEP0097';
 export * from './iterargs';
 export * from './loadModuleByBabel';
 export * from './pascalCase';
