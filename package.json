@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "wc-bundler",
+    "clean": "rm -r packages/*/{es,lib,index.umd.js}",
     "publish": "wc-bundler && lerna publish",
     "postinstall": "node scripts/postinstall/index.js"
   },

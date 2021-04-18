@@ -57,8 +57,6 @@ export function loadWorkspaceConfig(
     pathNameMap.set(abspath, name);
   }
 
-  // if (!pathNameMap.size) throw new Error(`Workspace empty (${cwd})`);
-
   return transformPathNameMap(pathNameMap);
 }
 
