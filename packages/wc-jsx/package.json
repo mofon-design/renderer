@@ -1,6 +1,6 @@
 {
   "name": "wc-jsx",
-  "version": "0.2.0-alpha.0",
+  "version": "0.3.0",
   "description": "Write Web Component in JSX",
   "author": "imhele <work@imhele.com>",
   "license": "MIT",
