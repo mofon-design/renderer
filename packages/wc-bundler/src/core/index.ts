@@ -3,7 +3,7 @@ import { Listr } from 'listr2';
 import signale from 'signale';
 import type { CoreConfig } from '../config';
 import { loadCoreConfig, loadListr2Config } from '../config';
-import { env } from '../utils';
+import { asArray, env } from '../utils';
 import { cjs } from './cjs';
 import { esm } from './esm';
 import { umd } from './umd';
@@ -17,15 +17,19 @@ export function core(): ListrTask<Listr2Ctx> {
   return {
     task(_ctx, task) {
       const tasks = createCoreTasks(configs);
-      if (!tasks.length) return signale.info(`No task found`);
+      if (!asArray(tasks).length) return signale.info(`No task found`);
       return task.newListr(tasks, { concurrent: true });
     },
   };
 }
 
-export function createCoreTasks(configs: t.Readonly<CoreConfig[]>): ListrTask<Listr2Ctx>[];
-export function createCoreTasks(...configs: t.Readonly<CoreConfig>[]): ListrTask<Listr2Ctx>[];
-export function createCoreTasks(): ListrTask<Listr2Ctx>[] {
+export function createCoreTasks(
+  configs: t.Readonly<CoreConfig[]>,
+): ListrTask<Listr2Ctx> | ListrTask<Listr2Ctx>[];
+export function createCoreTasks(
+  ...configs: t.Readonly<CoreConfig>[]
+): ListrTask<Listr2Ctx> | ListrTask<Listr2Ctx>[];
+export function createCoreTasks(): ListrTask<Listr2Ctx> | ListrTask<Listr2Ctx>[] {
   const resolved = loadCoreConfig.apply(null, arguments as never);
 
   if (env.DEBUG) signale.debug('Resolved core config: ', resolved);
@@ -46,6 +50,6 @@ export async function bin(configs: t.Readonly<CoreConfig[]>): Promise<void>;
 export async function bin(...configs: t.Readonly<CoreConfig>[]): Promise<void>;
 export async function bin(): Promise<void> {
   const tasks = createCoreTasks.apply(null, arguments as never);
-  if (!tasks.length) return signale.info(`No task found`);
+  if (!asArray(tasks).length) return signale.info(`No task found`);
   await new Listr(tasks, loadListr2Config({})).run();
 }

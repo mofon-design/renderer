@@ -6,12 +6,11 @@ import { asArray } from '../utils';
 import { withIO } from './io';
 
 export function esm(config?: t.Readonly<ECMAScriptModuleConfig>): ListrTask<Listr2Ctx> {
-  const task = withIO(config, function esmTask(upstream) {
+  return withIO(config, function esmTask(upstream, task) {
+    task.title = 'Transform to ECMAScript module';
     const resolved = loadECMAScriptModuleConfig(config);
     const babelConfigs = resolved.babel ? asArray(resolved.babel) : [];
     babelConfigs.push({ env: { modules: false } });
     return upstream.pipe(createBabelPipeline(babelConfigs));
   });
-
-  return { task, title: 'Transform to ECMAScript module' };
 }
