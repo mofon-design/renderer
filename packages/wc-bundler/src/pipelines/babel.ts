@@ -1,13 +1,12 @@
 import type { BabelFileResult, TransformOptions } from '@babel/core';
 import { transform } from '@babel/core';
-import signale from 'signale';
 import type { Transform } from 'stream';
 import type { TransformCallback, TransformFunction } from 'through2';
 import { obj } from 'through2';
 import type File from 'vinyl';
 import type { BabelConfig } from '../config';
 import { loadBabelConfig } from '../config';
-import { assertInstance, defineLazyLoadProperty, env } from '../utils';
+import { assertInstance, defineLazyLoadProperty, signale } from '../utils';
 
 export const BabelPipelineTransformOptionsSymbol = Symbol('BabelTransformOptions');
 
@@ -43,7 +42,7 @@ export function BabelTransformer(
   options: TransformOptions,
 ): void {
   if (chunk.isDirectory()) return callback(null);
-  if (env.DEBUG) signale.debug(`[babel] Transforming (${chunk.path})`);
+  signale.debug(`[babel] Transforming (${chunk.path})`);
   assertInstance(chunk.contents, Buffer);
   transform(
     chunk.contents.toString(encode),

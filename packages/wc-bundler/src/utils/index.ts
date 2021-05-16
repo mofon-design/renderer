@@ -15,5 +15,6 @@ export * from './loadPackageName';
 export * from './pascalCase';
 export * from './registerBabel';
 export * from './root';
+export * from './signale';
 export * from './slash';
 export * from './tmpdir';

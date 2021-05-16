@@ -2,9 +2,7 @@ import { loadPackageJSON } from '../../utils';
 import type { BabelConfig } from '../babel';
 import { DefaultBuiltinBabelPresetsConfig } from '../babel';
 import type { CommonJSModuleConfig } from '../cjs';
-import { DefaultCommonJSModuleConfig } from '../cjs';
 import type { ECMAScriptModuleConfig } from '../esm';
-import { DefaultECMAScriptModuleConfig } from '../esm';
 import type { UMDModuleConfig } from '../umd';
 import type { WorkspaceConfig } from '../workspace';
 import { DefaultWorkspaceConfig } from '../workspace';
@@ -85,10 +83,10 @@ export type ResolvedCoreTaskConfig = {
 
 export const DefaultCoreTaskConfigMap: Required<ResolvedCoreTaskConfig> = {
   get cjs() {
-    return DefaultCommonJSModuleConfig();
+    return {};
   },
   get esm() {
-    return DefaultECMAScriptModuleConfig();
+    return {};
   },
   get umd() {
     return {};
@@ -112,7 +110,7 @@ export function DefaultCoreTaskConfig(): ResolvedCoreTaskConfig {
       if (type === 'commonjs') config.cjs = DefaultCoreTaskConfigMap.cjs;
       else if (type === 'module') config.esm = DefaultCoreTaskConfigMap.esm;
     } else if (typeof pkg.main === 'string') {
-      if (pkg.main.endsWith('.umd.js')) config.umd = DefaultCoreTaskConfigMap.umd;
+      if (/\.umd\./.test(pkg.main)) config.umd = DefaultCoreTaskConfigMap.umd;
       else if (pkg.main.endsWith('.mjs')) config.esm = DefaultCoreTaskConfigMap.esm;
       else config.cjs = DefaultCoreTaskConfigMap.cjs;
     }

@@ -9,7 +9,7 @@ import type {
   TargetsOptions as BabelTargetsOptions,
 } from '@babel/preset-env';
 import { join } from 'path';
-import { detectFile, env, isRoot, resolveModuleByBabel, root } from '../../utils';
+import { detectFile, isRoot, resolveModuleByBabel, root } from '../../utils';
 
 export interface BabelEnvConfig extends BabelPresetEnv9Config {
   browserslistEnv?: string;
@@ -25,7 +25,6 @@ export function DefaultBabelEnvConfig(): BabelEnvConfig {
     browserslistEnv: undefined,
     bugfixes: true,
     configPath: root,
-    debug: env.DEBUG,
     ignoreBrowserslistConfig: true,
     loose: false,
     shippedProposals: false,

@@ -1,5 +1,5 @@
 import type { TransformOptions } from '@babel/core';
-import { transformBabelConfig } from '../config';
+import { loadBabelConfig } from '../config';
 import { env } from './env';
 import { escapeRegExp } from './escapeRegExp';
 import { root } from './root';
@@ -9,7 +9,7 @@ let registered = false;
 export function registerBabel(options?: TransformOptions): void {
   if (registered) return;
 
-  const fallback = transformBabelConfig({
+  const fallback = loadBabelConfig.raw({
     env: { targets: { node: process.version } },
     typescript: true,
   });

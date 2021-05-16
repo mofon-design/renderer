@@ -1,9 +1,8 @@
 import type { ListrTask } from 'listr2';
 import { Listr } from 'listr2';
-import signale from 'signale';
 import type { CoreConfig } from '../config';
 import { loadCoreConfig, loadListr2Config } from '../config';
-import { env } from '../utils';
+import { signale } from '../utils';
 import { cjs } from './cjs';
 import { esm } from './esm';
 import { umd } from './umd';
@@ -13,8 +12,7 @@ export function core(configs: t.Readonly<CoreConfig[]>): ListrTask<Listr2Ctx>['t
 export function core(...configs: t.Readonly<CoreConfig>[]): ListrTask<Listr2Ctx>['task'];
 export function core(): ListrTask<Listr2Ctx>['task'] {
   const resolved = loadCoreConfig.apply(null, arguments as never);
-
-  if (env.DEBUG) signale.debug('Resolved core config: ', resolved);
+  signale.debug('Resolved core config: ', resolved);
 
   const coreTask: ListrTask<Listr2Ctx>['task'] = function coreTask(_ctx, self) {
     const tasks: ListrTask<Listr2Ctx>[] = [];

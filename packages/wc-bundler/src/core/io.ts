@@ -7,11 +7,31 @@ import { loadBundleIOConfig } from '../config';
 import { createExtnamePipeline } from '../pipelines';
 import { env, hideDEP0097, plumber } from '../utils';
 
+export function withIO<
+  Renderer extends typeof ListrRenderer,
+  ResolvedConfig extends Required<BundleIOConfig>
+>(
+  config: () => ResolvedConfig,
+  pipe: (
+    upstream: NodeJS.ReadWriteStream,
+    task: TaskWrapper<Listr2Ctx, Renderer>,
+    config: ResolvedConfig,
+  ) => NodeJS.ReadWriteStream,
+): ListrTask<Listr2Ctx>;
 export function withIO<Renderer extends typeof ListrRenderer>(
   config: t.Readonly<BundleIOConfig> | undefined,
   pipe: (
     upstream: NodeJS.ReadWriteStream,
     task: TaskWrapper<Listr2Ctx, Renderer>,
+    config: Required<BundleIOConfig>,
+  ) => NodeJS.ReadWriteStream,
+): ListrTask<Listr2Ctx>;
+export function withIO<Renderer extends typeof ListrRenderer>(
+  config: (() => Required<BundleIOConfig>) | t.Readonly<BundleIOConfig> | undefined,
+  pipe: (
+    upstream: NodeJS.ReadWriteStream,
+    task: TaskWrapper<Listr2Ctx, Renderer>,
+    config: Required<BundleIOConfig>,
   ) => NodeJS.ReadWriteStream,
 ): ListrTask<Listr2Ctx> {
   return {
@@ -19,7 +39,7 @@ export function withIO<Renderer extends typeof ListrRenderer>(
     task: async function IOTask(_ctx, self) {
       hideDEP0097();
 
-      const resolved = loadBundleIOConfig(config);
+      const resolved = loadConfig();
       await del(resolved.outdir);
       self.title = 'Start IO task...';
       return new Promise<void>((resolve, reject) => {
@@ -27,7 +47,7 @@ export function withIO<Renderer extends typeof ListrRenderer>(
           const enablePlumber = !env.DEBUG;
           let stream = src(resolved.entry);
           if (enablePlumber) stream = stream.pipe(plumber(onerror));
-          stream = pipe(stream, self)
+          stream = pipe(stream, self, resolved)
             .pipe(createExtnamePipeline(resolved.extname))
             .pipe(dest(resolved.outdir));
           if (enablePlumber) stream = stream.pipe(plumber.stop());
@@ -36,6 +56,10 @@ export function withIO<Renderer extends typeof ListrRenderer>(
       });
     },
   };
+
+  function loadConfig() {
+    return typeof config === 'function' ? config() : loadBundleIOConfig(config);
+  }
 }
 
 function onerror() {

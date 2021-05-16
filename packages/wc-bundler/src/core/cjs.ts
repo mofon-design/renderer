@@ -2,15 +2,19 @@ import type { ListrTask } from 'listr2';
 import type { CommonJSModuleConfig } from '../config';
 import { loadCommonJSModuleConfig } from '../config';
 import { createBabelPipeline } from '../pipelines';
-import { asArray } from '../utils';
+import { asArray, signale } from '../utils';
 import { withIO } from './io';
 
 export function cjs(config?: t.Readonly<CommonJSModuleConfig>): ListrTask<Listr2Ctx> {
-  return withIO(config, function cjsTask(upstream, self) {
+  return withIO(loadConfig, function cjsTask(upstream, self, resolved) {
     self.title = 'Transform to CommonJS module';
-    const resolved = loadCommonJSModuleConfig(config);
-    const babelConfigs = resolved.babel ? asArray(resolved.babel) : [];
-    babelConfigs.push({ env: { modules: 'cjs' } });
+    const babelConfigs = asArray(resolved.babel || []).concat({ env: { modules: 'cjs' } });
     return upstream.pipe(createBabelPipeline(babelConfigs));
   });
+
+  function loadConfig() {
+    const resolved = loadCommonJSModuleConfig(config);
+    signale.debug('Resolved cjs config: ', resolved);
+    return resolved;
+  }
 }
