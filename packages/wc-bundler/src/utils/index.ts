@@ -11,6 +11,7 @@ export * from './hideDEP0097';
 export * from './iterargs';
 export * from './loadModuleByBabel';
 export * from './loadPackageJSON';
+export * from './loadPackageName';
 export * from './pascalCase';
 export * from './registerBabel';
 export * from './root';

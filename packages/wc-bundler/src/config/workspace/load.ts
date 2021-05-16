@@ -1,6 +1,6 @@
 import { sync as globSync } from 'glob';
-import { basename, resolve } from 'path';
-import { asArray, loadModuleByBabel, loadPackageJSON, slash } from '../../utils';
+import { resolve } from 'path';
+import { asArray, loadModuleByBabel, loadPackageJSON, loadPackageName, slash } from '../../utils';
 import type { ResolvedWorkspaceConfig, WorkspaceConfig, WorkspacePackageInfo } from './interface';
 import { DefaultWorkspaceConfig } from './interface';
 
@@ -54,9 +54,7 @@ export function loadWorkspaceConfig(
   if (pathset === undefined) pathset = new Set([cwd]);
 
   for (const abspath of pathset) {
-    const pkg = loadPackageJSON(abspath);
-    const name = pkg && typeof pkg.name === 'string' ? pkg.name : basename(abspath);
-    pathNameMap.set(abspath, name);
+    pathNameMap.set(abspath, loadPackageName(abspath));
   }
 
   return transformPathNameMap(pathNameMap);

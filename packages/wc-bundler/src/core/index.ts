@@ -7,7 +7,7 @@ import { env } from '../utils';
 import { cjs } from './cjs';
 import { esm } from './esm';
 import { umd } from './umd';
-import { workspace } from './wrokspace';
+import { coloredWorkspaceTaskTitle, workspace } from './wrokspace';
 
 export function core(configs: t.Readonly<CoreConfig[]>): ListrTask<Listr2Ctx>['task'];
 export function core(...configs: t.Readonly<CoreConfig>[]): ListrTask<Listr2Ctx>['task'];
@@ -16,12 +16,7 @@ export function core(): ListrTask<Listr2Ctx>['task'] {
 
   if (env.DEBUG) signale.debug('Resolved core config: ', resolved);
 
-  if (resolved.workspace)
-    return workspace(resolved.workspace, function createCoreTask(ctx, self) {
-      return core(resolved, { workspace: false })(ctx, self);
-    });
-
-  return function coreTask(_ctx, self) {
+  const coreTask: ListrTask<Listr2Ctx>['task'] = function coreTask(_ctx, self) {
     const tasks: ListrTask<Listr2Ctx>[] = [];
 
     if (resolved.cjs) tasks.push(cjs(resolved.cjs));
@@ -32,6 +27,18 @@ export function core(): ListrTask<Listr2Ctx>['task'] {
 
     return self.newListr(tasks, { concurrent: true });
   };
+
+  if (!resolved.workspace) {
+    return coreTask;
+  }
+
+  const coreTaskTitle = coloredWorkspaceTaskTitle();
+  const afterAll: ListrTask<Listr2Ctx> = { title: coreTaskTitle, task: coreTask };
+  const createCoreTask: ListrTask<Listr2Ctx>['task'] = function createCoreTask(ctx, self) {
+    return core(resolved, { workspace: false })(ctx, self);
+  };
+
+  return workspace(resolved.workspace, createCoreTask, { afterAll });
 }
 
 export async function bin(configs: t.Readonly<CoreConfig[]>): Promise<void>;
