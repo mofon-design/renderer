@@ -27,9 +27,11 @@ export function withIO<Renderer extends typeof ListrRenderer>(
           const enablePlumber = !env.DEBUG;
           let stream = src(resolved.entry);
           if (enablePlumber) stream = stream.pipe(plumber(onerror));
-          stream = pipe(stream, self).pipe(createExtnamePipeline(resolved.extname));
+          stream = pipe(stream, self)
+            .pipe(createExtnamePipeline(resolved.extname))
+            .pipe(dest(resolved.outdir));
           if (enablePlumber) stream = stream.pipe(plumber.stop());
-          return stream.pipe(dest(resolved.outdir));
+          return stream;
         })((error) => (error ? reject(error) : resolve()));
       });
     },
