@@ -9,7 +9,7 @@ export function umd(config?: t.Readonly<UMDModuleConfig>): ListrTask {
     title: 'Transform to UMD module',
     task: async function umdTask() {
       const resolved = loadUMDModuleConfig(config);
-      signale.debug('Resolved umd config: ', resolved);
+      signale.json.debug('Resolved umd config:', resolved);
       const bundle = await rollup(resolved);
       await bundle.write(resolved.output);
       await bundle.close();

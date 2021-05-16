@@ -14,7 +14,7 @@ export function esm(config?: t.Readonly<ECMAScriptModuleConfig>): ListrTask<List
 
   function loadConfig() {
     const resolved = loadECMAScriptModuleConfig(config);
-    signale.debug('Resolved esm config: ', resolved);
+    signale.json.debug('Resolved esm config:', resolved);
     return resolved;
   }
 }

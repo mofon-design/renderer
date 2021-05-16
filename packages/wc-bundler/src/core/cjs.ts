@@ -14,7 +14,7 @@ export function cjs(config?: t.Readonly<CommonJSModuleConfig>): ListrTask<Listr2
 
   function loadConfig() {
     const resolved = loadCommonJSModuleConfig(config);
-    signale.debug('Resolved cjs config: ', resolved);
+    signale.json.debug('Resolved cjs config:', resolved);
     return resolved;
   }
 }

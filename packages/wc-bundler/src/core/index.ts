@@ -12,7 +12,7 @@ export function core(configs: t.Readonly<CoreConfig[]>): ListrTask<Listr2Ctx>['t
 export function core(...configs: t.Readonly<CoreConfig>[]): ListrTask<Listr2Ctx>['task'];
 export function core(): ListrTask<Listr2Ctx>['task'] {
   const resolved = loadCoreConfig.apply(null, arguments as never);
-  signale.debug('Resolved core config: ', resolved);
+  signale.json.debug('Resolved core config:', resolved);
 
   const coreTask: ListrTask<Listr2Ctx>['task'] = function coreTask(_ctx, self) {
     const tasks: ListrTask<Listr2Ctx>[] = [];

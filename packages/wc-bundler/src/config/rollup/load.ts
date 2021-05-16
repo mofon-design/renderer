@@ -72,7 +72,7 @@ export function loadRollupConfig(): ResolvedRollupConfig {
     }
   }
 
-  signale.debug('Resolved rollup builtin plugins configs: ', builtinplugins);
+  signale.json.debug('Resolved rollup builtin plugins configs:', builtinplugins);
 
   for (const key in builtinplugins) {
     if (isKey.call(builtinplugins, key) && builtinplugins[key] !== undefined) {

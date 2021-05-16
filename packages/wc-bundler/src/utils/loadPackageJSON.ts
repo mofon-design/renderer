@@ -8,7 +8,7 @@ export function loadPackageJSON(cwd?: string): t.UnknownRecord | null {
     pkg = require(cwd === undefined ? resolve('package.json') : join(cwd, 'package.json'));
     if (typeof pkg !== 'object') pkg = null;
   } catch (error) {
-    signale.note('Load package.json failed: ', error);
+    signale.note('Load package.json failed:', error);
   }
 
   return pkg;
