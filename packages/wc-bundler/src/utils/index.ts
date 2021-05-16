@@ -10,6 +10,7 @@ export * from './export';
 export * from './hideDEP0097';
 export * from './iterargs';
 export * from './loadModuleByBabel';
+export * from './loadPackageJSON';
 export * from './pascalCase';
 export * from './registerBabel';
 export * from './root';

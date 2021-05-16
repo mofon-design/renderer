@@ -8,8 +8,14 @@ import { DefaultUMDModuleConfig } from './interface';
 
 const isKey = Object.prototype.hasOwnProperty as t.Object.prototype.hasOwnProperty;
 
-const BabelExtensionsIncludeTS = ['.js', '.jsx', '.es6', '.es', '.mjs', '.ts', '.tsx'];
-const NodeResolveExtensionsIncludeTS = BabelExtensionsIncludeTS.concat(['.json', '.node']);
+const Defaults = {
+  get BabelExtensionsIncludeTS() {
+    return ['.js', '.jsx', '.es6', '.es', '.mjs', '.ts', '.tsx'];
+  },
+  get NodeResolveExtensionsIncludeTS() {
+    return Defaults.BabelExtensionsIncludeTS.concat(['.json', '.node']);
+  },
+};
 
 export function loadUMDModuleConfig(
   config: t.Readonly<UMDModuleConfig> = {},
@@ -45,11 +51,11 @@ export function loadUMDModuleConfig(
 
     if (typescript) {
       if (merged.rollup.babel.extensions === undefined)
-        merged.rollup.babel.extensions = BabelExtensionsIncludeTS;
+        merged.rollup.babel.extensions = Defaults.BabelExtensionsIncludeTS;
       if (merged.rollup.nodeResolve === undefined || merged.rollup.nodeResolve) {
         if (typeof merged.rollup.nodeResolve === 'object')
-          merged.rollup.nodeResolve.extensions = NodeResolveExtensionsIncludeTS;
-        else merged.rollup.nodeResolve = { extensions: NodeResolveExtensionsIncludeTS };
+          merged.rollup.nodeResolve.extensions = Defaults.NodeResolveExtensionsIncludeTS;
+        else merged.rollup.nodeResolve = { extensions: Defaults.NodeResolveExtensionsIncludeTS };
       }
     }
   } else {

@@ -8,17 +8,16 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import url from '@rollup/plugin-url';
-import { basename, resolve } from 'path';
+import { basename } from 'path';
 import type {
   RollupOptions,
   InputOption as RollupInputOptions,
   OutputOptions as RollupOutputOptions,
   Plugin as RollupPlugin,
 } from 'rollup';
-import signale from 'signale';
 import type { Options as RollupTerserConfig } from 'rollup-plugin-terser';
 import { terser } from 'rollup-plugin-terser';
-import { detectFile, env, pascalCase } from '../../utils';
+import { detectFile, env, loadPackageJSON, pascalCase } from '../../utils';
 
 export type RollupCommonJSConfig = typeof cjs extends (options?: infer Options) => unknown
   ? Options
@@ -203,9 +202,24 @@ export interface ResolvedRollupConfig extends Omit<RollupOptions, 'input' | 'out
    * Specify output options.
    *
    * @default
-   * const { main } = require('package.json');
-   * const base = basename(main || '').split('.').find((f) => f.length > 0);
-   * const name = base && /[^a-z_]/i.test(base) ? PascalCase(base) : base?.toUpperCase();
+   * let file = 'index.umd.js', name;
+   * const pkg = require('package.json');
+   * const asUMDName = (name) => /[^a-z_]/i.test(name) ? PascalCase(name) : name.toUpperCase();
+   *
+   * if (pkg?.main) {
+   *   const base = basename(pkg.main).split('.').find((f) => f.length > 0);
+   *   name = base ? asUMDName(base) : undefined;
+   * }
+   *
+   * if (name === undefined && pkg?.name) {
+   *   const base = pkg.name.split('/').reverse()[0];
+   *   name = base ? asUMDName(base) : undefined;
+   * }
+   *
+   * if (name === undefined) {
+   *   name = asUMDName(basename(process.cwd()));
+   * }
+   *
    * const output = { file: main || 'index.umd.js', format: 'umd', name };
    */
   output: RollupOutputOptions;
@@ -222,26 +236,34 @@ const DefaultEntries = [
 export function DefaultRollupConfig(): ResolvedRollupConfig {
   let file = 'index.umd.js';
   let name: string | undefined;
+  const pkg = loadPackageJSON();
 
-  try {
-    const pkg: t.UnknownRecord | null = require(resolve('package.json'));
+  if (pkg) {
+    if (typeof pkg.main === 'string' && pkg.main) {
+      const base = basename(pkg.main)
+        .split('.')
+        .find((fragment) => fragment.length > 0);
 
-    if (typeof pkg === 'object' && pkg) {
-      if (typeof pkg.main === 'string' && pkg.main) {
-        const base = basename(pkg.main)
-          .split('.')
-          .find((fragment) => fragment.length > 0);
-
-        file = pkg.main;
-        name = base && /[^a-z_]/i.test(base) ? pascalCase(base) : base?.toUpperCase();
-      }
+      file = pkg.main;
+      name = base ? asUMDName(base) : undefined;
     }
-  } catch (error) {
-    if (env.DEBUG) signale.error(error);
+
+    if (name === undefined && typeof pkg.name === 'string' && pkg.name) {
+      const base: string | undefined = pkg.name.split('/').reverse()[0];
+      name = base ? asUMDName(base) : undefined;
+    }
+  }
+
+  if (name === undefined) {
+    name = asUMDName(basename(process.cwd()));
   }
 
   return {
     input: DefaultEntries.find((entry) => detectFile(entry)) || 'src/index',
     output: { file, format: 'umd', name },
   };
+}
+
+function asUMDName(name: string): string {
+  return /[^a-z_]/i.test(name) ? pascalCase(name) : name.toUpperCase();
 }

@@ -1,6 +1,5 @@
-import { dirname, extname, resolve } from 'path';
-import signale from 'signale';
-import { env } from '../../utils';
+import { dirname, extname } from 'path';
+import { loadPackageJSON } from '../../utils';
 import type { CoreSharedConfig } from '../core';
 import type { BundleIOConfig } from '../io';
 import { DefaultBundleIOConfig } from '../io';
@@ -29,21 +28,14 @@ export interface ResolvedCommonJSModuleConfig
     Omit<CommonJSModuleConfig, keyof BundleIOConfig> {}
 
 export function DefaultCommonJSModuleConfig(): ResolvedCommonJSModuleConfig {
+  const pkg = loadPackageJSON();
   const config: ResolvedCommonJSModuleConfig = DefaultBundleIOConfig();
 
   config.outdir = 'lib/';
 
-  try {
-    const pkg: t.UnknownRecord | null = require(resolve('package.json'));
-
-    if (typeof pkg === 'object' && pkg) {
-      if (typeof pkg.main === 'string') {
-        config.outdir = dirname(pkg.main);
-        config.extname = extname(pkg.main) || '.js';
-      }
-    }
-  } catch (error) {
-    if (env.DEBUG) signale.error(error);
+  if (pkg && typeof pkg.main === 'string') {
+    config.outdir = dirname(pkg.main);
+    config.extname = extname(pkg.main) || '.js';
   }
 
   return config;

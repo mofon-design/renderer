@@ -1,6 +1,4 @@
-import { resolve } from 'path';
-import signale from 'signale';
-import { env } from '../../utils';
+import { loadPackageJSON } from '../../utils';
 import type { BabelConfig } from '../babel';
 import { DefaultBuiltinBabelPresetsConfig } from '../babel';
 import type { CommonJSModuleConfig } from '../cjs';
@@ -105,15 +103,8 @@ export interface ResolvedCoreConfig
     ResolvedCoreTaskConfig {}
 
 export function DefaultCoreTaskConfig(): ResolvedCoreTaskConfig {
+  const pkg = loadPackageJSON();
   const config: ResolvedCoreTaskConfig = {};
-  let pkg: t.UnknownRecord | null = null;
-
-  try {
-    pkg = require(resolve('package.json'));
-    if (typeof pkg !== 'object') pkg = null;
-  } catch (error) {
-    if (env.DEBUG) signale.error(error);
-  }
 
   if (pkg) {
     if (typeof pkg.type === 'string') {

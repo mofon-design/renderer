@@ -1,6 +1,6 @@
 import { sync as globSync } from 'glob';
-import { basename, join, resolve } from 'path';
-import { asArray, loadModuleByBabel, slash } from '../../utils';
+import { basename, resolve } from 'path';
+import { asArray, loadModuleByBabel, loadPackageJSON, slash } from '../../utils';
 import type { ResolvedWorkspaceConfig, WorkspaceConfig, WorkspacePackageInfo } from './interface';
 import { DefaultWorkspaceConfig } from './interface';
 
@@ -21,9 +21,12 @@ export function loadWorkspaceConfig(
   }
 
   if (config.packageJSON === undefined || config.packageJSON) {
-    const pkg = loadModuleByBabel(resolve('package.json')) as t.AnyRecord;
-    if (typeof pkg === 'object' && typeof pkg?.workspaces === 'object' && pkg.workspaces.packages) {
-      ptnsets.push(asArray(pkg.workspaces.packages));
+    const pkg = loadPackageJSON();
+    if (pkg && typeof pkg.workspaces === 'object') {
+      const workspaces = pkg.workspaces as t.AnyRecord | null;
+      if (workspaces && workspaces.packages) {
+        ptnsets.push(asArray(workspaces.packages));
+      }
     }
   }
 
@@ -51,9 +54,8 @@ export function loadWorkspaceConfig(
   if (pathset === undefined) pathset = new Set([cwd]);
 
   for (const abspath of pathset) {
-    const pkg = loadModuleByBabel(join(abspath, 'package.json')) as t.UnknownRecord;
-    const name =
-      typeof pkg === 'object' && typeof pkg?.name === 'string' ? pkg.name : basename(abspath);
+    const pkg = loadPackageJSON(abspath);
+    const name = pkg && typeof pkg.name === 'string' ? pkg.name : basename(abspath);
     pathNameMap.set(abspath, name);
   }
 

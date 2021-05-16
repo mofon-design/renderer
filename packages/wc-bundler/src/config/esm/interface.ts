@@ -1,6 +1,5 @@
-import { dirname, extname, resolve } from 'path';
-import signale from 'signale';
-import { env } from '../../utils';
+import { dirname, extname } from 'path';
+import { loadPackageJSON } from '../../utils';
 import type { CoreSharedConfig } from '../core';
 import type { BundleIOConfig } from '../io';
 import { DefaultBundleIOConfig } from '../io';
@@ -37,24 +36,19 @@ export interface ResolvedECMAScriptModuleConfig
     Omit<ECMAScriptModuleConfig, keyof BundleIOConfig> {}
 
 export function DefaultECMAScriptModuleConfig(): ResolvedECMAScriptModuleConfig {
+  const pkg = loadPackageJSON();
   const config: ResolvedECMAScriptModuleConfig = DefaultBundleIOConfig();
 
   config.outdir = 'es/';
 
-  try {
-    const pkg: t.UnknownRecord | null = require(resolve('package.json'));
-
-    if (typeof pkg === 'object' && pkg) {
-      if (typeof pkg.module === 'string') {
-        config.outdir = dirname(pkg.module);
-        config.extname = extname(pkg.module) || '.js';
-      } else if (typeof pkg.main === 'string' && pkg.main.endsWith('.mjs')) {
-        config.extname = '.mjs';
-        config.outdir = dirname(pkg.main);
-      }
+  if (pkg) {
+    if (typeof pkg.module === 'string') {
+      config.outdir = dirname(pkg.module);
+      config.extname = extname(pkg.module) || '.js';
+    } else if (typeof pkg.main === 'string' && pkg.main.endsWith('.mjs')) {
+      config.extname = '.mjs';
+      config.outdir = dirname(pkg.main);
     }
-  } catch (error) {
-    if (env.DEBUG) signale.error(error);
   }
 
   return config;
