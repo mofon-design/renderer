@@ -1,5 +1,5 @@
 import type { Plugin as RollupPlugin } from 'rollup';
-import { asArray, iterargs, signale } from '../../utils';
+import { asArray, iterargs, json, signale } from '../../utils';
 import {
   DefaultRollupBabelConfig,
   DefaultRollupConfig,
@@ -72,7 +72,7 @@ export function loadRollupConfig(): ResolvedRollupConfig {
     }
   }
 
-  signale.json.debug('Resolved rollup builtin plugins configs:', builtinplugins);
+  signale.debug(() => ['Resolved rollup builtin plugins configs:', json(builtinplugins)]);
 
   for (const key in builtinplugins) {
     if (isKey.call(builtinplugins, key) && builtinplugins[key] !== undefined) {

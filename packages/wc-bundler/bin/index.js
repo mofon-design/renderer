@@ -8,7 +8,7 @@ function loadCore() {
     return require('wc-bundler').bin;
   } catch {}
 
-  require('signale').info(
+  require('lazy-signale').info(
     '`wc-bundler` has not been built yet, try to load the uncompiled source code...',
   );
   require('@babel/register')({

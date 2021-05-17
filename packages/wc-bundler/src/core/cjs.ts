@@ -2,7 +2,7 @@ import type { ListrTask } from 'listr2';
 import type { CommonJSModuleConfig } from '../config';
 import { loadCommonJSModuleConfig } from '../config';
 import { createBabelPipeline } from '../pipelines';
-import { asArray, signale } from '../utils';
+import { asArray, json, signale } from '../utils';
 import { withIO } from './io';
 
 export function cjs(config?: t.Readonly<CommonJSModuleConfig>): ListrTask<Listr2Ctx> {
@@ -14,7 +14,7 @@ export function cjs(config?: t.Readonly<CommonJSModuleConfig>): ListrTask<Listr2
 
   function loadConfig() {
     const resolved = loadCommonJSModuleConfig(config);
-    signale.json.debug('Resolved cjs config:', resolved);
+    signale.debug(() => ['Resolved cjs config:', json(resolved)]);
     return resolved;
   }
 }

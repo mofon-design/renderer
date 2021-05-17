@@ -2,7 +2,7 @@ import type { ListrTask } from 'listr2';
 import type { ECMAScriptModuleConfig } from '../config';
 import { loadECMAScriptModuleConfig } from '../config';
 import { createBabelPipeline } from '../pipelines';
-import { asArray, signale } from '../utils';
+import { asArray, json, signale } from '../utils';
 import { withIO } from './io';
 
 export function esm(config?: t.Readonly<ECMAScriptModuleConfig>): ListrTask<Listr2Ctx> {
@@ -14,7 +14,7 @@ export function esm(config?: t.Readonly<ECMAScriptModuleConfig>): ListrTask<List
 
   function loadConfig() {
     const resolved = loadECMAScriptModuleConfig(config);
-    signale.json.debug('Resolved esm config:', resolved);
+    signale.debug(() => ['Resolved esm config:', json(resolved)]);
     return resolved;
   }
 }

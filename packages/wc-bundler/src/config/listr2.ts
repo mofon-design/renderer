@@ -11,7 +11,7 @@ export function loadListr2Config(
     registerSignalListeners: false,
   };
 
-  if (env.DEBUG || env.TERM === 'dumb') {
+  if ((env.DEBUG && env.LOG_FILE === undefined) || env.TERM === 'dumb') {
     config.renderer = 'verbose';
   } else if (env.SILENT) {
     config.renderer = 'silent';
