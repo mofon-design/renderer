@@ -4,7 +4,7 @@
   "description": "Prettier parser that allows for parsing of experimental syntax transformed by Babel",
   "author": "imhele <work@imhele.com>",
   "license": "MIT",
-  "main": "index.umd.js",
+  "main": "lib/index.js",
   "module": "es/index.js",
   "types": "src/index.ts",
   "bugs": {
