@@ -25,7 +25,7 @@ export function DefaultBundleIOConfig(): Required<BundleIOConfig> {
     entry: [
       'src/**/*',
       '!**/*{demo,e2e,fixture,spec,test}?(s)*/**',
-      '!**/*{demo,e2e,fixture,spec,test}.*',
+      '!**/*.*(_){demo,e2e,fixture,spec,test}*(_).*',
     ],
     extname: '.js',
     outdir: 'dist/',
