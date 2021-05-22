@@ -194,6 +194,8 @@ export interface ResolvedRollupConfig extends Omit<RollupOptions, 'input' | 'out
   /**
    * Specify entry file.
    *
+   * If esm task enabled, the entry of esm output will be used as the input of rollup.
+   *
    * @default
    * 'src/index.{tsx,ts,jsx,js,mjs}'
    */

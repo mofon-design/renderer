@@ -23,7 +23,7 @@ export function core(): ListrTask<Listr2Ctx>['task'] {
 
     if (!tasks.length) return self.skip();
 
-    return self.newListr(tasks, { concurrent: true });
+    return self.newListr(tasks, { concurrent: false });
   };
 
   if (!resolved.workspace) {

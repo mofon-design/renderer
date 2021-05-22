@@ -101,6 +101,7 @@ export interface ResolvedCoreConfig
     ResolvedCoreTaskConfig {}
 
 export function DefaultCoreTaskConfig(): ResolvedCoreTaskConfig {
+  let esmentry: string | undefined;
   const pkg = loadPackageJSON();
   const config: ResolvedCoreTaskConfig = {};
 
@@ -111,14 +112,16 @@ export function DefaultCoreTaskConfig(): ResolvedCoreTaskConfig {
       else if (type === 'module') config.esm = DefaultCoreTaskConfigMap.esm;
     } else if (typeof pkg.main === 'string') {
       if (/\.umd\./.test(pkg.main)) config.umd = DefaultCoreTaskConfigMap.umd;
-      else if (pkg.main.endsWith('.mjs')) config.esm = DefaultCoreTaskConfigMap.esm;
+      else if (pkg.main.endsWith('.mjs'))
+        (config.esm = DefaultCoreTaskConfigMap.esm), (esmentry = pkg.main);
       else config.cjs = DefaultCoreTaskConfigMap.cjs;
     }
 
-    if (config.esm === undefined && typeof pkg.module === 'string') {
-      config.esm = DefaultCoreTaskConfigMap.esm;
-    }
+    if (config.esm === undefined && typeof pkg.module === 'string')
+      (config.esm = DefaultCoreTaskConfigMap.esm), (esmentry = pkg.module);
   }
+
+  if (config.esm && config.umd) config.umd.input = esmentry ?? 'es/index.js';
 
   return config;
 }
