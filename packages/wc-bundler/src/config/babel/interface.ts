@@ -265,13 +265,12 @@ export function DefaultBabelTypeScriptConfig(): BabelTypeScriptConfig {
 
 export function DefaultBabelPluginsConfig(): BabelPluginItem[] {
   return [
-    '@babel/plugin-proposal-class-properties',
+    '@babel/plugin-proposal-async-do-expressions',
     '@babel/plugin-proposal-class-static-block',
     ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: false }],
     '@babel/plugin-proposal-do-expressions',
     '@babel/plugin-proposal-export-default-from',
     '@babel/plugin-proposal-optional-chaining',
-    '@babel/plugin-proposal-private-methods',
     '@babel/plugin-proposal-private-property-in-object',
     '@babel/plugin-proposal-throw-expressions',
     '@babel/plugin-syntax-dynamic-import',

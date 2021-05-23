@@ -1,12 +1,23 @@
 module.exports.WCBundler = async function WCBundler() {
   console.log('\nBuild wc-bundler...');
 
-  const fs = require('fs');
   const cwd = process.cwd();
   process.chdir('./packages/wc-bundler');
-  const TSConfigJSONExsists = fs.existsSync('tsconfig.json');
-  if (!TSConfigJSONExsists) fs.writeFileSync('tsconfig.json', '{}', 'utf8');
-  await require('wc-bundler/bin/index');
-  if (!TSConfigJSONExsists) fs.unlinkSync('tsconfig.json');
+
+  require('@babel/register')({
+    extensions: ['.tsx', '.ts', '.jsx', '.mjs', '.es'],
+    ignore: [/node_modules/],
+    only: [process.cwd()],
+    presets: [
+      ['@babel/preset-env', { targets: { node: process.version }, modules: 'cjs' }],
+      '@babel/preset-typescript',
+    ],
+  });
+
+  await require('wc-bundler/src').bin({
+    babel: { typescript: true },
+    workspace: false,
+  });
+
   process.chdir(cwd);
 };
