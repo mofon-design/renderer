@@ -1,6 +1,6 @@
 import { asArray } from '../../utils';
 import { loadBabelConfig } from '../babel';
-import { DefaultCoreSharedConfigMap } from '../core';
+import { DefaultCoreSharedConfigGetterMap } from '../core';
 import type { ResolvedRollupConfig, RollupBabelConfig } from '../rollup';
 import { loadRollupConfig } from '../rollup';
 import type { UMDModuleConfig } from './interface';
@@ -25,7 +25,7 @@ export function loadUMDModuleConfig(
   for (const key in config) {
     if (!isKey.call(config, key)) continue;
 
-    if (isKey.call(DefaultCoreSharedConfigMap, key)) {
+    if (isKey.call(DefaultCoreSharedConfigGetterMap, key)) {
       if (key !== 'babel') merged[key] = config[key];
     } else if (key === 'rollupBabel') {
       // ignore additional config

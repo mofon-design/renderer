@@ -1,6 +1,6 @@
 import { loadPackageJSON } from '../../utils';
 import type { BabelConfig } from '../babel';
-import { DefaultBuiltinBabelPresetsConfig } from '../babel';
+import { DefaultBabelConfig } from '../babel';
 import type { CommonJSModuleConfig } from '../cjs';
 import type { ECMAScriptModuleConfig } from '../esm';
 import type { UMDModuleConfig } from '../umd';
@@ -18,7 +18,7 @@ export type ResolvedCoreGroupedConfig = {
   [Key in keyof CoreGroupedConfig]: Exclude<CoreGroupedConfig[Key], boolean>;
 };
 
-export const DefaultCoreGroupedConfigMap: Required<ResolvedCoreGroupedConfig> = {
+export const DefaultCoreGroupedConfigGetterMap: Required<ResolvedCoreGroupedConfig> = {
   get workspace() {
     return DefaultWorkspaceConfig();
   },
@@ -45,9 +45,9 @@ export type ResolvedCoreSharedConfig = {
     : never;
 };
 
-export const DefaultCoreSharedConfigMap: ResolvedCoreSharedConfig = {
+export const DefaultCoreSharedConfigGetterMap: ResolvedCoreSharedConfig = {
   get babel() {
-    return [DefaultBuiltinBabelPresetsConfig()];
+    return [DefaultBabelConfig()];
   },
 };
 
@@ -81,7 +81,7 @@ export type ResolvedCoreTaskConfig = {
   [Key in keyof CoreTaskConfig]: Exclude<CoreTaskConfig[Key], boolean>;
 };
 
-export const DefaultCoreTaskConfigMap: Required<ResolvedCoreTaskConfig> = {
+export const DefaultCoreTaskConfigGetterMap: Required<ResolvedCoreTaskConfig> = {
   get cjs() {
     return {};
   },
@@ -108,17 +108,17 @@ export function DefaultCoreTaskConfig(): ResolvedCoreTaskConfig {
   if (pkg) {
     if (typeof pkg.type === 'string') {
       const type = pkg.type.toLowerCase();
-      if (type === 'commonjs') config.cjs = DefaultCoreTaskConfigMap.cjs;
-      else if (type === 'module') config.esm = DefaultCoreTaskConfigMap.esm;
+      if (type === 'commonjs') config.cjs = DefaultCoreTaskConfigGetterMap.cjs;
+      else if (type === 'module') config.esm = DefaultCoreTaskConfigGetterMap.esm;
     } else if (typeof pkg.main === 'string') {
-      if (/\.umd\./.test(pkg.main)) config.umd = DefaultCoreTaskConfigMap.umd;
+      if (/\.umd\./.test(pkg.main)) config.umd = DefaultCoreTaskConfigGetterMap.umd;
       else if (pkg.main.endsWith('.mjs'))
-        (config.esm = DefaultCoreTaskConfigMap.esm), (esmentry = pkg.main);
-      else config.cjs = DefaultCoreTaskConfigMap.cjs;
+        (config.esm = DefaultCoreTaskConfigGetterMap.esm), (esmentry = pkg.main);
+      else config.cjs = DefaultCoreTaskConfigGetterMap.cjs;
     }
 
     if (config.esm === undefined && typeof pkg.module === 'string')
-      (config.esm = DefaultCoreTaskConfigMap.esm), (esmentry = pkg.module);
+      (config.esm = DefaultCoreTaskConfigGetterMap.esm), (esmentry = pkg.module);
   }
 
   if (config.esm && config.umd) config.umd.input = esmentry ?? 'es/index.js';
@@ -129,7 +129,7 @@ export function DefaultCoreTaskConfig(): ResolvedCoreTaskConfig {
 export function DefaultCoreConfig(): ResolvedCoreConfig {
   return Object.assign(
     DefaultCoreTaskConfig(),
-    DefaultCoreGroupedConfigMap,
-    DefaultCoreSharedConfigMap,
+    DefaultCoreGroupedConfigGetterMap,
+    DefaultCoreSharedConfigGetterMap,
   );
 }

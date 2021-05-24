@@ -2,6 +2,7 @@ import type {
   PluginItem as BabelPluginItem,
   TransformOptions as BabelTransformOptions,
 } from '@babel/core';
+import type { Options as BabelPluginTransformRuntimeConfig } from '@babel/plugin-transform-runtime';
 import type {
   ModuleOption as BabelPresetEnvModuleOption,
   Options as BabelPresetEnv9Config,
@@ -10,6 +11,28 @@ import type {
 } from '@babel/preset-env';
 import { join } from 'path';
 import { detectFile, isRoot, resolveModuleByBabel, root } from '../../utils';
+
+export interface BabelPluginProposalDecoratorsConfig {
+  /**
+   * This option was added to help tc39 collect feedback from the community by
+   * allowing experimentation with both possible syntaxes.
+   *
+   * For more information, check out: tc39/proposal-decorators#69.
+   */
+  decoratorsBeforeExport?: boolean;
+  /**
+   * Use the legacy (stage 1) decorators syntax and behavior.
+   */
+  legacy?: boolean;
+}
+
+export function DefaultBabelPluginProposalDecoratorsConfig(): BabelPluginProposalDecoratorsConfig {
+  return {};
+}
+
+export function DefaultBabelPluginTransformRuntimeConfig(): BabelPluginTransformRuntimeConfig {
+  return {}; // TODO
+}
 
 export interface BabelEnvConfig extends BabelPresetEnv9Config {
   browserslistEnv?: string;
@@ -264,18 +287,104 @@ export function DefaultBabelTypeScriptConfig(): BabelTypeScriptConfig {
 }
 
 export function DefaultBabelPluginsConfig(): BabelPluginItem[] {
-  return [
-    '@babel/plugin-proposal-async-do-expressions',
-    '@babel/plugin-proposal-class-static-block',
-    ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: false }],
-    '@babel/plugin-proposal-do-expressions',
-    '@babel/plugin-proposal-export-default-from',
-    '@babel/plugin-proposal-optional-chaining',
-    '@babel/plugin-proposal-private-property-in-object',
-    '@babel/plugin-proposal-throw-expressions',
-    '@babel/plugin-syntax-dynamic-import',
-  ];
+  return [];
 }
+
+export interface BuiltinBabelPluginsConfig {
+  ['plugin-proposal-async-do-expressions']?: boolean;
+  ['plugin-proposal-class-static-block']?: boolean;
+  ['plugin-proposal-decorators']?: BabelPluginProposalDecoratorsConfig | true;
+  ['plugin-proposal-do-expressions']?: boolean;
+  ['plugin-proposal-export-default-from']?: boolean;
+  ['plugin-proposal-function-bind']?: boolean;
+  ['plugin-proposal-function-sent']?: boolean;
+  ['plugin-proposal-partial-application']?: boolean;
+  ['plugin-proposal-pipeline-operator']?: boolean;
+  ['plugin-proposal-private-property-in-object']?: boolean;
+  ['plugin-proposal-throw-expressions']?: boolean;
+  ['plugin-syntax-dynamic-import']?: boolean;
+  ['plugin-transform-runtime']?: BabelPluginTransformRuntimeConfig | boolean;
+}
+
+export const DefaultBuiltinBabelPluginsConfigGetterMap: Required<BuiltinBabelPluginsConfig> = {
+  get ['plugin-proposal-async-do-expressions']() {
+    return true;
+  },
+  get ['plugin-proposal-class-static-block']() {
+    return true;
+  },
+  get ['plugin-proposal-decorators']() {
+    return DefaultBabelPluginProposalDecoratorsConfig();
+  },
+  get ['plugin-proposal-do-expressions']() {
+    return true;
+  },
+  get ['plugin-proposal-export-default-from']() {
+    return true;
+  },
+  get ['plugin-proposal-function-bind']() {
+    return true;
+  },
+  get ['plugin-proposal-function-sent']() {
+    return true;
+  },
+  get ['plugin-proposal-partial-application']() {
+    return true;
+  },
+  get ['plugin-proposal-pipeline-operator']() {
+    return true;
+  },
+  get ['plugin-proposal-private-property-in-object']() {
+    return true;
+  },
+  get ['plugin-proposal-throw-expressions']() {
+    return true;
+  },
+  get ['plugin-syntax-dynamic-import']() {
+    return true;
+  },
+  get ['plugin-transform-runtime']() {
+    return DefaultBabelPluginTransformRuntimeConfig();
+  },
+};
+
+export function DefaultBuiltinBabelPluginsConfig(): BuiltinBabelPluginsConfig {
+  const DefaultEnabledPlugins: (keyof BuiltinBabelPluginsConfig)[] = [
+    'plugin-proposal-async-do-expressions',
+    'plugin-proposal-class-static-block',
+    'plugin-proposal-decorators',
+    'plugin-proposal-do-expressions',
+    'plugin-proposal-export-default-from',
+    'plugin-proposal-private-property-in-object',
+    'plugin-proposal-throw-expressions',
+    'plugin-syntax-dynamic-import',
+    'plugin-transform-runtime',
+  ];
+
+  return DefaultEnabledPlugins.reduce<BuiltinBabelPluginsConfig>((map, key) => {
+    map[key] = DefaultBuiltinBabelPluginsConfigGetterMap[key] as never;
+    return map;
+  }, {});
+}
+
+export const BuiltinBabelPluginsNameMap: Readonly<
+  Record<keyof BuiltinBabelPluginsConfig, BabelPluginItem>
+> = {
+  ['plugin-proposal-async-do-expressions']: '@babel/plugin-proposal-async-do-expressions',
+  ['plugin-proposal-class-static-block']: '@babel/plugin-proposal-class-static-block',
+  ['plugin-proposal-decorators']: '@babel/plugin-proposal-decorators',
+  ['plugin-proposal-do-expressions']: '@babel/plugin-proposal-do-expressions',
+  ['plugin-proposal-export-default-from']: '@babel/plugin-proposal-export-default-from',
+  ['plugin-proposal-function-bind']: '@babel/plugin-proposal-function-bind',
+  ['plugin-proposal-function-sent']: '@babel/plugin-proposal-function-sent',
+  ['plugin-proposal-partial-application']: '@babel/plugin-proposal-partial-application',
+  ['plugin-proposal-pipeline-operator']: '@babel/plugin-proposal-pipeline-operator',
+  ['plugin-proposal-private-property-in-object']:
+    '@babel/plugin-proposal-private-property-in-object',
+  ['plugin-proposal-throw-expressions']: '@babel/plugin-proposal-throw-expressions',
+  ['plugin-syntax-dynamic-import']: '@babel/plugin-syntax-dynamic-import',
+  ['plugin-transform-runtime']: '@babel/plugin-transform-runtime',
+};
 
 export function DefaultBabelPresetsConfig(): BabelPluginItem[] {
   return [];
@@ -304,10 +413,24 @@ export type ResolvedBuiltinBabelPresetsConfig = {
   [Key in keyof BuiltinBabelPresetsConfig]: Exclude<BuiltinBabelPresetsConfig[Key], boolean>;
 };
 
+export const DefaultBuiltinBabelPresetsConfigGetterMap: Required<ResolvedBuiltinBabelPresetsConfig> = {
+  get env() {
+    return DefaultBabelEnvConfig();
+  },
+  get minify() {
+    return DefaultBabelMinifyConfig();
+  },
+  get typescript() {
+    return DefaultBabelTypeScriptConfig();
+  },
+};
+
 export function DefaultBuiltinBabelPresetsConfig(): ResolvedBuiltinBabelPresetsConfig {
   return {
-    env: DefaultBabelEnvConfig(),
-    typescript: detectFile('tsconfig.json') ? DefaultBabelTypeScriptConfig() : undefined,
+    env: DefaultBuiltinBabelPresetsConfigGetterMap.env,
+    typescript: detectFile('tsconfig.json')
+      ? DefaultBuiltinBabelPresetsConfigGetterMap.typescript
+      : undefined,
   };
 }
 
@@ -319,7 +442,10 @@ export const BuiltinBabelPresetsNameMap: Readonly<
   typescript: '@babel/preset-typescript',
 };
 
-export interface BabelConfig extends Omit<BabelTransformOptions, 'env'>, BuiltinBabelPresetsConfig {
+export interface BabelConfig
+  extends Omit<BabelTransformOptions, 'env'>,
+    BuiltinBabelPluginsConfig,
+    BuiltinBabelPresetsConfig {
   /**
    * Specify whether or not to use .babelrc and .babelignore files.
    *
@@ -352,5 +478,10 @@ export function DefaultBabelConfig(): BabelConfig {
     plugins: DefaultBabelPluginsConfig(),
     presets: DefaultBabelPresetsConfig(),
   };
-  return Object.assign(DefaultBuiltinBabelPresetsConfig(), extra);
+
+  return Object.assign(
+    extra,
+    DefaultBuiltinBabelPluginsConfig(),
+    DefaultBuiltinBabelPresetsConfig(),
+  );
 }

@@ -19,7 +19,7 @@ import {
 
 const isKey = Object.prototype.hasOwnProperty as t.Object.prototype.hasOwnProperty;
 
-const BuiltinRollupPluginConfigGetters: Required<ResolvedBuiltinRollupPluginsConfig> = {
+const BuiltinRollupPluginConfigGetterMap: Required<ResolvedBuiltinRollupPluginsConfig> = {
   get babel() {
     return DefaultRollupBabelConfig();
   },
@@ -51,14 +51,14 @@ export function loadRollupConfig(): ResolvedRollupConfig {
     for (const key in config) {
       if (!isKey.call(config, key)) continue;
 
-      if (isKey.call(BuiltinRollupPluginConfigGetters, key)) {
+      if (isKey.call(BuiltinRollupPluginConfigGetterMap, key)) {
         if (config[key] === undefined) {
           // ignore void preset config
         } else if (!config[key]) {
           builtinplugins[key] = undefined;
         } else {
           if (builtinplugins[key] === undefined)
-            Object.assign(builtinplugins, { [key]: BuiltinRollupPluginConfigGetters[key] });
+            Object.assign(builtinplugins, { [key]: BuiltinRollupPluginConfigGetterMap[key] });
           if (typeof config[key] === 'object') Object.assign(builtinplugins[key], config[key]);
         }
       } else if (key === 'plugins') {
