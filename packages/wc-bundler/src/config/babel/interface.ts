@@ -10,7 +10,7 @@ import type {
   TargetsOptions as BabelTargetsOptions,
 } from '@babel/preset-env';
 import { join } from 'path';
-import { detectFile, isRoot, resolveModuleByBabel, root } from '../../utils';
+import { detectFile, resolveModuleByBabel, root } from '../../utils';
 
 export interface BabelPluginProposalDecoratorsConfig {
   /**
@@ -31,7 +31,7 @@ export function DefaultBabelPluginProposalDecoratorsConfig(): BabelPluginProposa
 }
 
 export function DefaultBabelPluginTransformRuntimeConfig(): BabelPluginTransformRuntimeConfig {
-  return {}; // TODO
+  return {}; // TODO detect @babel/runtime
 }
 
 export interface BabelEnvConfig extends BabelPresetEnv9Config {
@@ -57,7 +57,7 @@ export function DefaultBabelEnvConfig(): BabelEnvConfig {
       firefox: '63',
       chrome: '54',
       safari: '10.1',
-    },
+    }, // TODO detect node env
     useBuiltIns: false,
   };
 }
@@ -283,7 +283,7 @@ export function DefaultBabelTypeScriptConfig(): BabelTypeScriptConfig {
     jsxPragmaFrag: 'WC.Fragment',
     isTSX: false,
     onlyRemoveTypeImports: false,
-  };
+  }; // TODO detect react
 }
 
 export function DefaultBabelPluginsConfig(): BabelPluginItem[] {
@@ -362,7 +362,7 @@ export function DefaultBuiltinBabelPluginsConfig(): BuiltinBabelPluginsConfig {
   ];
 
   return DefaultEnabledPlugins.reduce<BuiltinBabelPluginsConfig>((map, key) => {
-    map[key] = DefaultBuiltinBabelPluginsConfigGetterMap[key] as never;
+    map[key] = DefaultBuiltinBabelPluginsConfigGetterMap[key] as boolean;
     return map;
   }, {});
 }
@@ -469,12 +469,8 @@ export function DefaultBabelConfig(): BabelConfig {
   const extra: BabelConfig = {
     babelrc: false,
     configFile:
-      resolveModuleByBabel('./babel.config') ??
-      resolveModuleByBabel('./.babelrc') ??
-      (isRoot()
-        ? undefined
-        : resolveModuleByBabel(join(root, './babel.config')) ??
-          resolveModuleByBabel(join(root, './.babelrc'))),
+      resolveModuleByBabel(join(root, './babel.config')) ??
+      resolveModuleByBabel(join(root, './.babelrc')),
     plugins: DefaultBabelPluginsConfig(),
     presets: DefaultBabelPresetsConfig(),
   };

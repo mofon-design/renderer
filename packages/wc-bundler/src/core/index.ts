@@ -11,7 +11,9 @@ import { coloredWorkspaceTaskTitle, workspace } from './wrokspace';
 export function core(configs: t.Readonly<CoreConfig[]>): ListrTask<Listr2Ctx>['task'];
 export function core(...configs: t.Readonly<CoreConfig>[]): ListrTask<Listr2Ctx>['task'];
 export function core(): ListrTask<Listr2Ctx>['task'] {
-  const resolved = loadCoreConfig.apply(null, arguments as never);
+  const configs: t.Readonly<CoreConfig[]> = Array.from(arguments).flat(1);
+
+  const resolved = loadCoreConfig(configs);
   signale.debug(() => ['Resolved core config:', json(resolved)]);
 
   const coreTask: ListrTask<Listr2Ctx>['task'] = function coreTask(_ctx, self) {
@@ -33,7 +35,7 @@ export function core(): ListrTask<Listr2Ctx>['task'] {
   const coreTaskTitle = coloredWorkspaceTaskTitle();
   const afterAll: ListrTask<Listr2Ctx> = { title: coreTaskTitle, task: coreTask };
   const createCoreTask: ListrTask<Listr2Ctx>['task'] = function createCoreTask(ctx, self) {
-    return core(resolved, { workspace: false })(ctx, self);
+    return core(configs)(ctx, self);
   };
 
   return workspace(resolved.workspace, createCoreTask, { afterAll });

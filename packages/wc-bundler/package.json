@@ -77,6 +77,6 @@
     "bundler"
   ],
   "engines": {
-    "node": ">=10.10.0"
+    "node": ">=12"
   }
 }
