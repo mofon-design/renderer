@@ -45,11 +45,11 @@ export function DefaultBabelPluginTransformRuntimeConfig():
   | BabelPluginTransformRuntimeConfig
   | boolean {
   const pkg = loadPackageJSON();
-  return pkg
-    ? detectBabelRuntimeFromDependencies(pkg.dependencies) ??
-        detectBabelRuntimeFromDependencies(pkg.peerDependencies) ??
-        false
-    : false;
+  return (
+    detectBabelRuntimeFromDependencies(pkg?.dependencies) ||
+    detectBabelRuntimeFromDependencies(pkg?.peerDependencies) ||
+    false
+  );
 
   function detectBabelRuntimeFromDependencies(
     deps: unknown,
@@ -289,14 +289,16 @@ export interface BabelTypeScriptConfig {
    * Replace the function used when compiling JSX expressions.
    * This is so that we know that the import is not a type import, and should not be removed.
    *
-   * @default WC
+   * @default
+   * depsOrPeerDepsIncludeReact ? 'React' : 'WC'
    */
   jsxPragma?: string;
   /**
    * Replace the function used when compiling JSX fragment expressions.
    * This is so that we know that the import is not a type import, and should not be removed.
    *
-   * @default WC.Fragment
+   * @default
+   * `${defaultValueOfJsxPragma}.Fragment`
    */
   jsxPragmaFrag?: string;
   /**
@@ -316,15 +318,26 @@ export interface BabelTypeScriptConfig {
 }
 
 export function DefaultBabelTypeScriptConfig(): BabelTypeScriptConfig {
+  const pkg = loadPackageJSON();
+  const jsxPragma =
+    detectJSXPragmaFromDependencies(pkg?.dependencies) ||
+    detectJSXPragmaFromDependencies(pkg?.peerDependencies) ||
+    'WC';
+
   return {
     allExtensions: false,
     allowDeclareFields: true,
     allowNamespaces: true,
-    jsxPragma: 'WC',
-    jsxPragmaFrag: 'WC.Fragment',
+    jsxPragma,
+    jsxPragmaFrag: `${jsxPragma}.Fragment`,
     isTSX: false,
     onlyRemoveTypeImports: false,
-  }; // TODO detect react
+  };
+
+  function detectJSXPragmaFromDependencies(deps: unknown): string | undefined {
+    if (typeof deps !== 'object' || !deps) return;
+    if ('react' in deps) return 'React';
+  }
 }
 
 export function DefaultBabelPluginsConfig(): BabelPluginItem[] {
