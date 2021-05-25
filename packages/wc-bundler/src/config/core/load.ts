@@ -12,6 +12,7 @@ const isKey = Object.prototype.hasOwnProperty as t.Object.prototype.hasOwnProper
 export function loadCoreConfig(configs: t.Readonly<CoreConfig[]>): ResolvedCoreConfig;
 export function loadCoreConfig(...configs: t.Readonly<CoreConfig>[]): ResolvedCoreConfig;
 export function loadCoreConfig(): ResolvedCoreConfig {
+  // TODO load config from file
   const merged = DefaultCoreConfig();
 
   for (const config of iterargs<t.Readonly<CoreConfig>>(arguments)) {

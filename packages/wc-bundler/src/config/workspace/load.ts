@@ -48,10 +48,9 @@ export function loadWorkspaceConfig(
     }
   }
 
-  const cwd = slash(process.cwd());
-  const pathNameMap = new Map<string, string>();
+  if (pathset === undefined) return [];
 
-  if (pathset === undefined) pathset = new Set([cwd]);
+  const pathNameMap = new Map<string, string>();
 
   for (const abspath of pathset) {
     pathNameMap.set(abspath, loadPackageName(abspath));

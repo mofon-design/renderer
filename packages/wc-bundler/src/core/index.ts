@@ -6,7 +6,7 @@ import { json, signale } from '../utils';
 import { cjs } from './cjs';
 import { esm } from './esm';
 import { umd } from './umd';
-import { coloredWorkspaceTaskTitle, workspace } from './wrokspace';
+import { workspace } from './wrokspace';
 
 export function core(configs: t.Readonly<CoreConfig[]>): ListrTask<Listr2Ctx>['task'];
 export function core(...configs: t.Readonly<CoreConfig>[]): ListrTask<Listr2Ctx>['task'];
@@ -32,13 +32,11 @@ export function core(): ListrTask<Listr2Ctx>['task'] {
     return coreTask;
   }
 
-  const coreTaskTitle = coloredWorkspaceTaskTitle();
-  const afterAll: ListrTask<Listr2Ctx> = { title: coreTaskTitle, task: coreTask };
   const createCoreTask: ListrTask<Listr2Ctx>['task'] = function createCoreTask(ctx, self) {
     return core(configs)(ctx, self);
   };
 
-  return workspace(resolved.workspace, createCoreTask, { afterAll });
+  return workspace(resolved.workspace, createCoreTask, coreTask);
 }
 
 export async function bin(configs: t.Readonly<CoreConfig[]>): Promise<void>;
