@@ -2,7 +2,10 @@ import type {
   PluginItem as BabelPluginItem,
   TransformOptions as BabelTransformOptions,
 } from '@babel/core';
-import type { Options as BabelPluginTransformRuntimeConfig } from '@babel/plugin-transform-runtime';
+import type {
+  Options as BabelPluginTransformRuntimeConfig,
+  CorejsVersion as BabelPluginTransformRuntimeCorejsVersion,
+} from '@babel/plugin-transform-runtime';
 import type {
   ModuleOption as BabelPresetEnvModuleOption,
   Options as BabelPresetEnv9Config,
@@ -10,7 +13,13 @@ import type {
   TargetsOptions as BabelTargetsOptions,
 } from '@babel/preset-env';
 import { join } from 'path';
-import { detectFile, resolveModuleByBabel, root } from '../../utils';
+import {
+  assertInstance,
+  detectFile,
+  loadPackageJSON,
+  resolveModuleByBabel,
+  root,
+} from '../../utils';
 
 export interface BabelPluginProposalDecoratorsConfig {
   /**
@@ -26,12 +35,44 @@ export interface BabelPluginProposalDecoratorsConfig {
   legacy?: boolean;
 }
 
-export function DefaultBabelPluginProposalDecoratorsConfig(): BabelPluginProposalDecoratorsConfig {
-  return {};
+export function DefaultBabelPluginProposalDecoratorsConfig():
+  | BabelPluginProposalDecoratorsConfig
+  | boolean {
+  return { decoratorsBeforeExport: true, legacy: false };
 }
 
-export function DefaultBabelPluginTransformRuntimeConfig(): BabelPluginTransformRuntimeConfig {
-  return {}; // TODO detect @babel/runtime
+export function DefaultBabelPluginTransformRuntimeConfig():
+  | BabelPluginTransformRuntimeConfig
+  | boolean {
+  const pkg = loadPackageJSON();
+  return pkg
+    ? detectBabelRuntimeFromDependencies(pkg.dependencies) ??
+        detectBabelRuntimeFromDependencies(pkg.peerDependencies) ??
+        false
+    : false;
+
+  function detectBabelRuntimeFromDependencies(
+    deps: unknown,
+  ): BabelPluginTransformRuntimeConfig | undefined {
+    if (typeof deps !== 'object' || !deps) return;
+
+    const name = Object.keys(deps).find((key) => key.startsWith('@babel/runtime'));
+    if (!name) return;
+
+    const matched = name.match(/^@babel\/runtime(-corejs(?<corejs>\d))?$/);
+    assertInstance(matched, Object);
+
+    const corejs = matched.groups?.corejs
+      ? (Number(matched.groups.corejs) as BabelPluginTransformRuntimeCorejsVersion)
+      : false;
+
+    return {
+      corejs,
+      helpers: true,
+      regenerator: true,
+      version: (deps as t.AnyRecord)[name],
+    };
+  }
 }
 
 export interface BabelEnvConfig extends BabelPresetEnv9Config {
@@ -293,7 +334,7 @@ export function DefaultBabelPluginsConfig(): BabelPluginItem[] {
 export interface BuiltinBabelPluginsConfig {
   ['plugin-proposal-async-do-expressions']?: boolean;
   ['plugin-proposal-class-static-block']?: boolean;
-  ['plugin-proposal-decorators']?: BabelPluginProposalDecoratorsConfig | true;
+  ['plugin-proposal-decorators']?: BabelPluginProposalDecoratorsConfig | boolean;
   ['plugin-proposal-do-expressions']?: boolean;
   ['plugin-proposal-export-default-from']?: boolean;
   ['plugin-proposal-function-bind']?: boolean;

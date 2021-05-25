@@ -69,9 +69,9 @@ export function loadRawBabelConfig(): BabelTransformOptions {
         if (config[key] === undefined) {
           // ignore void plugin config
         } else if (!config[key]) {
-          builtinplugin[key] = undefined;
+          builtinplugin[key] = false;
         } else {
-          if (builtinplugin[key] === undefined)
+          if (!builtinplugin[key])
             builtinplugin[key] = DefaultBuiltinBabelPluginsConfigGetterMap[key] as never;
           if (typeof config[key] === 'object') {
             if (typeof builtinplugin[key] === 'object')
@@ -99,7 +99,7 @@ export function loadRawBabelConfig(): BabelTransformOptions {
   Object.keys(BuiltinBabelPluginsNameMap)
     .reverse()
     .forEach((key) => {
-      if (isKey.call(BuiltinBabelPluginsNameMap, key) && builtinplugin[key] !== undefined) {
+      if (isKey.call(BuiltinBabelPluginsNameMap, key) && builtinplugin[key]) {
         if (typeof builtinplugin[key] === 'object')
           repeatable.plugins.unshift([BuiltinBabelPluginsNameMap[key], builtinplugin[key]]);
         else repeatable.plugins.unshift(BuiltinBabelPluginsNameMap[key]);
