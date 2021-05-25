@@ -4,12 +4,21 @@ import { env } from './env';
 import { escapeRegExp } from './escapeRegExp';
 import { root } from './root';
 
-let registered = false;
+let registering = false;
+let tryToRegisterAgainDuringRegistering: boolean | null = false;
+let registeredOptions: TransformOptions | undefined | symbol = Symbol('Empty');
 
 export function registerBabel(options?: TransformOptions): void {
-  if (registered) return;
+  if (registeredOptions === options) return;
 
-  const fallback = loadBabelConfig.raw({
+  if (registering) {
+    if (tryToRegisterAgainDuringRegistering !== null) tryToRegisterAgainDuringRegistering = true;
+    return;
+  }
+
+  registering = true;
+
+  const fallback = loadBabelConfig({
     env: { targets: { node: process.version } },
     typescript: true,
   });
@@ -21,7 +30,15 @@ export function registerBabel(options?: TransformOptions): void {
     only: [RegExp(`^${escapeRegExp(root)}`, 'i')],
   };
 
-  require('@babel/register')(Object.assign(fallback, options, override));
+  require('@babel/register')(Object.assign(fallback, override, options));
 
-  registered = true;
+  registering = false;
+
+  if (tryToRegisterAgainDuringRegistering) {
+    tryToRegisterAgainDuringRegistering = null;
+    registerBabel(options);
+    tryToRegisterAgainDuringRegistering = false;
+  }
+
+  registeredOptions = options;
 }

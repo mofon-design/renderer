@@ -36,10 +36,12 @@ export function loadUMDModuleConfig(
 
   if (config.rollupBabel === undefined || config.rollupBabel) {
     const babel = asArray(config.babel || []).concat();
-    const typescript = babel.reduce((prev, curr) => {
-      return curr.typescript === undefined ? prev : !!curr.typescript;
-    }, false);
+    const extra = {
+      ...(typeof config.rollupBabel === 'object' ? config.rollupBabel : null),
+    };
 
+    if (!extra.babelHelpers) extra.babelHelpers = 'bundled';
+    if (extra.babelHelpers !== 'external') babel.push({ 'plugin-transform-runtime': false });
     try {
       const corejs = loadPackageJSON(require.resolve('core-js'))?.version;
       babel.unshift({
@@ -47,15 +49,13 @@ export function loadUMDModuleConfig(
       });
     } catch {}
 
-    merged.rollup.babel = loadBabelConfig(babel) as RollupBabelConfig;
+    const babelRawConfig = loadBabelConfig.raw(babel);
+    merged.rollup.babel = Object.assign(
+      loadBabelConfig.fromRaw(babelRawConfig) as RollupBabelConfig,
+      extra,
+    );
 
-    if (merged.rollup.babel.babelHelpers === undefined)
-      merged.rollup.babel.babelHelpers = 'bundled';
-
-    if (typeof config.rollupBabel === 'object')
-      Object.assign(merged.rollup.babel, config.rollupBabel);
-
-    if (typescript) {
+    if (babelRawConfig.typescript) {
       if (merged.rollup.babel.extensions === undefined)
         merged.rollup.babel.extensions = Defaults.BabelExtensionsIncludeTS;
       if (merged.rollup.nodeResolve === undefined || merged.rollup.nodeResolve) {

@@ -11,16 +11,15 @@ export function workspace(
 ): ListrTask<Listr2Ctx>['task'] {
   return function createWorkspaceTask(ctx, self) {
     self.title = 'Detecting packages at current workspace...';
-    const workspaceDir = process.cwd();
     const pkgs = loadWorkspaceConfig(config);
 
     if (!pkgs.length) {
       if (workspaceTask) {
-        self.title = coloredWorkspaceTaskTitle(workspaceDir);
+        self.title = coloredWorkspaceTaskTitle();
         return workspaceTask(ctx, self);
       }
 
-      return self.skip(`No package found at ${workspaceDir}`);
+      return self.skip(`No package found at ${process.cwd()}`);
     }
 
     self.title = 'Running tasks for each package...';

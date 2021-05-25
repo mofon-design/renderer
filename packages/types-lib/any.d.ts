@@ -14,5 +14,5 @@ declare namespace t {
     (...args: any[]): any;
   }
 
-  type AnyRecord = Record<PropertyKey, any>;
+  type AnyRecord<Key = PropertyKey> = Record<Key, any>;
 }

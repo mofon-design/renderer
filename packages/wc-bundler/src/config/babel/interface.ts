@@ -41,6 +41,24 @@ export function DefaultBabelPluginProposalDecoratorsConfig():
   return { decoratorsBeforeExport: true, legacy: false };
 }
 
+export interface BabelPluginProposalPipelineOperatorConfig {
+  /**
+   * The Pipeline Proposal is one of three competing implementations.
+   * Which implementation the plugin should use is configured with this option.
+   * This option is required and should be one of:
+   * - "minimal" – Minimal Pipeline
+   * - "smart" - Smart Pipeline - Added in v7.3.0
+   * - "fsharp" - F#-Style Pipeline - Added in v7.5.0
+   * When one of the implementations is accepted, it will become the default
+   * and this option will no longer be required.
+   */
+  proposal: 'minimal' | 'smart' | 'fsharp';
+}
+
+export function DefaultBabelPluginProposalPipelineOperatorConfig(): BabelPluginProposalPipelineOperatorConfig {
+  return { proposal: 'minimal' };
+}
+
 export function DefaultBabelPluginTransformRuntimeConfig():
   | BabelPluginTransformRuntimeConfig
   | boolean {
@@ -352,7 +370,7 @@ export interface BuiltinBabelPluginsConfig {
   ['plugin-proposal-function-bind']?: boolean;
   ['plugin-proposal-function-sent']?: boolean;
   ['plugin-proposal-partial-application']?: boolean;
-  ['plugin-proposal-pipeline-operator']?: boolean;
+  ['plugin-proposal-pipeline-operator']?: BabelPluginProposalPipelineOperatorConfig;
   ['plugin-proposal-private-property-in-object']?: boolean;
   ['plugin-proposal-throw-expressions']?: boolean;
   ['plugin-syntax-dynamic-import']?: boolean;
@@ -385,7 +403,7 @@ export const DefaultBuiltinBabelPluginsConfigGetterMap: Required<BuiltinBabelPlu
     return true;
   },
   get ['plugin-proposal-pipeline-operator']() {
-    return true;
+    return DefaultBabelPluginProposalPipelineOperatorConfig();
   },
   get ['plugin-proposal-private-property-in-object']() {
     return true;
@@ -415,13 +433,13 @@ export function DefaultBuiltinBabelPluginsConfig(): BuiltinBabelPluginsConfig {
   ];
 
   return DefaultEnabledPlugins.reduce<BuiltinBabelPluginsConfig>((map, key) => {
-    map[key] = DefaultBuiltinBabelPluginsConfigGetterMap[key] as boolean;
+    map[key] = DefaultBuiltinBabelPluginsConfigGetterMap[key] as never;
     return map;
   }, {});
 }
 
 export const BuiltinBabelPluginsNameMap: Readonly<
-  Record<keyof BuiltinBabelPluginsConfig, BabelPluginItem>
+  Record<keyof BuiltinBabelPluginsConfig, string>
 > = {
   ['plugin-proposal-async-do-expressions']: '@babel/plugin-proposal-async-do-expressions',
   ['plugin-proposal-class-static-block']: '@babel/plugin-proposal-class-static-block',
@@ -488,7 +506,7 @@ export function DefaultBuiltinBabelPresetsConfig(): ResolvedBuiltinBabelPresetsC
 }
 
 export const BuiltinBabelPresetsNameMap: Readonly<
-  Record<keyof BuiltinBabelPresetsConfig, BabelPluginItem>
+  Record<keyof BuiltinBabelPresetsConfig, string>
 > = {
   env: '@babel/preset-env',
   minify: 'babel-preset-minify',
@@ -519,10 +537,18 @@ export interface BabelConfig
 }
 
 export function DefaultBabelConfig(): BabelConfig {
-  return {
+  const extra: BabelConfig = {
     babelrc: false,
     configFile:
       resolveModuleByBabel(join(root, './babel.config')) ??
       resolveModuleByBabel(join(root, './.babelrc')),
+    plugins: DefaultBabelPluginsConfig(),
+    presets: DefaultBabelPresetsConfig(),
   };
+
+  return Object.assign(
+    extra,
+    DefaultBuiltinBabelPluginsConfig(),
+    DefaultBuiltinBabelPresetsConfig(),
+  );
 }
