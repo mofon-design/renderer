@@ -1,6 +1,5 @@
 import { loadPackageJSON } from '../../utils';
 import type { BabelConfig } from '../babel';
-import { DefaultBabelConfig } from '../babel';
 import type { CommonJSModuleConfig } from '../cjs';
 import type { ECMAScriptModuleConfig } from '../esm';
 import type { UMDModuleConfig } from '../umd';
@@ -47,7 +46,7 @@ export type ResolvedCoreSharedConfig = {
 
 export const DefaultCoreSharedConfigGetterMap: ResolvedCoreSharedConfig = {
   get babel() {
-    return [DefaultBabelConfig()];
+    return [];
   },
 };
 

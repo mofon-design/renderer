@@ -519,18 +519,10 @@ export interface BabelConfig
 }
 
 export function DefaultBabelConfig(): BabelConfig {
-  const extra: BabelConfig = {
+  return {
     babelrc: false,
     configFile:
       resolveModuleByBabel(join(root, './babel.config')) ??
       resolveModuleByBabel(join(root, './.babelrc')),
-    plugins: DefaultBabelPluginsConfig(),
-    presets: DefaultBabelPresetsConfig(),
   };
-
-  return Object.assign(
-    extra,
-    DefaultBuiltinBabelPluginsConfig(),
-    DefaultBuiltinBabelPresetsConfig(),
-  );
 }
