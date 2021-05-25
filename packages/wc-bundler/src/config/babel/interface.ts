@@ -62,12 +62,10 @@ export function DefaultBabelPluginTransformRuntimeConfig():
     const matched = name.match(/^@babel\/runtime(-corejs(?<corejs>\d))?$/);
     assertInstance(matched, Object);
 
-    const corejs = matched.groups?.corejs
-      ? (Number(matched.groups.corejs) as BabelPluginTransformRuntimeCorejsVersion)
-      : false;
+    const corejs = Number(matched.groups?.corejs || '') || false;
 
     return {
-      corejs,
+      corejs: corejs as BabelPluginTransformRuntimeCorejsVersion | false,
       helpers: true,
       regenerator: true,
       version: (deps as t.AnyRecord)[name],
@@ -75,8 +73,9 @@ export function DefaultBabelPluginTransformRuntimeConfig():
   }
 }
 
-export interface BabelEnvConfig extends BabelPresetEnv9Config {
+export interface BabelEnvConfig extends Omit<BabelPresetEnv9Config, 'corejs'> {
   browserslistEnv?: string;
+  corejs?: string | { version: string; proposals: boolean };
   /**
    * Overrided by `BundleConfig.cjs` and `BundleConfig.esm`.
    */

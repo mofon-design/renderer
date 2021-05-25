@@ -1,4 +1,4 @@
-import { asArray } from '../../utils';
+import { asArray, loadPackageJSON } from '../../utils';
 import { loadBabelConfig } from '../babel';
 import { DefaultCoreSharedConfigGetterMap } from '../core';
 import type { ResolvedRollupConfig, RollupBabelConfig } from '../rollup';
@@ -40,7 +40,13 @@ export function loadUMDModuleConfig(
       return curr.typescript === undefined ? prev : !!curr.typescript;
     }, false);
 
-    babel.unshift({ env: { useBuiltIns: 'entry' } });
+    try {
+      const corejs = loadPackageJSON(require.resolve('core-js'))?.version;
+      babel.unshift({
+        env: { corejs: typeof corejs === 'string' ? corejs : undefined, useBuiltIns: 'entry' },
+      });
+    } catch {}
+
     merged.rollup.babel = loadBabelConfig(babel) as RollupBabelConfig;
 
     if (merged.rollup.babel.babelHelpers === undefined)
