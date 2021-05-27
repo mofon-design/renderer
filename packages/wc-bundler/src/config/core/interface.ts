@@ -1,6 +1,7 @@
 import { loadPackageJSON } from '../../utils';
 import type { BabelConfig } from '../babel';
 import type { CommonJSModuleConfig } from '../cjs';
+import type { TypeScriptDeclarationConfig } from '../dts';
 import type { ECMAScriptModuleConfig } from '../esm';
 import type { TypeScriptCompileConfig } from '../tsc';
 import type { UMDModuleConfig } from '../umd';
@@ -68,6 +69,16 @@ export interface CoreTaskConfig {
    */
   cjs?: boolean | CommonJSModuleConfig;
   /**
+   * Enable TypeScript declaration output.
+   *
+   * @default
+   * const { types, typings } = require('package.json');
+   * const dts =
+   *   (typeof types === 'string' && types.endsWith('.d.ts')) ||
+   *   (typeof typings === 'string' && typings.endsWith('.d.ts'));
+   */
+  dts?: boolean | TypeScriptDeclarationConfig;
+  /**
    * Enable ECMAScript module output.
    *
    * @default
@@ -90,6 +101,9 @@ export type ResolvedCoreTaskConfig = {
 
 export const DefaultCoreTaskConfigGetterMap: Required<ResolvedCoreTaskConfig> = {
   get cjs() {
+    return {};
+  },
+  get dts() {
     return {};
   },
   get esm() {
@@ -124,6 +138,12 @@ export function DefaultCoreTaskConfig(): ResolvedCoreTaskConfig {
 
     if (config.esm === undefined && typeof pkg.module === 'string')
       config.esm = DefaultCoreTaskConfigGetterMap.esm;
+
+    if (
+      (typeof pkg.types === 'string' && pkg.types.endsWith('.d.ts')) ||
+      (typeof pkg.typings === 'string' && pkg.typings.endsWith('.d.ts'))
+    )
+      config.dts = DefaultCoreTaskConfigGetterMap.dts;
   }
 
   return config;

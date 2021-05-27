@@ -4,6 +4,7 @@ import type { CoreConfig } from '../config';
 import { loadCoreConfig, loadListr2Config } from '../config';
 import { json, signale } from '../utils';
 import { cjs } from './cjs';
+import { dts } from './dts';
 import { esm } from './esm';
 import { umd } from './umd';
 import { workspace } from './wrokspace';
@@ -19,6 +20,7 @@ export function core(): ListrTask<Listr2Ctx>['task'] {
   const coreTask: ListrTask<Listr2Ctx>['task'] = function coreTask(_ctx, self) {
     const tasks: ListrTask<Listr2Ctx>[] = [];
 
+    if (resolved.dts) tasks.push(dts(resolved.dts));
     if (resolved.cjs) tasks.push(cjs(resolved.cjs));
     if (resolved.esm) tasks.push(esm(resolved.esm));
     if (resolved.umd) tasks.push(umd(resolved.umd));

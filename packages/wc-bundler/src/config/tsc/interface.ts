@@ -1,9 +1,13 @@
-import type { CompilerOptions } from 'typescript';
+import type { CompilerOptions, ParsedCommandLine } from 'typescript';
 import { detectFile } from '../../utils';
 
 export interface TypeScriptCompileConfig {
   compilerOptions?: CompilerOptions;
-  configFilePath?: string | false;
+  configFilePath?: string;
+}
+
+export interface ResolvedTypeScriptCompileConfig extends Partial<ParsedCommandLine> {
+  rawCompilerOptions: CompilerOptions;
 }
 
 export function DefaultTypeScriptCompileConfig(): TypeScriptCompileConfig | false {

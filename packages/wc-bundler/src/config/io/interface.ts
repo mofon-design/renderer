@@ -1,5 +1,11 @@
 export interface BundleIOConfig {
   /**
+   * Clean outdir before start io task.
+   *
+   * @default true
+   */
+  cleanOutdir?: boolean;
+  /**
    * Specify entry file(s) or directory(s).
    *
    * @default
@@ -22,6 +28,7 @@ export interface BundleIOConfig {
 
 export function DefaultBundleIOConfig(): Required<BundleIOConfig> {
   return {
+    cleanOutdir: true,
     entry: [
       'src/**/*',
       '!**/*{demo,e2e,fixture,spec,test}?(s)*/**',

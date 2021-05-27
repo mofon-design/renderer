@@ -1,23 +1,24 @@
 import { dirname, resolve } from 'path';
-import { iterargs } from 'src/utils';
+import { iterargs } from '../../utils';
 import ts from 'typescript';
-import type { TypeScriptCompileConfig } from './interface';
+import { CompilerOptionsEnumMap } from './compiler-options-enum-map';
+import type { ResolvedTypeScriptCompileConfig, TypeScriptCompileConfig } from './interface';
 import { DefaultTypeScriptCompileConfig } from './interface';
 
 const isKey = Object.prototype.hasOwnProperty as t.Object.prototype.hasOwnProperty;
 
 export function loadTypeScriptCompileConfig(
-  configs: t.Readonly<TypeScriptCompileConfig[]>,
-): Partial<ts.ParsedCommandLine> | false;
+  configs: t.Readonly<(TypeScriptCompileConfig | false)[]>,
+): ResolvedTypeScriptCompileConfig | null;
 export function loadTypeScriptCompileConfig(
-  ...configs: t.Readonly<TypeScriptCompileConfig>[]
-): Partial<ts.ParsedCommandLine> | false;
-export function loadTypeScriptCompileConfig(): Partial<ts.ParsedCommandLine> | false {
-  let merged = DefaultTypeScriptCompileConfig();
+  ...configs: t.Readonly<TypeScriptCompileConfig | false>[]
+): ResolvedTypeScriptCompileConfig | null;
+export function loadTypeScriptCompileConfig(): ResolvedTypeScriptCompileConfig | null {
+  let merged = DefaultTypeScriptCompileConfig() || null;
 
   for (const config of iterargs<t.Readonly<TypeScriptCompileConfig>>(arguments)) {
     if (!config) {
-      merged = false;
+      merged = null;
       continue;
     }
 
@@ -42,20 +43,50 @@ export function loadTypeScriptCompileConfig(): Partial<ts.ParsedCommandLine> | f
     }
   }
 
-  if (!merged) return false;
+  if (!merged) return null;
 
   const cwd = process.cwd();
-  const compilerOptions = ts.convertCompilerOptionsFromJson(merged.compilerOptions || {}, cwd);
+  const converted: Partial<ts.ParsedCommandLine> = ts.convertCompilerOptionsFromJson(
+    merged.compilerOptions || {},
+    cwd,
+  );
 
-  if (!merged.configFilePath) return compilerOptions;
+  if (!merged.configFilePath) {
+    return Object.assign(
+      { rawCompilerOptions: convertCompilerOptionsBack(converted.options || {}) },
+      converted,
+    );
+  }
 
   merged.configFilePath = resolve(merged.configFilePath);
   const tsConfig = ts.readConfigFile(merged.configFilePath, ts.sys.readFile);
-  return ts.parseJsonConfigFileContent(
+  const parsed = ts.parseJsonConfigFileContent(
     tsConfig.config || {},
     ts.sys,
     dirname(merged.configFilePath),
-    compilerOptions.options,
+    converted.options,
     merged.configFilePath,
   );
+
+  return Object.assign({ rawCompilerOptions: convertCompilerOptionsBack(parsed.options) }, parsed);
+}
+
+function convertCompilerOptionsBack(compilerOptions: ts.CompilerOptions): ts.CompilerOptions {
+  const converted: ts.CompilerOptions = {};
+
+  for (const key in compilerOptions) {
+    if (!isKey.call(compilerOptions, key)) continue;
+
+    if (isKey.call(CompilerOptionsEnumMap, key)) {
+      const value = compilerOptions[key];
+      (converted as t.UnknownRecord)[key] =
+        typeof value === 'number' ? (CompilerOptionsEnumMap as t.AnyRecord)[key][value] : value;
+    } else if (compilerOptions[key] !== undefined) {
+      converted[key] = compilerOptions[key];
+    }
+  }
+
+  delete converted.configFilePath;
+
+  return converted;
 }
