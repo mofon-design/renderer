@@ -1,5 +1,6 @@
 import type { ListrTask } from 'listr2';
 import type { ECMAScriptModuleConfig } from '../config';
+import { loadBabelConfig } from '../config';
 import { loadECMAScriptModuleConfig } from '../config';
 import { createBabelPipeline } from '../pipelines';
 import { asArray, json, signale } from '../utils';
@@ -9,7 +10,8 @@ export function esm(config?: t.Readonly<ECMAScriptModuleConfig>): ListrTask<List
   return withIO(loadConfig, function esmTask(upstream, self, resolved) {
     self.title = 'Transform to ECMAScript module';
     const babelConfigs = asArray(resolved.babel || []).concat({ env: { modules: false } });
-    return upstream.pipe(createBabelPipeline(babelConfigs));
+    const resolvedBabelConfig = loadBabelConfig(babelConfigs);
+    return upstream.pipe(createBabelPipeline(resolvedBabelConfig));
   });
 
   function loadConfig() {

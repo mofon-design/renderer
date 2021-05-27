@@ -17,7 +17,7 @@ import type {
 } from 'rollup';
 import type { Options as RollupTerserConfig } from 'rollup-plugin-terser';
 import { terser } from 'rollup-plugin-terser';
-import { detectFile, env, loadPackageJSON, pascalCase } from '../../utils';
+import { env, loadPackageJSON, pascalCase, resolveModuleByBabel } from '../../utils';
 
 export type RollupCommonJSConfig = typeof cjs extends (options?: infer Options) => unknown
   ? Options
@@ -227,14 +227,6 @@ export interface ResolvedRollupConfig extends Omit<RollupOptions, 'input' | 'out
   output: RollupOutputOptions;
 }
 
-const DefaultEntries = [
-  'src/index.tsx',
-  'src/index.ts',
-  'src/index.jsx',
-  'src/index.js',
-  'src/index.mjs',
-];
-
 export function DefaultRollupConfig(): ResolvedRollupConfig {
   let file = 'index.umd.js';
   let name: string | undefined;
@@ -261,7 +253,7 @@ export function DefaultRollupConfig(): ResolvedRollupConfig {
   }
 
   return {
-    input: DefaultEntries.find((entry) => detectFile(entry)) || 'src/index',
+    input: resolveModuleByBabel('src/index') || 'src/index',
     output: { file, format: 'umd', name },
   };
 }

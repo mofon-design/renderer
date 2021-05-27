@@ -1,5 +1,5 @@
 import type { ListrBaseClassOptions, ListrRendererValue } from 'listr2';
-import { env } from '../utils';
+import { env } from '../../utils';
 
 export function loadListr2Config(
   ctx: Listr2Ctx,

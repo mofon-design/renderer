@@ -1,38 +1,19 @@
 import type { BabelFileResult, TransformOptions } from '@babel/core';
 import { transform } from '@babel/core';
 import type { Transform } from 'stream';
-import type { TransformCallback, TransformFunction } from 'through2';
+import type { TransformCallback } from 'through2';
 import { obj } from 'through2';
 import type File from 'vinyl';
-import type { BabelConfig } from '../config';
-import { loadBabelConfig } from '../config';
-import { assertInstance, defineLazyLoadProperty, signale } from '../utils';
+import { assertInstance, signale } from '../utils';
 
-export const BabelPipelineTransformOptionsSymbol = Symbol('BabelTransformOptions');
-
-export interface BabelPipelineTransform extends Transform {
-  readonly [BabelPipelineTransformOptionsSymbol]: TransformOptions;
-}
-
-export function createBabelPipeline(configs: t.Readonly<BabelConfig>[]): BabelPipelineTransform;
-export function createBabelPipeline(...configs: t.Readonly<BabelConfig>[]): BabelPipelineTransform;
-export function createBabelPipeline(): BabelPipelineTransform {
-  const args = Array.from(arguments);
-  const tranform = obj(proxyBabelTransformer as TransformFunction) as BabelPipelineTransform;
-  defineLazyLoadProperty(tranform, BabelPipelineTransformOptionsSymbol, () => {
-    const resolved = loadBabelConfig.apply(null, args);
-    return resolved;
+export function createBabelPipeline(options: TransformOptions): Transform {
+  return obj(function proxyBabelTransformer(
+    chunk: File,
+    encode: BufferEncoding,
+    callback: TransformCallback,
+  ): void {
+    BabelTransformer(chunk, encode, callback, options);
   });
-  return tranform;
-}
-
-function proxyBabelTransformer(
-  this: BabelPipelineTransform,
-  chunk: File,
-  encode: BufferEncoding,
-  callback: TransformCallback,
-): void {
-  BabelTransformer(chunk, encode, callback, this[BabelPipelineTransformOptionsSymbol]);
 }
 
 export function BabelTransformer(

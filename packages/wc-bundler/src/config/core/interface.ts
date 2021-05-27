@@ -2,6 +2,7 @@ import { loadPackageJSON } from '../../utils';
 import type { BabelConfig } from '../babel';
 import type { CommonJSModuleConfig } from '../cjs';
 import type { ECMAScriptModuleConfig } from '../esm';
+import type { TypeScriptCompileConfig } from '../tsc';
 import type { UMDModuleConfig } from '../umd';
 import type { WorkspaceConfig } from '../workspace';
 import { DefaultWorkspaceConfig } from '../workspace';
@@ -30,6 +31,10 @@ export interface CoreSharedConfig {
    * Config babel transformer.
    */
   babel?: CoreSharedConfigItem<BabelConfig>;
+  /**
+   * Config typescript compiler.
+   */
+  tsc?: CoreSharedConfigItem<TypeScriptCompileConfig | false>;
 }
 
 export type WithResolvedCoreSharedConfig<T extends CoreSharedConfig> = Omit<
@@ -46,6 +51,9 @@ export type ResolvedCoreSharedConfig = {
 
 export const DefaultCoreSharedConfigGetterMap: ResolvedCoreSharedConfig = {
   get babel() {
+    return [];
+  },
+  get tsc() {
     return [];
   },
 };
