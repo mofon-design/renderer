@@ -1,8 +1,7 @@
 import { dirname, extname } from 'path';
 import { loadPackageJSON } from '../../utils';
 import type { CoreSharedConfig } from '../core';
-import type { BundleIOConfig } from '../io';
-import { DefaultBundleIOConfig } from '../io';
+import type { BundleIOConfig, ResolvedBundleIOConfig } from '../io';
 
 export interface ECMAScriptModuleConfig extends BundleIOConfig, CoreSharedConfig {
   /**
@@ -32,14 +31,23 @@ export interface ECMAScriptModuleConfig extends BundleIOConfig, CoreSharedConfig
 }
 
 export interface ResolvedECMAScriptModuleConfig
-  extends Required<BundleIOConfig>,
-    Omit<ECMAScriptModuleConfig, keyof BundleIOConfig> {}
+  extends ResolvedBundleIOConfig,
+    Omit<ECMAScriptModuleConfig, keyof ResolvedBundleIOConfig> {
+  extname: string;
+}
 
 export function DefaultECMAScriptModuleConfig(): ResolvedECMAScriptModuleConfig {
   const pkg = loadPackageJSON();
-  const config: ResolvedECMAScriptModuleConfig = DefaultBundleIOConfig();
-
-  config.outdir = 'es/';
+  const config: ResolvedECMAScriptModuleConfig = {
+    clean: true,
+    entry: [
+      'src/**/*',
+      '!**/*{demo,e2e,fixture,spec,test}?(s)*/**',
+      '!**/*.*(_){demo,e2e,fixture,spec,test}*(_).*',
+    ],
+    extname: '.js',
+    outdir: 'es/',
+  };
 
   if (pkg) {
     if (typeof pkg.module === 'string') {

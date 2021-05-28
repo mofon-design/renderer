@@ -1,11 +1,11 @@
-import type { BundleIOConfig } from './interface';
+import type { BundleIOConfig, ResolvedBundleIOConfig } from './interface';
 import { DefaultBundleIOConfig } from './interface';
 
 const isKey = Object.prototype.hasOwnProperty as t.Object.prototype.hasOwnProperty;
 
 export function loadBundleIOConfig(
   config: t.Readonly<BundleIOConfig> | undefined,
-): Required<BundleIOConfig> {
+): ResolvedBundleIOConfig {
   const merged = DefaultBundleIOConfig();
 
   if (config) {

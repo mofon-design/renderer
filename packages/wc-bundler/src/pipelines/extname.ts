@@ -19,6 +19,6 @@ export function ExtnameTransformer(
   callback: TransformCallback,
   extname: string,
 ): void {
-  if (!chunk.basename.endsWith(extname)) chunk.extname = extname;
+  chunk.extname = extname;
   callback(null, chunk);
 }

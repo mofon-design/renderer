@@ -2,9 +2,9 @@ import del from 'del';
 import { dest, series } from 'gulp';
 import type { ListrRenderer, ListrTask } from 'listr2';
 import type { TaskWrapper } from 'listr2/dist/lib/task-wrapper';
-import type { BundleIOConfig } from '../config';
+import { relative } from 'path';
+import type { BundleIOConfig, ResolvedBundleIOConfig } from '../config';
 import { loadBundleIOConfig } from '../config';
-import { createExtnamePipeline } from '../pipelines';
 import { env, hideDEP0097, plumber } from '../utils';
 
 export interface WithIOStreamHooks {
@@ -15,7 +15,7 @@ export interface WithIOStreamHooks {
 
 export function withIO<
   Renderer extends typeof ListrRenderer,
-  ResolvedConfig extends Required<BundleIOConfig>
+  ResolvedConfig extends ResolvedBundleIOConfig
 >(
   config: () => ResolvedConfig,
   pipe: (
@@ -28,15 +28,15 @@ export function withIO<Renderer extends typeof ListrRenderer>(
   config: t.Readonly<BundleIOConfig> | undefined,
   pipe: (
     task: TaskWrapper<Listr2Ctx, Renderer>,
-    config: Required<BundleIOConfig>,
+    config: ResolvedBundleIOConfig,
     hooks: WithIOStreamHooks,
   ) => NodeJS.ReadWriteStream | void | Promise<NodeJS.ReadWriteStream | void>,
 ): ListrTask<Listr2Ctx>;
 export function withIO<Renderer extends typeof ListrRenderer>(
-  config: (() => Required<BundleIOConfig>) | t.Readonly<BundleIOConfig> | undefined,
+  config: (() => ResolvedBundleIOConfig) | t.Readonly<BundleIOConfig> | undefined,
   pipe: (
     task: TaskWrapper<Listr2Ctx, Renderer>,
-    config: Required<BundleIOConfig>,
+    config: ResolvedBundleIOConfig,
     hooks: WithIOStreamHooks,
   ) => NodeJS.ReadWriteStream | void | Promise<NodeJS.ReadWriteStream | void>,
 ): ListrTask<Listr2Ctx> {
@@ -56,9 +56,7 @@ export function withIO<Renderer extends typeof ListrRenderer>(
 
         return {
           after(stream) {
-            stream = stream
-              .pipe(createExtnamePipeline(resolved.extname))
-              .pipe(dest(resolved.outdir));
+            stream = stream.pipe(dest(resolved.outdir));
 
             if (enablePlumber) stream = stream.pipe(plumber.stop());
 
@@ -76,7 +74,13 @@ export function withIO<Renderer extends typeof ListrRenderer>(
 
             hideDEP0097();
 
-            if (resolved.cleanOutdir) await del(resolved.outdir);
+            if (typeof resolved.clean === 'string' || Array.isArray(resolved.clean)) {
+              await del(resolved.clean);
+            } else if (resolved.clean) {
+              if (relative(resolved.outdir, process.cwd()) === '')
+                self.title = 'Skip clean because outdir is equal to cwd';
+              else await del(resolved.outdir);
+            }
           },
         };
       }

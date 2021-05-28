@@ -1,15 +1,9 @@
 import { dirname } from 'path';
 import { loadPackageJSON } from '../../utils';
 import type { CoreSharedConfig } from '../core';
-import type { BundleIOConfig } from '../io';
+import type { BundleIOConfig, ResolvedBundleIOConfig } from '../io';
 
 export interface TypeScriptDeclarationConfig extends BundleIOConfig, CoreSharedConfig {
-  /**
-   * Clean outdir before start io task.
-   *
-   * @default false
-   */
-  cleanOutdir?: boolean;
   /**
    * Specify entry file(s) or directory(s).
    *
@@ -17,12 +11,6 @@ export interface TypeScriptDeclarationConfig extends BundleIOConfig, CoreSharedC
    * ['src\/**\/*.{ts,tsx}', '!**\/*{demo,e2e,fixture,spec,test}?(s)*\/**', '!**\/*{demo,e2e,fixture,spec,test}.*']
    */
   entry?: string | string[];
-  /**
-   * Specify extname of output file.
-   *
-   * @default '.d.ts'
-   */
-  extname?: string;
   /**
    * Specify output directory.
    *
@@ -38,19 +26,18 @@ export interface TypeScriptDeclarationConfig extends BundleIOConfig, CoreSharedC
 }
 
 export interface ResolvedTypeScriptDeclarationConfig
-  extends Required<BundleIOConfig>,
-    Omit<TypeScriptDeclarationConfig, keyof BundleIOConfig> {}
+  extends ResolvedBundleIOConfig,
+    Omit<TypeScriptDeclarationConfig, keyof ResolvedBundleIOConfig> {}
 
 export function DefaultTypeScriptDeclarationConfig(): ResolvedTypeScriptDeclarationConfig {
   const pkg = loadPackageJSON();
   const config: ResolvedTypeScriptDeclarationConfig = {
-    cleanOutdir: false,
+    clean: true,
     entry: [
       'src/**/*.{ts,tsx}',
       '!**/*{demo,e2e,fixture,spec,test}?(s)*/**',
       '!**/*.*(_){demo,e2e,fixture,spec,test}*(_).*',
     ],
-    extname: '.d.ts',
     outdir: 'types/',
   };
 

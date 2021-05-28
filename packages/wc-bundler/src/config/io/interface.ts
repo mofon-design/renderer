@@ -1,10 +1,15 @@
 export interface BundleIOConfig {
   /**
-   * Clean outdir before start io task.
+   * Clean output before start io task.
+   *
+   * Set `true` to clean outdir.
+   *
+   * If `clean === true && path.relative(outdir, process.cwd()) === ''`,
+   * this step will be skipped.
    *
    * @default true
    */
-  cleanOutdir?: boolean;
+  clean?: boolean | string | string[];
   /**
    * Specify entry file(s) or directory(s).
    *
@@ -13,12 +18,6 @@ export interface BundleIOConfig {
    */
   entry?: string | string[];
   /**
-   * Specify extname of output file.
-   *
-   * @default '.js'
-   */
-  extname?: string;
-  /**
    * Specify output directory.
    *
    * @default 'dist/'
@@ -26,15 +25,16 @@ export interface BundleIOConfig {
   outdir?: string;
 }
 
-export function DefaultBundleIOConfig(): Required<BundleIOConfig> {
+export interface ResolvedBundleIOConfig extends Required<BundleIOConfig> {}
+
+export function DefaultBundleIOConfig(): ResolvedBundleIOConfig {
   return {
-    cleanOutdir: true,
+    clean: true,
     entry: [
       'src/**/*',
       '!**/*{demo,e2e,fixture,spec,test}?(s)*/**',
       '!**/*.*(_){demo,e2e,fixture,spec,test}*(_).*',
     ],
-    extname: '.js',
     outdir: 'dist/',
   };
 }
