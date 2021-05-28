@@ -1,5 +1,6 @@
 import type { ListrBaseClassOptions, ListrRendererValue } from 'listr2';
 import { env } from '../../utils';
+import { CustomLogger } from './logger';
 
 export function loadListr2Config(
   ctx: Listr2Ctx,
@@ -9,16 +10,24 @@ export function loadListr2Config(
     exitOnError: env.DEBUG,
     nonTTYRenderer: 'verbose',
     registerSignalListeners: false,
+    rendererOptions: { logger: CustomLogger },
   };
 
-  if ((env.DEBUG && env.LOG_FILE === undefined) || env.TERM === 'dumb') {
-    config.renderer = 'verbose';
+  if (env.DEBUG || env.LOG_FILE || env.TERM === 'dumb') {
+    setRenderer(config, 'verbose');
   } else if (env.SILENT) {
-    config.renderer = 'silent';
+    setRenderer(config, 'silent');
   } else {
-    config.renderer = 'default';
-    config.rendererOptions = { collapse: false, dateFormat: false };
+    setRenderer(config, 'default');
+    config.rendererOptions = { ...config.rendererOptions, collapse: false };
   }
 
   return config;
+}
+
+function setRenderer<Renderer extends ListrRendererValue>(
+  config: ListrBaseClassOptions<Listr2Ctx, ListrRendererValue, ListrRendererValue>,
+  renderer: Renderer,
+): asserts config is ListrBaseClassOptions<Listr2Ctx, Renderer, Renderer> {
+  config.renderer = renderer;
 }

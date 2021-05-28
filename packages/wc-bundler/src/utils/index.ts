@@ -13,6 +13,7 @@ export * from './json';
 export * from './loadModuleByBabel';
 export * from './loadPackageJSON';
 export * from './loadPackageName';
+export * from './log';
 export * from './pascalCase';
 export * from './registerBabel';
 export * from './root';
