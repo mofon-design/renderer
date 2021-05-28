@@ -10,9 +10,10 @@ declare namespace t {
 
   namespace Array {
     interface isArray {
-      (arg: unknown): arg is AnyArray;
       <T, U>(arg: T[] | U): arg is T[];
       <T, U>(arg: readonly T[] | U): arg is readonly T[];
+      <T, U>(arg: readonly T[] | T[] | U): arg is readonly T[];
+      (arg: unknown): arg is AnyArray;
     }
   }
 

@@ -1,17 +1,21 @@
 import { dirname, extname } from 'path';
+import type { ExtSatisfiesRange } from '../../utils';
 import { loadPackageJSON } from '../../utils';
 import type { CoreSharedConfig } from '../core';
 import type { BundleIOConfig, ResolvedBundleIOConfig } from '../io';
 
 export interface CommonJSModuleConfig extends BundleIOConfig, CoreSharedConfig {
   /**
-   * Specify extname of output file.
+   * Supported extnames for babel, copy and tsx task.
    *
    * @default
-   * const { main } = require('package.json');
-   * const extname = typeof main === 'string' ? (path.extname(main) || '.js') : '.js';
+   * {
+   *   babel: ['.js', '.jsx', '.es6', '.es', '.mjs'],
+   *   copy: {},
+   *   tsc: ['.ts', '.tsx'],
+   * };
    */
-  extname?: string;
+  exts?: Partial<Record<'babel' | 'copy' | 'tsc', ExtSatisfiesRange>>;
   /**
    * Specify output directory.
    *
@@ -20,30 +24,44 @@ export interface CommonJSModuleConfig extends BundleIOConfig, CoreSharedConfig {
    * const outdir = typeof main === 'string' ? path.dirname(main) : 'lib/';
    */
   outdir?: string;
+  /**
+   * Specify extname of output file.
+   *
+   * @default
+   * const { main } = require('package.json');
+   * const extname = typeof main === 'string' ? (path.extname(main) || '.js') : '.js';
+   */
+  outext?: string;
 }
 
 export interface ResolvedCommonJSModuleConfig
   extends ResolvedBundleIOConfig,
     Omit<CommonJSModuleConfig, keyof ResolvedBundleIOConfig> {
-  extname: string;
+  exts: NonNullable<Required<CommonJSModuleConfig['exts']>>;
+  outext: NonNullable<CommonJSModuleConfig['outext']>;
 }
 
 export function DefaultCommonJSModuleConfig(): ResolvedCommonJSModuleConfig {
   const pkg = loadPackageJSON();
   const config: ResolvedCommonJSModuleConfig = {
     clean: true,
+    exts: {
+      babel: ['.js', '.jsx', '.es6', '.es', '.mjs'],
+      copy: {},
+      tsc: ['.ts', '.tsx'],
+    },
     entry: [
       'src/**/*',
       '!**/*{demo,e2e,fixture,spec,test}?(s)*/**',
       '!**/*.*(_){demo,e2e,fixture,spec,test}*(_).*',
     ],
-    extname: '.js',
     outdir: 'lib/',
+    outext: '.js',
   };
 
   if (pkg && typeof pkg.main === 'string') {
     config.outdir = dirname(pkg.main);
-    config.extname = extname(pkg.main) || '.js';
+    config.outext = extname(pkg.main) || '.js';
   }
 
   return config;

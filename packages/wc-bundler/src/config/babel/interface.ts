@@ -13,13 +13,8 @@ import type {
   TargetsOptions as BabelTargetsOptions,
 } from '@babel/preset-env';
 import { join } from 'path';
-import {
-  assertInstance,
-  detectFile,
-  loadPackageJSON,
-  resolveModuleByBabel,
-  root,
-} from '../../utils';
+import satisfies from 'semver/functions/satisfies';
+import { assertInstance, loadPackageJSON, resolveModuleByBabel, root } from '../../utils';
 
 export interface BabelPluginProposalDecoratorsConfig {
   /**
@@ -283,6 +278,104 @@ export function DefaultBabelMinifyConfig(): BabelMinifyConfig {
   return DefaultBabelMinifyPluginsConfig();
 }
 
+export interface BabelReactConfig {
+  /**
+   * This toggles behavior specific to development,
+   * such as adding `__source` and `__self`.
+   *
+   * @default
+   * env.NODE_ENV === 'development'
+   */
+  development?: boolean;
+  /**
+   * Replaces the import source when importing functions.
+   *
+   * @default
+   * depsOrPeerDepsIncludeReact ? 'react' : 'wc-jsx'
+   */
+  importSource?: string;
+  /**
+   * Replace the function used when compiling JSX expressions.
+   *
+   * @default 'React.createElement'
+   */
+  pragma?: string;
+  /**
+   * Replace the component used when compiling JSX fragments.
+   *
+   * @default 'React.Fragment'
+   */
+  pragmaFrag?: string;
+  /**
+   * Decides which runtime to use.
+   *
+   * @default
+   * depsOrPeerDepsIncludeReact && reactVersionLessThan17 ? 'classic' : 'automatic'
+   */
+  runtime?: 'automatic' | 'classic';
+  /**
+   * Toggles whether or not to throw an error if a XML namespaced tag name is used.
+   *
+   * @default true
+   */
+  throwIfNamespace?: boolean;
+  /**
+   * Will use the native built-in instead of trying to polyfill behavior
+   * for any plugins that require one.
+   *
+   * @default false
+   */
+  useBuiltIns?: boolean;
+  /**
+   * When spreading props, use inline object with spread elements directly
+   * instead of Babel's extend helper or `Object.assign`.
+   *
+   * @default false
+   */
+  useSpread?: boolean;
+}
+
+export function DefaultBabelReactConfig(): BabelReactConfig {
+  const pkg = loadPackageJSON();
+  const { importSource = 'wc-jsx', runtime = 'automatic' } =
+    detectImportSourceFromDependencies(pkg?.dependencies) ||
+    detectImportSourceFromDependencies(pkg?.peerDependencies) ||
+    {};
+  const config: BabelReactConfig = {
+    development: process.env.NODE_ENV === 'development',
+    runtime,
+    throwIfNamespace: true,
+    useBuiltIns: false,
+    useSpread: false,
+  };
+
+  if (config.runtime === 'automatic') {
+    config.importSource = importSource;
+  } else {
+    config.pragma = 'React.createElement';
+    config.pragmaFrag = 'React.Fragment';
+  }
+
+  return config;
+
+  function detectImportSourceFromDependencies(
+    deps: unknown,
+  ): Pick<BabelReactConfig, 'importSource' | 'runtime'> {
+    if (typeof deps !== 'object' || !deps) return {};
+    const reactVersionRange = (deps as t.UnknownRecord).react;
+    if (typeof reactVersionRange !== 'string') return {};
+
+    try {
+      return {
+        importSource: 'react',
+        runtime: satisfies('17.0.0', reactVersionRange) ? 'automatic' : 'classic',
+      };
+    } catch {}
+
+    return { importSource: 'react', runtime: 'classic' };
+  }
+}
+
 export interface BabelTypeScriptConfig {
   /**
    * Indicates that every file should be parsed as TS or TSX (depending on the `isTSX` option).
@@ -473,6 +566,10 @@ export interface BuiltinBabelPresetsConfig {
    */
   minify?: boolean | BabelMinifyConfig;
   /**
+   * Babel preset react config.
+   */
+  react?: boolean | BabelReactConfig;
+  /**
    * Enable transform TypeScript.
    *
    * @default fs.statSync('tsconfig.json').isFile()
@@ -491,6 +588,9 @@ export const DefaultBuiltinBabelPresetsConfigGetterMap: Required<ResolvedBuiltin
   get minify() {
     return DefaultBabelMinifyConfig();
   },
+  get react() {
+    return DefaultBabelReactConfig();
+  },
   get typescript() {
     return DefaultBabelTypeScriptConfig();
   },
@@ -499,9 +599,7 @@ export const DefaultBuiltinBabelPresetsConfigGetterMap: Required<ResolvedBuiltin
 export function DefaultBuiltinBabelPresetsConfig(): ResolvedBuiltinBabelPresetsConfig {
   return {
     env: DefaultBuiltinBabelPresetsConfigGetterMap.env,
-    typescript: detectFile('tsconfig.json')
-      ? DefaultBuiltinBabelPresetsConfigGetterMap.typescript
-      : undefined,
+    react: DefaultBuiltinBabelPresetsConfigGetterMap.react,
   };
 }
 
@@ -510,6 +608,7 @@ export const BuiltinBabelPresetsNameMap: Readonly<
 > = {
   env: '@babel/preset-env',
   minify: 'babel-preset-minify',
+  react: '@babel/preset-react',
   typescript: '@babel/preset-typescript',
 };
 

@@ -104,8 +104,7 @@ export function loadRawBabelConfig(): BabelConfig {
   for (const key in TransformBuiltinPresetConfig) {
     if (!isKey.call(TransformBuiltinPresetConfig, key)) continue;
     const transformer = TransformBuiltinPresetConfig[key];
-    if (transformer && merged[key])
-      transformer(merged[key] as NonNullable<ResolvedBuiltinBabelPresetsConfig[typeof key]>);
+    if (transformer && merged[key]) transformer(merged[key] as never);
   }
 
   return Object.assign(merged, repeatable);

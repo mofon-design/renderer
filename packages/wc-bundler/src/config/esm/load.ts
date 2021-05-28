@@ -12,6 +12,7 @@ export function loadECMAScriptModuleConfig(
     for (const key in config) {
       if (!isKey.call(config, key)) continue;
       if (config[key] !== undefined) merged[key] = config[key] as never;
+      // TODO exts
     }
   }
 

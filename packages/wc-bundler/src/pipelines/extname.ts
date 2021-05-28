@@ -1,5 +1,7 @@
 import type { Transform } from 'stream';
 import type { TransformCallback } from 'through2';
+import type { ExtSatisfiesRange } from '../utils';
+import { extSatisfies } from '../utils';
 import { obj } from 'through2';
 import type File from 'vinyl';
 
@@ -21,4 +23,15 @@ export function ExtnameTransformer(
 ): void {
   chunk.extname = extname;
   callback(null, chunk);
+}
+
+export function filterByExtname(range: ExtSatisfiesRange): Transform {
+  return obj(function SplitByExtname(
+    chunk: File,
+    _encode: BufferEncoding,
+    callback: TransformCallback,
+  ) {
+    if (!chunk.isDirectory() && extSatisfies(chunk.basename, range)) callback(null, chunk);
+    else callback(null);
+  });
 }

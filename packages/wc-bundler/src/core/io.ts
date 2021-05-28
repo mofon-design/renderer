@@ -3,13 +3,14 @@ import { dest, series } from 'gulp';
 import type { ListrRenderer, ListrTask } from 'listr2';
 import type { TaskWrapper } from 'listr2/dist/lib/task-wrapper';
 import { relative } from 'path';
+import type { Stream } from 'stream';
 import type { BundleIOConfig, ResolvedBundleIOConfig } from '../config';
 import { loadBundleIOConfig } from '../config';
 import { env, hideDEP0097, plumber } from '../utils';
 
 export interface WithIOStreamHooks {
-  after(upstream: NodeJS.ReadWriteStream): NodeJS.ReadWriteStream;
-  before(upstream: NodeJS.ReadWriteStream): NodeJS.ReadWriteStream;
+  after(upstream: Stream): Stream;
+  before(upstream: Stream): Stream;
   prepare(): Promise<void>;
 }
 
@@ -22,7 +23,7 @@ export function withIO<
     task: TaskWrapper<Listr2Ctx, Renderer>,
     config: ResolvedConfig,
     hooks: WithIOStreamHooks,
-  ) => NodeJS.ReadWriteStream | void | Promise<NodeJS.ReadWriteStream | void>,
+  ) => Stream | void | Promise<Stream | void>,
 ): ListrTask<Listr2Ctx>;
 export function withIO<Renderer extends typeof ListrRenderer>(
   config: t.Readonly<BundleIOConfig> | undefined,
@@ -30,7 +31,7 @@ export function withIO<Renderer extends typeof ListrRenderer>(
     task: TaskWrapper<Listr2Ctx, Renderer>,
     config: ResolvedBundleIOConfig,
     hooks: WithIOStreamHooks,
-  ) => NodeJS.ReadWriteStream | void | Promise<NodeJS.ReadWriteStream | void>,
+  ) => Stream | void | Promise<Stream | void>,
 ): ListrTask<Listr2Ctx>;
 export function withIO<Renderer extends typeof ListrRenderer>(
   config: (() => ResolvedBundleIOConfig) | t.Readonly<BundleIOConfig> | undefined,
@@ -38,7 +39,7 @@ export function withIO<Renderer extends typeof ListrRenderer>(
     task: TaskWrapper<Listr2Ctx, Renderer>,
     config: ResolvedBundleIOConfig,
     hooks: WithIOStreamHooks,
-  ) => NodeJS.ReadWriteStream | void | Promise<NodeJS.ReadWriteStream | void>,
+  ) => Stream | void | Promise<Stream | void>,
 ): ListrTask<Listr2Ctx> {
   return {
     title: 'IO task',

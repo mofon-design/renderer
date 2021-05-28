@@ -14,10 +14,7 @@ module.exports.WCBundler = async function WCBundler() {
     ],
   });
 
-  await require('wc-bundler/src').bin({
-    babel: { typescript: true },
-    workspace: false,
-  });
+  await require('wc-bundler/src').bin();
 
   process.chdir(cwd);
 };
