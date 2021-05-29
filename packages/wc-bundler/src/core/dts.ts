@@ -22,7 +22,7 @@ export function dts(config?: t.Readonly<TypeScriptDeclarationConfig>): ListrTask
       target: 'esnext',
     };
 
-    const tsc = loadTypeScriptCompileConfig(asArray(resolved.tsc || []));
+    const tsc = loadTypeScriptCompileConfig(asArray(resolved.tsc ?? []));
     signale.debug(() => ['Resolved tsc config:', json(tsc)]);
 
     if (!tsc) return self.skip('TypeScript declaration disabled');

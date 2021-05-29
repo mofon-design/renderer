@@ -35,7 +35,7 @@ export function loadUMDModuleConfig(
   }
 
   if (config.rollupBabel === undefined || config.rollupBabel) {
-    const babel = asArray(config.babel || []).concat();
+    const babel = asArray(config.babel ?? []).concat();
     const extra = {
       ...(typeof config.rollupBabel === 'object' ? config.rollupBabel : null),
     };

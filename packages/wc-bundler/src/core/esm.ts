@@ -31,9 +31,9 @@ export function esm(config?: t.Readonly<ECMAScriptModuleConfig>): ListrTask<List
       target: 'esnext',
     };
 
-    const tsc = loadTypeScriptCompileConfig(asArray(resolved.tsc || []));
+    const tsc = loadTypeScriptCompileConfig(asArray(resolved.tsc ?? []));
     const babel = loadBabelConfig(
-      asArray(resolved.babel || []).concat({ env: { modules: false } }),
+      asArray(resolved.babel ?? []).concat({ env: { modules: false } }),
     );
     signale.debug(() => ['Resolved tsc config:', json(tsc)]);
     signale.debug(() => ['Resolved babel config:', json(babel)]);

@@ -27,9 +27,9 @@ export function cjs(config?: t.Readonly<CommonJSModuleConfig>): ListrTask<Listr2
       target: 'esnext',
     };
 
-    const tsc = loadTypeScriptCompileConfig(asArray(resolved.tsc || []));
+    const tsc = loadTypeScriptCompileConfig(asArray(resolved.tsc ?? []));
     const babel = loadBabelConfig(
-      asArray(resolved.babel || []).concat({ env: { modules: 'cjs' } }),
+      asArray(resolved.babel ?? []).concat({ env: { modules: 'cjs' } }),
     );
     signale.debug(() => ['Resolved tsc config:', json(tsc)]);
     signale.debug(() => ['Resolved babel config:', json(babel)]);

@@ -62,7 +62,7 @@ export function loadRollupConfig(): ResolvedRollupConfig {
           if (typeof config[key] === 'object') Object.assign(builtinplugins[key], config[key]);
         }
       } else if (key === 'plugins') {
-        plugins.push.apply(plugins, asArray(config.plugins || []) as RollupPlugin[]);
+        plugins.push.apply(plugins, asArray(config.plugins ?? []) as RollupPlugin[]);
       } else if (key === 'output') {
         if (config.output && merged.output) Object.assign(merged.output, config.output);
         else merged.output = config.output as NonNullable<RollupConfig['output']>;
