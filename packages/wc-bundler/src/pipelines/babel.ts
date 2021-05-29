@@ -6,7 +6,7 @@ import { obj } from 'through2';
 import type File from 'vinyl';
 import { assertInstance, signale } from '../utils';
 
-export function createBabelPipeline(options: TransformOptions): Transform {
+export function createBabelPipeline(options?: TransformOptions): Transform {
   return obj(function proxyBabelTransformer(
     chunk: File,
     encode: BufferEncoding,
@@ -20,10 +20,10 @@ export function BabelTransformer(
   chunk: File,
   encode: BufferEncoding,
   callback: TransformCallback,
-  options: TransformOptions,
+  options?: TransformOptions,
 ): void {
   if (chunk.isDirectory()) return callback(null);
-  signale.debug(`[babel] Transforming (${chunk.path})`);
+  signale.debug(`[babel] Transforming (${chunk.history[0] || chunk.path})`);
   assertInstance(chunk.contents, Buffer);
   transform(
     chunk.contents.toString(encode),
