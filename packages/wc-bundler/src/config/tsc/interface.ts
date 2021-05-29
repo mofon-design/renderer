@@ -14,6 +14,7 @@ export interface TypeScriptCompilerOptions {
   allowUnusedLabels?: boolean;
   alwaysStrict?: boolean;
   charset?: string;
+  declaration?: boolean;
   disableSizeLimit?: boolean;
   disableSourceOfProjectReferenceRedirect?: boolean;
   disableSolutionSearching?: boolean;
@@ -35,6 +36,7 @@ export interface TypeScriptCompilerOptions {
   maxNodeModuleJsDepth?: number;
   moduleResolution?: ModuleResolutionKind;
   newLine?: NewLineKind;
+  noEmit?: boolean;
   noEmitHelpers?: boolean;
   noErrorTruncation?: boolean;
   noFallthroughCasesInSwitch?: boolean;
@@ -79,7 +81,7 @@ export interface TypeScriptCompilerOptions {
   useDefineForClassFields?: boolean;
 }
 
-export const AllowedCompilerOptions: Record<keyof TypeScriptCompilerOptions, 1> = {
+export const AllowedCompilerOptions: Record<keyof TypeScriptCompilerOptions, 0 | 1> = {
   allowJs: 1,
   allowSyntheticDefaultImports: 1,
   allowUmdGlobalAccess: 1,
@@ -87,6 +89,7 @@ export const AllowedCompilerOptions: Record<keyof TypeScriptCompilerOptions, 1> 
   allowUnusedLabels: 1,
   alwaysStrict: 1,
   charset: 1,
+  declaration: 0,
   disableSizeLimit: 1,
   disableSourceOfProjectReferenceRedirect: 1,
   disableSolutionSearching: 1,
@@ -108,6 +111,7 @@ export const AllowedCompilerOptions: Record<keyof TypeScriptCompilerOptions, 1> 
   maxNodeModuleJsDepth: 1,
   moduleResolution: 1,
   newLine: 1,
+  noEmit: 0,
   noEmitHelpers: 1,
   noErrorTruncation: 1,
   noFallthroughCasesInSwitch: 1,
@@ -157,11 +161,20 @@ export interface TypeScriptCompileConfig {
   configFilePath?: string;
 }
 
+export interface ParsedTypeScriptCompileConfig
+  extends Partial<Omit<ParsedCommandLine, 'errors' | 'options'>>,
+    Pick<ParsedCommandLine, 'errors' | 'options'> {}
+
 export interface ResolvedTypeScriptCompileConfig {
   loaded: TypeScriptCompilerOptions;
-  parsed: Partial<ParsedCommandLine>;
+  parsed: ParsedTypeScriptCompileConfig;
 }
 
 export function DefaultTypeScriptCompileConfig(): TypeScriptCompileConfig | false {
-  return detectFile('tsconfig.json') ? { configFilePath: 'tsconfig.json' } : false;
+  return detectFile('tsconfig.json')
+    ? {
+        compilerOptions: { declaration: true, rootDir: process.cwd() },
+        configFilePath: 'tsconfig.json',
+      }
+    : false;
 }

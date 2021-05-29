@@ -3,6 +3,7 @@ import { iterargs } from '../../utils';
 import ts from 'typescript';
 import { CompilerOptionsEnumMap } from './compiler-options-enum-map';
 import type {
+  ParsedTypeScriptCompileConfig,
   ResolvedTypeScriptCompileConfig,
   TypeScriptCompileConfig,
   TypeScriptCompilerOptions,
@@ -50,7 +51,7 @@ export function loadTypeScriptCompileConfig(): ResolvedTypeScriptCompileConfig |
   if (!merged) return null;
 
   const cwd = process.cwd();
-  const converted: Partial<ts.ParsedCommandLine> = ts.convertCompilerOptionsFromJson(
+  const converted: ParsedTypeScriptCompileConfig = ts.convertCompilerOptionsFromJson(
     merged.compilerOptions || {},
     cwd,
   );
@@ -77,7 +78,12 @@ function convertCompilerOptionsBack(
   const converted: TypeScriptCompilerOptions = {};
 
   for (const key in compilerOptions) {
-    if (!isKey.call(compilerOptions, key) || !isKey.call(AllowedCompilerOptions, key)) continue;
+    if (
+      // !isKey.call(compilerOptions, key) ||
+      !isKey.call(AllowedCompilerOptions, key) ||
+      !AllowedCompilerOptions[key]
+    )
+      continue;
 
     if (isKey.call(CompilerOptionsEnumMap, key)) {
       const value = compilerOptions[key];

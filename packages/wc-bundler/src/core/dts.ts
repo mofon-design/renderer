@@ -18,17 +18,16 @@ export function dts(config?: t.Readonly<TypeScriptDeclarationConfig>): ListrTask
       declaration: true,
       jsx: 'preserve',
       module: 'esnext',
-      rootDir: process.cwd(),
       target: 'esnext',
     };
 
     const tsc = loadTypeScriptCompileConfig(asArray(resolved.tsc ?? []));
     signale.debug(() => ['Resolved tsc config:', json(tsc)]);
 
-    if (!tsc) return self.skip('TypeScript declaration disabled');
+    if (!tsc?.parsed.options.declaration) return self.skip('TypeScript declaration disabled');
 
     self.title = 'Generate TypeScript declaration';
-    const downstream = upstream.pipe(gulpts(Object.assign(override, tsc.loaded))).dts;
+    const downstream = upstream.pipe(gulpts(Object.assign({}, tsc.loaded, override))).dts;
 
     return hook.after(downstream);
   });

@@ -23,7 +23,6 @@ export function cjs(config?: t.Readonly<CommonJSModuleConfig>): ListrTask<Listr2
       declaration: true,
       jsx: 'preserve',
       module: 'esnext',
-      rootDir: process.cwd(),
       target: 'esnext',
     };
 
@@ -50,12 +49,19 @@ export function cjs(config?: t.Readonly<CommonJSModuleConfig>): ListrTask<Listr2
     if (tsc) {
       const tscOutput = upstream
         .pipe(filterByExtname(resolved.exts.tsc))
-        .pipe(gulpts(Object.assign(override, tsc.loaded)));
+        .pipe(gulpts(Object.assign({}, tsc.loaded, override)));
 
-      output.push(
-        tscOutput.js.pipe(createBabelPipeline(babel)).pipe(createExtnamePipeline(resolved.outext)),
-        tscOutput.dts,
-      );
+      if (!tsc.parsed.options.noEmit) {
+        output.push(
+          tscOutput.js
+            .pipe(createBabelPipeline(babel))
+            .pipe(createExtnamePipeline(resolved.outext)),
+        );
+      }
+
+      if (tsc.parsed.options.declaration) {
+        output.push(tscOutput.dts);
+      }
     }
 
     return hook.after(merge(output));
