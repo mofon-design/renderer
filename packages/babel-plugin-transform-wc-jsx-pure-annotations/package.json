@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-transform-wc-jsx-pure-annotations",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Mark top-level Web Component method calls as pure for tree shaking",
   "author": "imhele <work@imhele.com>",
   "license": "MIT",
