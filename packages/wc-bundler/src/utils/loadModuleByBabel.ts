@@ -1,3 +1,4 @@
+import interopRequireDefault from '@babel/runtime/helpers/interopRequireDefault';
 import { registerBabel } from './registerBabel';
 
 export function resolveModuleByBabel(id: string): string | undefined {
@@ -9,10 +10,11 @@ export function resolveModuleByBabel(id: string): string | undefined {
   return undefined;
 }
 
-export function loadModuleByBabel(id: string): unknown {
+export function loadModuleByBabel(id: string, interopRequire = true): unknown {
   try {
     registerBabel();
-    return require(id);
+    const content = require(id);
+    return interopRequire ? interopRequireDefault(content) : content;
   } catch {}
 
   return undefined;

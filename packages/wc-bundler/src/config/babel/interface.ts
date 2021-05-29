@@ -627,10 +627,8 @@ export interface BabelConfig
    * `false` will disable searching for config files.
    *
    * @default
-   * require.resolve('./babel.config') ??
-   * require.resolve('./.babelrc') ??
-   * require.resolve(path.join(root, './babel.config')) ??
-   * require.resolve(path.join(root, './.babelrc'))
+   * require.resolve(path.join(workspaceRoot, './babel.config')) ??
+   * require.resolve(path.join(workspaceRoot, './.babelrc'))
    */
   configFile?: string | boolean | null;
 }

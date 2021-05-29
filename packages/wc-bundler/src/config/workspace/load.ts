@@ -1,6 +1,6 @@
 import { sync as globSync } from 'glob';
 import { resolve } from 'path';
-import { asArray, loadModuleByBabel, loadPackageJSON, loadPackageName, slash } from '../../utils';
+import { asArray, loadPackageJSON, loadPackageName, slash } from '../../utils';
 import type { ResolvedWorkspaceConfig, WorkspaceConfig, WorkspacePackageInfo } from './interface';
 import { DefaultWorkspaceConfig } from './interface';
 
@@ -14,10 +14,12 @@ export function loadWorkspaceConfig(
   }
 
   if (config.lerna === undefined || config.lerna) {
-    const lerna = loadModuleByBabel(resolve('lerna.json')) as t.AnyRecord;
-    if (typeof lerna === 'object' && lerna?.packages) {
-      ptnsets.push(asArray(lerna.packages));
-    }
+    try {
+      const lerna = require(resolve('lerna.json')) as t.AnyRecord;
+      if (typeof lerna === 'object' && lerna?.packages) {
+        ptnsets.push(asArray(lerna.packages));
+      }
+    } catch {}
   }
 
   if (config.packageJSON === undefined || config.packageJSON) {

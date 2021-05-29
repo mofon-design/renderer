@@ -1,4 +1,5 @@
-import { asArray, iterargs } from '../../utils';
+import { resolve } from 'path';
+import { asArray, iterargs, loadModuleByBabel } from '../../utils';
 import type {
   CoreConfig,
   CoreTaskConfig,
@@ -19,7 +20,6 @@ const isKey = Object.prototype.hasOwnProperty as t.Object.prototype.hasOwnProper
 export function loadCoreConfig(configs: t.Readonly<CoreConfig[]>): ResolvedCoreConfig;
 export function loadCoreConfig(...configs: t.Readonly<CoreConfig>[]): ResolvedCoreConfig;
 export function loadCoreConfig(): ResolvedCoreConfig {
-  // TODO load config from file
   const merged = DefaultCoreConfig();
   const extendableTaskConfigMap = Object.assign({}, ExtendableCoreTaskConfigGetterMap);
 
@@ -129,4 +129,20 @@ function mergeCoreTaskConfigContent(
   }
 
   return target;
+}
+
+export function loadCoreConfigFiles(
+  files: boolean | string | null | undefined | readonly string[],
+): t.Readonly<CoreConfig[]> {
+  if (typeof files === 'string') {
+    const config = loadModuleByBabel(files) as t.UnknownRecord<'default'> | null;
+    return typeof config === 'object' && typeof config?.default === 'object' && config.default
+      ? [config.default]
+      : [];
+  }
+
+  if (!files) return [];
+  if ((Array.isArray as t.Array.isArray)(files))
+    return files.map((file) => loadCoreConfigFiles(file)).flat(1);
+  return loadCoreConfigFiles([resolve('.wc-bundlerrc'), resolve('wc-bundler.config')]);
 }

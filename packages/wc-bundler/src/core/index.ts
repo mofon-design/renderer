@@ -1,6 +1,6 @@
 import type { ListrTask } from 'listr2';
 import { Listr } from 'listr2';
-import type { CoreConfig } from '../config';
+import { CoreConfig, loadCoreConfigFiles } from '../config';
 import { loadCoreConfig, loadListr2Config } from '../config';
 import { asArray, json, signale } from '../utils';
 import { cjs } from './cjs';
@@ -9,11 +9,14 @@ import { esm } from './esm';
 import { umd } from './umd';
 import { workspace } from './wrokspace';
 
-export function core(configs: t.Readonly<CoreConfig[]>): ListrTask<Listr2Ctx>['task'];
-export function core(...configs: t.Readonly<CoreConfig>[]): ListrTask<Listr2Ctx>['task'];
-export function core(): ListrTask<Listr2Ctx>['task'] {
-  const configs: t.Readonly<CoreConfig[]> = Array.from(arguments).flat(1);
+export function core(
+  overrideConfigs?: t.Readonly<CoreConfig> | t.Readonly<CoreConfig[]>,
+  configFile?: boolean,
+): ListrTask<Listr2Ctx>['task'] {
+  const configsFromFile = loadCoreConfigFiles(configFile);
+  signale.debug(() => ['Loaded core config from file:', json(configsFromFile)]);
 
+  const configs = configsFromFile.concat(overrideConfigs ?? []);
   const resolved = loadCoreConfig(configs);
   signale.debug(() => ['Resolved core config:', json(resolved)]);
 
@@ -39,15 +42,13 @@ export function core(): ListrTask<Listr2Ctx>['task'] {
   }
 
   const createCoreTask: ListrTask<Listr2Ctx>['task'] = function createCoreTask(ctx, self) {
-    return core(configs)(ctx, self);
+    return core(configs, configFile)(ctx, self);
   };
 
   return workspace(resolved.workspace, createCoreTask, coreTask);
 }
 
-export async function bin(configs: t.Readonly<CoreConfig[]>): Promise<void>;
-export async function bin(...configs: t.Readonly<CoreConfig>[]): Promise<void>;
-export async function bin(): Promise<void> {
-  const task = core.apply(null, arguments as never);
+export async function bin(configs?: t.Readonly<CoreConfig[]>, configFile = true): Promise<void> {
+  const task = core(configs, configFile);
   await new Listr({ task }, loadListr2Config({})).run();
 }
