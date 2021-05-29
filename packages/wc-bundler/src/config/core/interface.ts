@@ -59,6 +59,8 @@ export const DefaultCoreSharedConfigGetterMap: ResolvedCoreSharedConfig = {
   },
 };
 
+export type CoreTaskConfigItem<Config> = boolean | Config | Config[];
+
 export interface CoreTaskConfig {
   /**
    * Enable CommonJS module output.
@@ -67,7 +69,7 @@ export interface CoreTaskConfig {
    * const { main, type } = require('package.json');
    * const cjs = typeof type === 'string' ? type === 'commonjs' : !/(\.umd\.js|\.mjs)$/.test(main);
    */
-  cjs?: boolean | CommonJSModuleConfig;
+  cjs?: CoreTaskConfigItem<CommonJSModuleConfig>;
   /**
    * Enable TypeScript declaration output.
    *
@@ -77,7 +79,7 @@ export interface CoreTaskConfig {
    *   (typeof types === 'string' && types.endsWith('.d.ts')) ||
    *   (typeof typings === 'string' && typings.endsWith('.d.ts'));
    */
-  dts?: boolean | TypeScriptDeclarationConfig;
+  dts?: CoreTaskConfigItem<TypeScriptDeclarationConfig>;
   /**
    * Enable ECMAScript module output.
    *
@@ -85,21 +87,23 @@ export interface CoreTaskConfig {
    * const { main, module, type } = require('package.json');
    * const esm = type === 'module' || typeof module === 'string' || main.endsWith('.mjs');
    */
-  esm?: boolean | ECMAScriptModuleConfig;
+  esm?: CoreTaskConfigItem<ECMAScriptModuleConfig>;
   /**
    * Enable UMD module output.
    *
    * @default
    * require('package.json').main.endsWith('.umd.js')
    */
-  umd?: boolean | UMDModuleConfig;
+  umd?: CoreTaskConfigItem<UMDModuleConfig>;
 }
 
-export type ResolvedCoreTaskConfig = {
-  [Key in keyof CoreTaskConfig]: Exclude<CoreTaskConfig[Key], boolean>;
+export type SingleCoreTaskConfigMap = {
+  [Key in keyof CoreTaskConfig]: CoreTaskConfig[Key] extends CoreTaskConfigItem<infer Config>
+    ? Config
+    : CoreTaskConfig[Key];
 };
 
-export const DefaultCoreTaskConfigGetterMap: Required<ResolvedCoreTaskConfig> = {
+export const ExtendableCoreTaskConfigGetterMap: Required<SingleCoreTaskConfigMap> = {
   get cjs() {
     return {};
   },
@@ -113,6 +117,12 @@ export const DefaultCoreTaskConfigGetterMap: Required<ResolvedCoreTaskConfig> = 
     return {};
   },
 };
+
+export type ResolvedCoreTaskConfig = {
+  [Key in keyof CoreTaskConfig]: Exclude<CoreTaskConfig[Key], boolean>;
+};
+
+export const DefaultCoreTaskConfigGetterMap: Required<ResolvedCoreTaskConfig> = ExtendableCoreTaskConfigGetterMap;
 
 export interface CoreConfig extends CoreGroupedConfig, CoreSharedConfig, CoreTaskConfig {}
 

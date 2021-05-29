@@ -17,7 +17,7 @@ export function loadECMAScriptModuleConfig(
       if (config[key] === undefined) {
         // ignore void config
       } else if (isKey.call(DefaultCoreSharedConfigGetterMap, key)) {
-        merged[key] = asArray(merged[key] ?? []).concat(config[key] as never);
+        merged[key] = asArray(merged[key] ?? []).concat((config[key] as never) ?? []);
       } else if (key === 'exts') {
         const source = config[key];
         const target = merged[key];

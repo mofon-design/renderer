@@ -2,7 +2,7 @@ import type { ListrTask } from 'listr2';
 import { Listr } from 'listr2';
 import type { CoreConfig } from '../config';
 import { loadCoreConfig, loadListr2Config } from '../config';
-import { json, signale } from '../utils';
+import { asArray, json, signale } from '../utils';
 import { cjs } from './cjs';
 import { dts } from './dts';
 import { esm } from './esm';
@@ -18,12 +18,16 @@ export function core(): ListrTask<Listr2Ctx>['task'] {
   signale.debug(() => ['Resolved core config:', json(resolved)]);
 
   const coreTask: ListrTask<Listr2Ctx>['task'] = function coreTask(_ctx, self) {
-    const tasks: ListrTask<Listr2Ctx>[] = [];
+    let tasks: ListrTask<Listr2Ctx>[] = [];
 
-    if (resolved.dts) tasks.push(dts(resolved.dts));
-    if (resolved.cjs) tasks.push(cjs(resolved.cjs));
-    if (resolved.esm) tasks.push(esm(resolved.esm));
-    if (resolved.umd) tasks.push(umd(resolved.umd));
+    if (resolved.dts)
+      tasks = tasks.concat(asArray(resolved.dts).map((taskConfig) => dts(taskConfig)));
+    if (resolved.cjs)
+      tasks = tasks.concat(asArray(resolved.cjs).map((taskConfig) => cjs(taskConfig)));
+    if (resolved.esm)
+      tasks = tasks.concat(asArray(resolved.esm).map((taskConfig) => esm(taskConfig)));
+    if (resolved.umd)
+      tasks = tasks.concat(asArray(resolved.umd).map((taskConfig) => umd(taskConfig)));
 
     if (!tasks.length) return self.skip();
 
