@@ -8,7 +8,7 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import url from '@rollup/plugin-url';
-import { basename } from 'path';
+import { basename, resolve } from 'path';
 import type {
   RollupOptions,
   InputOption as RollupInputOptions,
@@ -253,7 +253,7 @@ export function DefaultRollupConfig(): ResolvedRollupConfig {
   }
 
   return {
-    input: resolveModuleByBabel('src/index') || 'src/index',
+    input: resolveModuleByBabel(resolve('./src')) || './src',
     output: { file, format: 'umd', name },
   };
 }
