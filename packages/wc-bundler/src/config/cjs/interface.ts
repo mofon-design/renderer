@@ -47,6 +47,11 @@ export function DefaultCommonJSModuleConfig(): ResolvedCommonJSModuleConfig {
   const pkg = loadPackageJSON();
   const config: ResolvedCommonJSModuleConfig = {
     clean: true,
+    entry: [
+      'src/**/*',
+      '!**/*{demo,e2e,fixture,spec,test}?(s)*/**',
+      '!**/*.*(_){demo,e2e,fixture,spec,test}*(_).*',
+    ],
     exts: {
       babel: ['.js', '.jsx', '.es6', '.es', '.mjs'],
       copy: {
@@ -57,11 +62,6 @@ export function DefaultCommonJSModuleConfig(): ResolvedCommonJSModuleConfig {
       },
       tsc: ['.ts', '.tsx'],
     },
-    entry: [
-      'src/**/*',
-      '!**/*{demo,e2e,fixture,spec,test}?(s)*/**',
-      '!**/*.*(_){demo,e2e,fixture,spec,test}*(_).*',
-    ],
     outdir: 'lib/',
     outext: '.js',
   };

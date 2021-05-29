@@ -1,9 +1,20 @@
 import { dirname } from 'path';
+import type { ExtSatisfiesRange } from '../../utils';
 import { loadPackageJSON } from '../../utils';
 import type { CoreSharedConfig } from '../core';
 import type { BundleIOConfig, ResolvedBundleIOConfig } from '../io';
 
 export interface TypeScriptDeclarationConfig extends BundleIOConfig, CoreSharedConfig {
+  /**
+   * Supported extnames for babel, copy and tsx task.
+   *
+   * @default
+   * {
+   *   copy: ['.json'],
+   *   tsc: ['.ts', '.tsx'],
+   * };
+   */
+  exts?: Partial<Record<'copy' | 'tsc', ExtSatisfiesRange>>;
   /**
    * Specify entry file(s) or directory(s).
    *
@@ -27,17 +38,23 @@ export interface TypeScriptDeclarationConfig extends BundleIOConfig, CoreSharedC
 
 export interface ResolvedTypeScriptDeclarationConfig
   extends ResolvedBundleIOConfig,
-    Omit<TypeScriptDeclarationConfig, keyof ResolvedBundleIOConfig> {}
+    Omit<TypeScriptDeclarationConfig, keyof ResolvedBundleIOConfig> {
+  exts: NonNullable<Required<TypeScriptDeclarationConfig['exts']>>;
+}
 
 export function DefaultTypeScriptDeclarationConfig(): ResolvedTypeScriptDeclarationConfig {
   const pkg = loadPackageJSON();
   const config: ResolvedTypeScriptDeclarationConfig = {
     clean: true,
     entry: [
-      'src/**/*.{ts,tsx}',
+      'src/**/*',
       '!**/*{demo,e2e,fixture,spec,test}?(s)*/**',
       '!**/*.*(_){demo,e2e,fixture,spec,test}*(_).*',
     ],
+    exts: {
+      copy: ['.json'],
+      tsc: ['.ts', '.tsx'],
+    },
     outdir: 'types/',
   };
 

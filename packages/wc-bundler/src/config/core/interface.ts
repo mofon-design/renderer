@@ -1,3 +1,4 @@
+import { dirname, resolve } from 'path';
 import { loadPackageJSON } from '../../utils';
 import type { BabelConfig } from '../babel';
 import type { CommonJSModuleConfig } from '../cjs';
@@ -74,10 +75,16 @@ export interface CoreTaskConfig {
    * Enable TypeScript declaration output.
    *
    * @default
-   * const { types, typings } = require('package.json');
+   * const { main, module, types, typings } = require('package.json');
    * const dts =
-   *   (typeof types === 'string' && types.endsWith('.d.ts')) ||
-   *   (typeof typings === 'string' && typings.endsWith('.d.ts'));
+   *   (typeof types === 'string' &&
+   *     types.endsWith('.d.ts') &&
+   *     !isSubdir(types, main) &&
+   *     !isSubdir(types, module)) ||
+   *   (typeof typings === 'string' &&
+   *     typings.endsWith('.d.ts') &&
+   *     !isSubdir(typings, main) &&
+   *     !isSubdir(typings, module));
    */
   dts?: CoreTaskConfigItem<TypeScriptDeclarationConfig>;
   /**
@@ -136,22 +143,34 @@ export function DefaultCoreTaskConfig(): ResolvedCoreTaskConfig {
   const config: ResolvedCoreTaskConfig = {};
 
   if (pkg) {
-    if (typeof pkg.type === 'string') {
-      const type = pkg.type.toLowerCase();
-      if (type === 'commonjs') config.cjs = DefaultCoreTaskConfigGetterMap.cjs;
-      else if (type === 'module') config.esm = DefaultCoreTaskConfigGetterMap.esm;
-    } else if (typeof pkg.main === 'string') {
-      if (/\.umd\./.test(pkg.main)) config.umd = DefaultCoreTaskConfigGetterMap.umd;
-      else if (pkg.main.endsWith('.mjs')) config.esm = DefaultCoreTaskConfigGetterMap.esm;
+    const pkgMain = typeof pkg.main === 'string' ? pkg.main : null;
+    const pkgModule = typeof pkg.module === 'string' ? pkg.module : null;
+    const pkgType = typeof pkg.type === 'string' ? pkg.type.toLowerCase() : null;
+
+    const shouldEnableDtsTask = (types: string): boolean => {
+      if (!types.endsWith('.d.ts')) return false;
+      const abspath = resolve(dirname(types));
+      return (
+        (pkgMain === null || !abspath.startsWith(resolve(dirname(pkgMain)))) &&
+        (pkgModule === null || !abspath.startsWith(resolve(dirname(pkgModule))))
+      );
+    };
+
+    if (pkgType !== null) {
+      if (pkgType === 'commonjs') config.cjs = DefaultCoreTaskConfigGetterMap.cjs;
+      else if (pkgType === 'module') config.esm = DefaultCoreTaskConfigGetterMap.esm;
+    } else if (typeof pkgMain === 'string') {
+      if (/\.umd\./i.test(pkgMain)) config.umd = DefaultCoreTaskConfigGetterMap.umd;
+      else if (pkgMain.endsWith('.mjs')) config.esm = DefaultCoreTaskConfigGetterMap.esm;
       else config.cjs = DefaultCoreTaskConfigGetterMap.cjs;
     }
 
-    if (config.esm === undefined && typeof pkg.module === 'string')
+    if (config.esm === undefined && typeof pkgModule === 'string')
       config.esm = DefaultCoreTaskConfigGetterMap.esm;
 
     if (
-      (typeof pkg.types === 'string' && pkg.types.endsWith('.d.ts')) ||
-      (typeof pkg.typings === 'string' && pkg.typings.endsWith('.d.ts'))
+      (typeof pkg.types === 'string' && shouldEnableDtsTask(pkg.types)) ||
+      (typeof pkg.typings === 'string' && shouldEnableDtsTask(pkg.typings))
     )
       config.dts = DefaultCoreTaskConfigGetterMap.dts;
   }
