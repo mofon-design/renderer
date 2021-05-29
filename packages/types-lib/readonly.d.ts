@@ -1,15 +1,9 @@
 declare namespace t {
   // eslint-disable-next-line @typescript-eslint/ban-types
-  interface ReadonlyWeakMap<K extends object, V> extends WeakMap<K, V> {
-    delete?: never;
-    set?: never;
-  }
+  interface ReadonlyWeakMap<K extends object, V> extends Omit<WeakMap<K, V>, 'delete' | 'set'> {}
 
   // eslint-disable-next-line @typescript-eslint/ban-types
-  interface ReadonlyWeakSet<K extends object, V> extends WeakSet<K, V> {
-    add?: never;
-    delete?: never;
-  }
+  interface ReadonlyWeakSet<K extends object> extends Omit<WeakSet<K>, 'add' | 'delete'> {}
 
   type Readonly<T> = T extends WeakMap<infer Key, infer Value>
     ? ReadonlyWeakMap<Key, t.Readonly<Value>>

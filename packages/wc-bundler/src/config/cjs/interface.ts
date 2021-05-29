@@ -11,7 +11,9 @@ export interface CommonJSModuleConfig extends BundleIOConfig, CoreSharedConfig {
    * @default
    * {
    *   babel: ['.js', '.jsx', '.es6', '.es', '.mjs'],
-   *   copy: {},
+   *   get copy() {
+   *     return { exclude: [this.babel, this.tsc] };
+   *   },
    *   tsc: ['.ts', '.tsx'],
    * };
    */
@@ -47,7 +49,12 @@ export function DefaultCommonJSModuleConfig(): ResolvedCommonJSModuleConfig {
     clean: true,
     exts: {
       babel: ['.js', '.jsx', '.es6', '.es', '.mjs'],
-      copy: {},
+      copy: {
+        exclude: {
+          include: ['.js', '.jsx', '.es6', '.es', '.mjs', '.ts', '.tsx'],
+          exclude: ['.d.ts'],
+        },
+      },
       tsc: ['.ts', '.tsx'],
     },
     entry: [

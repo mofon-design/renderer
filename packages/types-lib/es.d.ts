@@ -22,7 +22,7 @@ declare namespace t {
       interface hasOwnProperty {
         (v: PropertyKey): v is keyof this;
         call<T>(self: T, v: PropertyKey): v is keyof T;
-        apply<T>(self: T, args: [v: PropertyKey]): v is keyof T;
+        apply<T>(self: T, args: [v: PropertyKey]): args is [v: keyof T];
       }
     }
 

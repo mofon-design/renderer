@@ -6,7 +6,12 @@ import merge from 'merge2';
 import type { Readable } from 'stream';
 import type { CommonJSModuleConfig } from '../config';
 import { loadBabelConfig, loadCommonJSModuleConfig, loadTypeScriptCompileConfig } from '../config';
-import { createBabelPipeline, createExtnamePipeline, filterByExtname } from '../pipelines';
+import {
+  createBabelPipeline,
+  createCopyPipeline,
+  createExtnamePipeline,
+  filterByExtname,
+} from '../pipelines';
 import { asArray, json, signale } from '../utils';
 import { withIO } from './io';
 
@@ -32,6 +37,8 @@ export function cjs(config?: t.Readonly<CommonJSModuleConfig>): ListrTask<Listr2
     self.title = 'Transform to CommonJS module';
 
     const output: Readable[] = [];
+
+    output.push(upstream.pipe(filterByExtname(resolved.exts.copy)).pipe(createCopyPipeline()));
 
     output.push(
       upstream

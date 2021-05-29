@@ -10,7 +10,12 @@ import {
   loadECMAScriptModuleConfig,
   loadTypeScriptCompileConfig,
 } from '../config';
-import { createBabelPipeline, createExtnamePipeline, filterByExtname } from '../pipelines';
+import {
+  createBabelPipeline,
+  createCopyPipeline,
+  createExtnamePipeline,
+  filterByExtname,
+} from '../pipelines';
 import { asArray, json, signale } from '../utils';
 import { withIO } from './io';
 
@@ -36,6 +41,8 @@ export function esm(config?: t.Readonly<ECMAScriptModuleConfig>): ListrTask<List
     self.title = 'Transform to ECMAScript module';
 
     const output: Readable[] = [];
+
+    output.push(upstream.pipe(filterByExtname(resolved.exts.copy)).pipe(createCopyPipeline()));
 
     output.push(
       upstream

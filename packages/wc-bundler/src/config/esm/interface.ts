@@ -11,7 +11,12 @@ export interface ECMAScriptModuleConfig extends BundleIOConfig, CoreSharedConfig
    * @default
    * {
    *   babel: ['.js', '.jsx', '.es6', '.es', '.mjs'],
-   *   copy: {},
+   *   copy: {
+   *     exclude: {
+   *       include: ['.js', '.jsx', '.es6', '.es', '.mjs', '.ts', '.tsx'],
+   *       exclude: ['.d.ts'],
+   *     },
+   *   },
    *   tsc: ['.ts', '.tsx'],
    * };
    */
@@ -55,7 +60,12 @@ export function DefaultECMAScriptModuleConfig(): ResolvedECMAScriptModuleConfig 
     clean: true,
     exts: {
       babel: ['.js', '.jsx', '.es6', '.es', '.mjs'],
-      copy: {},
+      copy: {
+        exclude: {
+          include: ['.js', '.jsx', '.es6', '.es', '.mjs', '.ts', '.tsx'],
+          exclude: ['.d.ts'],
+        },
+      },
       tsc: ['.ts', '.tsx'],
     },
     entry: [
