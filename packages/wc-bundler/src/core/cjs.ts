@@ -57,10 +57,10 @@ export function cjs(config?: t.Readonly<CommonJSModuleConfig>): ListrTask<Listr2
             .pipe(createBabelPipeline(babel))
             .pipe(createExtnamePipeline(resolved.outext)),
         );
-      }
 
-      if (tsc.parsed.options.declaration) {
-        output.push(tscOutput.dts);
+        if (tsc.parsed.options.declaration) {
+          output.push(tscOutput.dts);
+        }
       }
     }
 

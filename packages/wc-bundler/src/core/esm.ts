@@ -61,10 +61,10 @@ export function esm(config?: t.Readonly<ECMAScriptModuleConfig>): ListrTask<List
             .pipe(createBabelPipeline(babel))
             .pipe(createExtnamePipeline(resolved.outext)),
         );
-      }
 
-      if (tsc.parsed.options.declaration) {
-        output.push(tscOutput.dts);
+        if (tsc.parsed.options.declaration) {
+          output.push(tscOutput.dts);
+        }
       }
     }
 

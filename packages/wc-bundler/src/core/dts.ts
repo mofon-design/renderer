@@ -24,7 +24,8 @@ export function dts(config?: t.Readonly<TypeScriptDeclarationConfig>): ListrTask
     const tsc = loadTypeScriptCompileConfig(asArray(resolved.tsc ?? []));
     signale.debug(() => ['Resolved tsc config:', json(tsc)]);
 
-    if (!tsc?.parsed.options.declaration) return self.skip('TypeScript declaration disabled');
+    if (!tsc?.parsed.options.declaration || tsc.parsed.options.noEmit)
+      return self.skip('TypeScript declaration disabled');
 
     self.title = 'Generate TypeScript declaration';
 
