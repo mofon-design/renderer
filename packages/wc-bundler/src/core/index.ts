@@ -55,7 +55,8 @@ export async function bin(
 ): Promise<void> {
   const configFromCLI = YargsParser(process.argv.slice(2));
   const configFilesFromCLI = configFile && configFromCLI._.length ? configFromCLI._ : configFile;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const task = core(asArray(configs ?? []).concat(configFilesFromCLI as any), configFilesFromCLI);
+  signale.debug(() => ['Parsed config from CLI:', json(configFromCLI)]);
+
+  const task = core(asArray(configs ?? []).concat(configFromCLI as CoreConfig), configFilesFromCLI);
   await new Listr({ task }, loadListr2Config({})).run();
 }
