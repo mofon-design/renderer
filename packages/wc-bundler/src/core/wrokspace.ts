@@ -33,6 +33,10 @@ export function workspace(
       };
     });
 
+    if (workspaceTask) {
+      tasks.push({ task: workspaceTask, title: coloredWorkspaceTaskTitle() });
+    }
+
     return self.newListr(tasks, { concurrent: false });
   };
 }
