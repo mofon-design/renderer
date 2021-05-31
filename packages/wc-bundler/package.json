@@ -1,6 +1,6 @@
 {
   "name": "wc-bundler",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Web Component bundler",
   "author": "imhele <work@imhele.com>",
   "license": "MIT",
