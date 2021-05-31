@@ -13,7 +13,7 @@ export function loadWorkspaceConfig(
     ptnsets.push(asArray(config.packages));
   }
 
-  if (config.lerna === undefined || config.lerna) {
+  if ((config.lerna === undefined && config.packages === undefined) || config.lerna) {
     try {
       const lerna = require(resolve('lerna.json')) as t.AnyRecord;
       if (typeof lerna === 'object' && lerna?.packages) {
@@ -22,7 +22,7 @@ export function loadWorkspaceConfig(
     } catch {}
   }
 
-  if (config.packageJSON === undefined || config.packageJSON) {
+  if ((config.packageJSON === undefined && config.packages === undefined) || config.packageJSON) {
     const pkg = loadPackageJSON();
     if (pkg && typeof pkg.workspaces === 'object') {
       const workspaces = pkg.workspaces as t.AnyRecord | null;

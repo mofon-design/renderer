@@ -6,13 +6,15 @@ export interface WorkspaceConfig {
   /**
    * Apply lerna config.
    *
-   * @default fs.statSync('lerna.json').isFile()
+   * @default
+   * packages === undefined && fs.statSync('lerna.json').isFile()
    */
   lerna?: boolean;
   /**
    * Apply package.json config.
    *
-   * @default Array.isArray(require('package.json').workspaces.packages)
+   * @default
+   * packages === undefined && Array.isArray(require('package.json').workspaces.packages)
    */
   packageJSON?: boolean;
   /**
