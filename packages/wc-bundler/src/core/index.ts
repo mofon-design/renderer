@@ -14,6 +14,7 @@ export function core(
   overrideConfigs?: t.Readonly<CoreConfig> | t.Readonly<CoreConfig[]>,
   configFile?: boolean | string | string[],
 ): ListrTask<Listr2Ctx>['task'] {
+  const cwd = process.cwd();
   const configsFromFile = loadCoreConfigFiles(configFile);
   signale.debug(() => ['Loaded core config from file:', json(configsFromFile)]);
 
@@ -22,6 +23,8 @@ export function core(
   signale.debug(() => ['Resolved core config:', json(resolved)]);
 
   const coreTask: ListrTask<Listr2Ctx>['task'] = function coreTask(_ctx, self) {
+    process.chdir(cwd);
+
     let tasks: ListrTask<Listr2Ctx>[] = [];
 
     if (resolved.dts)
