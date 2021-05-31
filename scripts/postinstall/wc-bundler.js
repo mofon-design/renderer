@@ -1,9 +1,6 @@
 module.exports.WCBundler = async function WCBundler() {
   console.log('\nBuild wc-bundler...');
 
-  const cwd = process.cwd();
-  process.chdir('./packages/wc-bundler');
-
   require('@babel/register')({
     extensions: ['.tsx', '.ts', '.jsx', '.mjs', '.es'],
     ignore: [/node_modules/],
@@ -14,7 +11,5 @@ module.exports.WCBundler = async function WCBundler() {
     ],
   });
 
-  await require('wc-bundler/src').bin();
-
-  process.chdir(cwd);
+  await require('wc-bundler/src').bin({ workspace: { packages: ['packages/wc-bundler'] } });
 };

@@ -1,5 +1,6 @@
 import type { ListrTask } from 'listr2';
 import { Listr } from 'listr2';
+import YargsParser from 'yargs-parser';
 import { CoreConfig, loadCoreConfigFiles } from '../config';
 import { loadCoreConfig, loadListr2Config } from '../config';
 import { asArray, json, signale } from '../utils';
@@ -11,7 +12,7 @@ import { workspace } from './wrokspace';
 
 export function core(
   overrideConfigs?: t.Readonly<CoreConfig> | t.Readonly<CoreConfig[]>,
-  configFile?: boolean,
+  configFile?: boolean | string | string[],
 ): ListrTask<Listr2Ctx>['task'] {
   const configsFromFile = loadCoreConfigFiles(configFile);
   signale.debug(() => ['Loaded core config from file:', json(configsFromFile)]);
@@ -42,13 +43,19 @@ export function core(
   }
 
   const createCoreTask: ListrTask<Listr2Ctx>['task'] = function createCoreTask(ctx, self) {
-    return core(configs, configFile)(ctx, self);
+    return core(configs, configFile === true)(ctx, self);
   };
 
   return workspace(resolved.workspace, createCoreTask, coreTask);
 }
 
-export async function bin(configs?: t.Readonly<CoreConfig[]>, configFile = true): Promise<void> {
-  const task = core(configs, configFile);
+export async function bin(
+  configs?: t.Readonly<CoreConfig> | t.Readonly<CoreConfig[]>,
+  configFile = true,
+): Promise<void> {
+  const configFromCLI = YargsParser(process.argv.slice(2));
+  const configFilesFromCLI = configFile && configFromCLI._.length ? configFromCLI._ : configFile;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const task = core(asArray(configs ?? []).concat(configFilesFromCLI as any), configFilesFromCLI);
   await new Listr({ task }, loadListr2Config({})).run();
 }
