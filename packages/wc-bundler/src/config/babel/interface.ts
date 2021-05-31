@@ -107,9 +107,9 @@ export function DefaultBabelEnvConfig(): BabelEnvConfig {
     spec: false,
     targets: {
       edge: '79',
-      firefox: '63',
-      chrome: '54',
-      safari: '10.1',
+      firefox: '64',
+      chrome: '67',
+      safari: '12.1',
     }, // TODO detect node env
     useBuiltIns: false,
   };
