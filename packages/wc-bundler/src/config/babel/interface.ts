@@ -13,7 +13,7 @@ import type {
   TargetsOptions as BabelTargetsOptions,
 } from '@babel/preset-env';
 import { join } from 'path';
-import satisfies from 'semver/functions/satisfies';
+import SemverRange from 'semver/classes/range';
 import { assertInstance, loadPackageJSON, resolveModuleByBabel, root } from '../../utils';
 
 export interface BabelPluginProposalDecoratorsConfig {
@@ -310,7 +310,10 @@ export interface BabelReactConfig {
    * Decides which runtime to use.
    *
    * @default
-   * depsOrPeerDepsIncludeReact && reactVersionLessThan17 ? 'classic' : 'automatic'
+   * !depsOrPeerDepsIncludeReact ||
+   * !new SemverRange(reactVersion).intersects(new SemverRange('<17'))
+   *   ? 'automatic'
+   *   : 'classic'
    */
   runtime?: 'automatic' | 'classic';
   /**
@@ -368,7 +371,9 @@ export function DefaultBabelReactConfig(): BabelReactConfig {
     try {
       return {
         importSource: 'react',
-        runtime: satisfies('17.0.0', reactVersionRange) ? 'automatic' : 'classic',
+        runtime: new SemverRange(reactVersionRange).intersects(new SemverRange('<17'))
+          ? 'classic'
+          : 'automatic',
       };
     } catch {}
 
