@@ -363,10 +363,10 @@ export function DefaultBabelReactConfig(): BabelReactConfig {
 
   function detectImportSourceFromDependencies(
     deps: unknown,
-  ): Pick<BabelReactConfig, 'importSource' | 'runtime'> {
-    if (typeof deps !== 'object' || !deps) return {};
+  ): Pick<BabelReactConfig, 'importSource' | 'runtime'> | void {
+    if (typeof deps !== 'object' || !deps) return;
     const reactVersionRange = (deps as t.UnknownRecord).react;
-    if (typeof reactVersionRange !== 'string') return {};
+    if (typeof reactVersionRange !== 'string') return;
 
     try {
       return {
