@@ -7,17 +7,17 @@ import { DefaultWorkspaceConfig } from './interface';
 export function loadWorkspaceConfig(
   config: t.Readonly<WorkspaceConfig> = DefaultWorkspaceConfig(),
 ): ResolvedWorkspaceConfig {
-  const ptnsets: (readonly string[])[] = [];
+  const patternsList: (readonly string[])[] = [];
 
   if (config.packages !== undefined) {
-    ptnsets.push(asArray(config.packages));
+    patternsList.push(asArray(config.packages));
   }
 
   if ((config.lerna === undefined && config.packages === undefined) || config.lerna) {
     try {
       const lerna = require(resolve('lerna.json')) as t.AnyRecord;
       if (typeof lerna === 'object' && lerna?.packages) {
-        ptnsets.push(asArray(lerna.packages));
+        patternsList.push(asArray(lerna.packages));
       }
     } catch {}
   }
@@ -27,43 +27,44 @@ export function loadWorkspaceConfig(
     if (pkg && typeof pkg.workspaces === 'object') {
       const workspaces = pkg.workspaces as t.AnyRecord | null;
       if (workspaces && workspaces.packages) {
-        ptnsets.push(asArray(workspaces.packages));
+        patternsList.push(asArray(workspaces.packages));
       }
     }
   }
 
-  let pathset: Set<string> | undefined;
+  let matchedPaths: readonly string[] = [];
+  let intersectionOfPatternsList: Set<string> | undefined;
 
-  for (const patterns of ptnsets) {
+  for (const patterns of patternsList) {
     const paths = patterns.reduce<string[]>((paths, pattern) => {
       pattern = slash(pattern);
       pattern = pattern.endsWith('/') ? pattern : `${pattern}/`;
       return paths.concat(globSync(pattern, { absolute: true, ignore: config.ignore }));
     }, []);
 
-    if (pathset === undefined) {
-      pathset = new Set(paths);
+    matchedPaths = matchedPaths.concat(paths);
+
+    if (intersectionOfPatternsList === undefined) {
+      intersectionOfPatternsList = new Set(paths);
     } else {
-      const omit = new Set(pathset);
-      for (const abspath of paths) omit.delete(abspath);
-      for (const abspath of omit) pathset.delete(abspath);
+      const rest = intersectionOfPatternsList;
+      const omit = new Set(intersectionOfPatternsList);
+      paths.forEach((abspath) => omit.delete(abspath));
+      omit.forEach((abspath) => rest.delete(abspath));
     }
   }
 
-  if (pathset === undefined) return [];
+  if (!intersectionOfPatternsList?.size || !matchedPaths.length) return [];
 
   const cwd = process.cwd();
-  const pathNameMap = new Map<string, string>();
+  const nonNullableIntersectionOfPatternsList = intersectionOfPatternsList;
 
-  for (const abspath of pathset) {
-    if (relative(abspath, cwd) !== '') {
-      pathNameMap.set(abspath, loadPackageName(abspath));
-    }
-  }
+  return matchedPaths.reduce<WorkspacePackageInfo[]>((pkgs, abspath) => {
+    if (!nonNullableIntersectionOfPatternsList.has(abspath)) return pkgs;
+    nonNullableIntersectionOfPatternsList.delete(abspath);
 
-  return transformPathNameMap(pathNameMap);
-}
-
-function transformPathNameMap(map: Map<string, string>): WorkspacePackageInfo[] {
-  return Array.from(map).map((entry) => ({ abspath: entry[0], name: entry[1] }));
+    if (relative(abspath, cwd) === '') return pkgs;
+    pkgs.push({ abspath, name: loadPackageName(abspath) });
+    return pkgs;
+  }, []);
 }
