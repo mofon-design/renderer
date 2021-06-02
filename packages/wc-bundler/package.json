@@ -57,12 +57,17 @@
     "update-notifier": "5.1.0",
     "yargs-parser": "20.2.7"
   },
+  "optionalDependencies": {
+    "@types/babel__core": "~7.1.14",
+    "@types/babel__plugin-transform-runtime": "~7.9.0",
+    "@types/babel__preset-env": "~7.9.1",
+    "types-lib": "^0.8.0"
+  },
   "devDependencies": {
     "@types/babel__core": "~7.1.14",
     "@types/babel__plugin-transform-runtime": "~7.9.0",
     "@types/babel__preset-env": "~7.9.1",
     "@types/gulp": "~4.0.8",
-    "@types/gulp-plumber": "~0.0.32",
     "@types/lodash.upperfirst": "~4.3.6",
     "@types/lodash.words": "~4.2.6",
     "@types/merge2": "^1.3.0",
