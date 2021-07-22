@@ -2,6 +2,7 @@ export const env = {
   DEBUG: envBoolean(caseInsensitiveEnv('DEBUG')),
   DISABLE_CLI_RUNTIME_CACHE: envBoolean(caseInsensitiveEnv('DISABLE_CLI_RUNTIME_CACHE')),
   LOG_FILE: caseInsensitiveEnv('LOG_FILE')?.trim(),
+  GULP_PLUMBER: envBoolean(caseInsensitiveEnv('GULP_PLUMBER')),
   SILENT: envBoolean(caseInsensitiveEnv('SILENT')),
   TERM: process.env.TERM,
 } as const;

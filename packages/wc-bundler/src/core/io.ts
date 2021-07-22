@@ -54,20 +54,18 @@ export function withIO<Renderer extends typeof ListrRenderer>(
       });
 
       function createHook(): WithIOStreamHooks {
-        const enablePlumber = !env.DEBUG;
-
         return {
           after(stream) {
             stream = stream.pipe(dest(resolved.outdir));
 
-            if (enablePlumber) stream = stream.pipe(plumber.stop());
+            if (env.GULP_PLUMBER) stream = stream.pipe(plumber.stop());
 
             return stream;
           },
           before(stream) {
             self.title = 'Start IO task...';
 
-            if (enablePlumber) stream = stream.pipe(plumber(onerror));
+            if (env.GULP_PLUMBER) stream = stream.pipe(plumber(onerror));
 
             return stream;
           },
