@@ -3,7 +3,6 @@
     "alwaysStrict": true,
     "baseUrl": ".",
     "declaration": true,
-    "emitDeclarationOnly": true,
     "esModuleInterop": true,
     "experimentalDecorators": false,
     "importHelpers": false,
