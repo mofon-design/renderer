@@ -1,3 +1,4 @@
+import type t from 'types-lib';
 import type { TypeScriptDeclarationConfig, ResolvedTypeScriptDeclarationConfig } from './interface';
 import { DefaultTypeScriptDeclarationConfig } from './interface';
 

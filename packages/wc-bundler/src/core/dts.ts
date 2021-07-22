@@ -3,6 +3,7 @@ import type { ListrTask } from 'listr2';
 import type { Settings as GulpTypeScriptSettings } from 'gulp-typescript';
 import gulpts from 'gulp-typescript';
 import merge from 'merge2';
+import type t from 'types-lib';
 import type { TypeScriptDeclarationConfig } from '../config';
 import { loadTypeScriptCompileConfig, loadTypeScriptDeclarationConfig } from '../config';
 import { createCopyPipeline, filterByExtname } from '../pipelines';

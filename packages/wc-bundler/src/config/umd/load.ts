@@ -1,3 +1,4 @@
+import type t from 'types-lib';
 import { asArray, loadPackageJSON } from '../../utils';
 import { loadBabelConfig } from '../babel';
 import { DefaultCoreSharedConfigGetterMap } from '../core';

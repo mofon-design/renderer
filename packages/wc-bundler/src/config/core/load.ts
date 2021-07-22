@@ -1,5 +1,6 @@
 import { resolve } from 'path';
 import { asArray, iterargs, loadModuleByBabel } from '../../utils';
+import type t from 'types-lib';
 import type {
   CoreConfig,
   CoreTaskConfig,

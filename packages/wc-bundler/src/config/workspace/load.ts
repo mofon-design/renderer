@@ -1,5 +1,6 @@
 import { sync as globSync } from 'glob';
 import { relative, resolve } from 'path';
+import type t from 'types-lib';
 import { asArray, loadPackageJSON, loadPackageName, slash } from '../../utils';
 import type { ResolvedWorkspaceConfig, WorkspaceConfig, WorkspacePackageInfo } from './interface';
 import { DefaultWorkspaceConfig } from './interface';

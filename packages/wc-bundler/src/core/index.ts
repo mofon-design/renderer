@@ -1,5 +1,6 @@
 import type { ListrTask } from 'listr2';
 import { Listr } from 'listr2';
+import type t from 'types-lib';
 import YargsParser from 'yargs-parser';
 import { CoreConfig, loadCoreConfigFiles } from '../config';
 import { loadCoreConfig, loadListr2Config } from '../config';

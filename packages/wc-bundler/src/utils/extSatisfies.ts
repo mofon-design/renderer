@@ -1,3 +1,5 @@
+import type t from 'types-lib';
+
 export type ExtSatisfiesRange =
   | string[]
   | {

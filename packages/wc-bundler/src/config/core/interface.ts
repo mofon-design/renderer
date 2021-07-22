@@ -1,4 +1,5 @@
 import { dirname, resolve } from 'path';
+import type t from 'types-lib';
 import { loadPackageJSON } from '../../utils';
 import type { BabelConfig } from '../babel';
 import type { CommonJSModuleConfig } from '../cjs';

@@ -4,6 +4,7 @@ import type { ListrRenderer, ListrTask } from 'listr2';
 import type { TaskWrapper } from 'listr2/dist/lib/task-wrapper';
 import { relative } from 'path';
 import type { Stream } from 'stream';
+import type t from 'types-lib';
 import type { BundleIOConfig, ResolvedBundleIOConfig } from '../config';
 import { loadBundleIOConfig } from '../config';
 import { env, hideDEP0097, plumber } from '../utils';

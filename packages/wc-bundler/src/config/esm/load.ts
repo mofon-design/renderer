@@ -1,3 +1,4 @@
+import type t from 'types-lib';
 import { asArray } from '../../utils';
 import { DefaultCoreSharedConfigGetterMap } from '../core';
 import type { ECMAScriptModuleConfig, ResolvedECMAScriptModuleConfig } from './interface';

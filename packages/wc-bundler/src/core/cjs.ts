@@ -4,6 +4,7 @@ import type { Settings as GulpTypeScriptSettings } from 'gulp-typescript';
 import gulpts from 'gulp-typescript';
 import merge from 'merge2';
 import type { Readable } from 'stream';
+import type t from 'types-lib';
 import type { CommonJSModuleConfig } from '../config';
 import { loadBabelConfig, loadCommonJSModuleConfig, loadTypeScriptCompileConfig } from '../config';
 import {

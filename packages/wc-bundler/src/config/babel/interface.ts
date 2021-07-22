@@ -14,6 +14,7 @@ import type {
 } from '@babel/preset-env';
 import { join } from 'path';
 import SemverRange from 'semver/classes/range';
+import type t from 'types-lib';
 import { assertInstance, loadPackageJSON, resolveModuleByBabel, root } from '../../utils';
 
 export interface BabelPluginProposalDecoratorsConfig {

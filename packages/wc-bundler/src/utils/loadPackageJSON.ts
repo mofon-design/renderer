@@ -1,4 +1,5 @@
 import { join, resolve } from 'path';
+import type t from 'types-lib';
 import { signale } from './signale';
 
 export function loadPackageJSON(cwd?: string): t.UnknownRecord | null {

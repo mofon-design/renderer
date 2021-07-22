@@ -1,3 +1,4 @@
+import type t from 'types-lib';
 import type { BundleIOConfig, ResolvedBundleIOConfig } from './interface';
 import { DefaultBundleIOConfig } from './interface';
 

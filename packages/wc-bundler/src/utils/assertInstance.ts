@@ -1,3 +1,5 @@
+import type t from 'types-lib';
+
 export function assertInstance<T extends t.AnyConstructor>(
   value: unknown,
   cls: T,

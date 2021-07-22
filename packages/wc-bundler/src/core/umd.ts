@@ -1,5 +1,6 @@
 import type { ListrTask } from 'listr2';
 import { rollup } from 'rollup';
+import type t from 'types-lib';
 import type { UMDModuleConfig } from '../config';
 import { loadUMDModuleConfig } from '../config';
 import { json, signale } from '../utils';

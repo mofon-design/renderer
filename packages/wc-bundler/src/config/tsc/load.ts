@@ -1,4 +1,5 @@
 import { dirname, resolve } from 'path';
+import type t from 'types-lib';
 import { iterargs } from '../../utils';
 import ts from 'typescript';
 import { CompilerOptionsEnumMap } from './compiler-options-enum-map';

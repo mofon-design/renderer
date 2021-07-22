@@ -3,6 +3,7 @@ import type {
   TransformOptions as BabelTransformOptions,
 } from '@babel/core';
 import { loadPartialConfig } from '@babel/core';
+import type t from 'types-lib';
 import { iterargs } from '../../utils';
 import type { BabelConfig, ResolvedBuiltinBabelPresetsConfig } from './interface';
 import {

@@ -1,4 +1,5 @@
 import type { Plugin as RollupPlugin } from 'rollup';
+import type t from 'types-lib';
 import { asArray, iterargs, json, signale } from '../../utils';
 import {
   DefaultRollupBabelConfig,

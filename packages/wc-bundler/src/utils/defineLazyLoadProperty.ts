@@ -1,3 +1,5 @@
+import type t from 'types-lib';
+
 export function defineLazyLoadProperty<Target, Key extends keyof Target, Value>(
   target: Target,
   key: Key,
