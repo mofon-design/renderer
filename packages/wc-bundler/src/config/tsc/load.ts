@@ -10,6 +10,7 @@ import type {
   TypeScriptCompilerOptions,
 } from './interface';
 import { AllowedCompilerOptions, DefaultTypeScriptCompileConfig } from './interface';
+import { libPathMap } from './libs';
 
 const isKey = Object.prototype.hasOwnProperty as t.Object.prototype.hasOwnProperty;
 
@@ -88,11 +89,20 @@ function convertCompilerOptionsBack(
 
     if (isKey.call(CompilerOptionsEnumMap, key)) {
       const value = compilerOptions[key];
+      const enumMap = CompilerOptionsEnumMap[key];
       (converted as t.UnknownRecord)[key] =
-        typeof value === 'number' ? (CompilerOptionsEnumMap as t.AnyRecord)[key][value] : value;
-    } else if (key === 'lib' && Array.isArray(compilerOptions[key])) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      converted[key] = compilerOptions[key]!.map((value) => value.toLowerCase());
+        value !== undefined && isKey.call(enumMap, value) ? enumMap[value] : value;
+    } else if (key === 'lib') {
+      if (compilerOptions.lib === undefined)
+        // ignore void value
+        continue;
+      else if ((Array.isArray as t.Array.isArray)(compilerOptions.lib))
+        // convert lib paths back
+        converted.lib = compilerOptions.lib.map((lib) => {
+          if (typeof lib !== 'string') return lib;
+          return libPathMap.get(lib.toLowerCase()) ?? lib;
+        });
+      else converted.lib = compilerOptions.lib;
     } else if (compilerOptions[key] !== undefined) {
       converted[key] = compilerOptions[key] as never;
     }
