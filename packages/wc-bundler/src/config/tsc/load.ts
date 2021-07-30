@@ -90,6 +90,9 @@ function convertCompilerOptionsBack(
       const value = compilerOptions[key];
       (converted as t.UnknownRecord)[key] =
         typeof value === 'number' ? (CompilerOptionsEnumMap as t.AnyRecord)[key][value] : value;
+    } else if (key === 'lib' && Array.isArray(compilerOptions[key])) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      converted[key] = compilerOptions[key]!.map((value) => value.toLowerCase());
     } else if (compilerOptions[key] !== undefined) {
       converted[key] = compilerOptions[key] as never;
     }
