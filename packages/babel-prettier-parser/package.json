@@ -1,6 +1,6 @@
 {
   "name": "babel-prettier-parser",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Prettier parser that allows for parsing of experimental syntax transformed by Babel",
   "author": "imhele <work@imhele.com>",
   "license": "MIT",
