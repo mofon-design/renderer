@@ -139,9 +139,9 @@ function mergeBuiltinPluginOrPresetConfig<
 function unshiftBuiltinPluginsOrPresetsConfig<
   Key extends string,
   Source extends Readonly<Partial<t.AnyRecord<Key>>>
->(nameMap: Readonly<Record<Key, string>>, source: Source, target: BabelPluginItem[]): void {
-  (Object.entries(nameMap) as [Key, string][]).reverse().forEach(([key, name]) => {
+>(nameMap: Readonly<Record<Key, string | null>>, source: Source, target: BabelPluginItem[]): void {
+  (Object.entries(nameMap) as [Key, string | null][]).reverse().forEach(([key, name]) => {
     const config = source[key];
-    if (config) target.unshift(typeof config === 'object' ? [name, config] : name);
+    if (config && name) target.unshift(typeof config === 'object' ? [name, config] : name);
   });
 }

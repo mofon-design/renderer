@@ -470,6 +470,11 @@ export interface BuiltinBabelPluginsConfig {
   ['plugin-proposal-function-sent']?: boolean;
   ['plugin-proposal-partial-application']?: boolean;
   ['plugin-proposal-pipeline-operator']?: BabelPluginProposalPipelineOperatorConfig;
+  /**
+   * @deprecated
+   * [Ergonomic brand checks for Private Fields](https://github.com/tc39/proposal-private-fields-in-in)
+   * proposal has already reached Stage 4, so this config will be removed in the next major version.
+   */
   ['plugin-proposal-private-property-in-object']?: boolean;
   ['plugin-proposal-throw-expressions']?: boolean;
   ['plugin-syntax-dynamic-import']?: boolean;
@@ -505,7 +510,7 @@ export const DefaultBuiltinBabelPluginsConfigGetterMap: Required<BuiltinBabelPlu
     return DefaultBabelPluginProposalPipelineOperatorConfig();
   },
   get ['plugin-proposal-private-property-in-object']() {
-    return true;
+    return false;
   },
   get ['plugin-proposal-throw-expressions']() {
     return true;
@@ -525,7 +530,6 @@ export function DefaultBuiltinBabelPluginsConfig(): BuiltinBabelPluginsConfig {
     'plugin-proposal-decorators',
     'plugin-proposal-do-expressions',
     'plugin-proposal-export-default-from',
-    'plugin-proposal-private-property-in-object',
     'plugin-proposal-throw-expressions',
     'plugin-syntax-dynamic-import',
     'plugin-transform-runtime',
@@ -538,7 +542,7 @@ export function DefaultBuiltinBabelPluginsConfig(): BuiltinBabelPluginsConfig {
 }
 
 export const BuiltinBabelPluginsNameMap: Readonly<
-  Record<keyof BuiltinBabelPluginsConfig, string>
+  Record<keyof BuiltinBabelPluginsConfig, string | null>
 > = {
   ['plugin-proposal-async-do-expressions']: '@babel/plugin-proposal-async-do-expressions',
   ['plugin-proposal-class-static-block']: '@babel/plugin-proposal-class-static-block',
@@ -549,8 +553,7 @@ export const BuiltinBabelPluginsNameMap: Readonly<
   ['plugin-proposal-function-sent']: '@babel/plugin-proposal-function-sent',
   ['plugin-proposal-partial-application']: '@babel/plugin-proposal-partial-application',
   ['plugin-proposal-pipeline-operator']: '@babel/plugin-proposal-pipeline-operator',
-  ['plugin-proposal-private-property-in-object']:
-    '@babel/plugin-proposal-private-property-in-object',
+  ['plugin-proposal-private-property-in-object']: null,
   ['plugin-proposal-throw-expressions']: '@babel/plugin-proposal-throw-expressions',
   ['plugin-syntax-dynamic-import']: '@babel/plugin-syntax-dynamic-import',
   ['plugin-transform-runtime']: '@babel/plugin-transform-runtime',

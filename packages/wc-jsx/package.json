@@ -9,7 +9,7 @@
   "types": "es/index.d.ts",
   "sideEffects": false,
   "dependencies": {
-    "@babel/runtime": "~7.14.0"
+    "@babel/runtime": "~7.15.0"
   },
   "bugs": {
     "url": "https://github.com/mofon-design/renderer/issues"
