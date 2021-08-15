@@ -37,19 +37,50 @@ export function DefaultBabelPluginProposalDecoratorsConfig():
   return { decoratorsBeforeExport: true, legacy: false };
 }
 
-export interface BabelPluginProposalPipelineOperatorConfig {
-  /**
-   * The Pipeline Proposal is one of three competing implementations.
-   * Which implementation the plugin should use is configured with this option.
-   * This option is required and should be one of:
-   * - "minimal" – Minimal Pipeline
-   * - "smart" - Smart Pipeline - Added in v7.3.0
-   * - "fsharp" - F#-Style Pipeline - Added in v7.5.0
-   * When one of the implementations is accepted, it will become the default
-   * and this option will no longer be required.
-   */
-  proposal: 'minimal' | 'smart' | 'fsharp';
-}
+export type BabelPluginProposalPipelineOperatorConfig =
+  | {
+      /**
+       * The pipeline operator has several competing proposals.
+       * Configure which proposal to use with this required option.
+       *
+       * [Smart-mix pipes](https://github.com/js-choi/proposal-smart-pipelines)
+       *
+       * @deprecated https://babeljs.io/blog/2021/07/26/7.15.0
+       */
+      proposal: 'smart';
+    }
+  | {
+      /**
+       * The pipeline operator has several competing proposals.
+       * Configure which proposal to use with this required option.
+       *
+       * [Minimal F#-style pipes](https://github.com/tc39/proposal-pipeline-operator/)
+       */
+      proposal: 'minimal';
+    }
+  | {
+      /**
+       * The pipeline operator has several competing proposals.
+       * Configure which proposal to use with this required option.
+       *
+       * [F#-style pipes with await](https://github.com/valtech-nyc/proposal-fsharp-pipelines)
+       */
+      proposal: 'fsharp';
+    }
+  | {
+      /**
+       * The pipeline operator has several competing proposals.
+       * Configure which proposal to use with this required option.
+       *
+       * [Hack-style pipes](https://github.com/js-choi/proposal-hack-pipes)
+       */
+      proposal: 'hack';
+      /**
+       * Hack-style pipelines require you to always use a "topic token" (such as #)
+       * to reference the value of the previous pipeline step
+       */
+      topicToken: '%' | '#';
+    };
 
 export function DefaultBabelPluginProposalPipelineOperatorConfig(): BabelPluginProposalPipelineOperatorConfig {
   return { proposal: 'minimal' };
@@ -431,6 +462,12 @@ export interface BabelTypeScriptConfig {
    * @default false
    */
   onlyRemoveTypeImports?: boolean;
+  /**
+   * When set to true, Babel will inline enum values rather than using the usual enum output.
+   *
+   * @default false
+   */
+  optimizeConstEnums?: boolean;
 }
 
 export function DefaultBabelTypeScriptConfig(): BabelTypeScriptConfig {
@@ -448,6 +485,7 @@ export function DefaultBabelTypeScriptConfig(): BabelTypeScriptConfig {
     jsxPragmaFrag: `${jsxPragma}.Fragment`,
     isTSX: false,
     onlyRemoveTypeImports: false,
+    optimizeConstEnums: false,
   };
 
   function detectJSXPragmaFromDependencies(deps: unknown): string | undefined {
