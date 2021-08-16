@@ -14,7 +14,11 @@ export interface BundleIOConfig {
    * Specify entry file(s) or directory(s).
    *
    * @default
-   * ['src\/**\/*', '!**\/*{demo,e2e,fixture,spec,test}?(s)*\/**', '!**\/*{demo,e2e,fixture,spec,test}.*']
+   * [
+   *   'src\/**\/*',
+   *   '!**\/*{demo,e2e,fixture,mock,spec,test}?(s)*\/**',
+   *   '!**\/*{demo,e2e,fixture,mock,spec,test}.*',
+   * ]
    */
   entry?: string | string[];
   /**

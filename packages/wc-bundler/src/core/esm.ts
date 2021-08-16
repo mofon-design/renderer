@@ -17,7 +17,7 @@ import {
   createExtnamePipeline,
   filterByExtname,
 } from '../pipelines';
-import { asArray, json, signale } from '../utils';
+import { asArray, json, relativeCWD, signale } from '../utils';
 import { withIO } from './io';
 
 export function esm(config?: t.Readonly<ECMAScriptModuleConfig>): ListrTask<Listr2Ctx> {
@@ -38,7 +38,7 @@ export function esm(config?: t.Readonly<ECMAScriptModuleConfig>): ListrTask<List
     signale.debug(() => ['Resolved tsc config:', json(tsc)]);
     signale.debug(() => ['Resolved babel config:', json(babel)]);
 
-    self.title = `Transform to ECMAScript module into ${hook.config.outdir}`;
+    self.title = `Transform to ECMAScript module into ${relativeCWD(hook.config.outdir)}`;
 
     const output: Readable[] = [];
 

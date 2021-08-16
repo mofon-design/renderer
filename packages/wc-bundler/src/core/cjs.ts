@@ -13,7 +13,7 @@ import {
   createExtnamePipeline,
   filterByExtname,
 } from '../pipelines';
-import { asArray, json, signale } from '../utils';
+import { asArray, json, relativeCWD, signale } from '../utils';
 import { withIO } from './io';
 
 export function cjs(config?: t.Readonly<CommonJSModuleConfig>): ListrTask<Listr2Ctx> {
@@ -34,7 +34,7 @@ export function cjs(config?: t.Readonly<CommonJSModuleConfig>): ListrTask<Listr2
     signale.debug(() => ['Resolved tsc config:', json(tsc)]);
     signale.debug(() => ['Resolved babel config:', json(babel)]);
 
-    self.title = `Transform to CommonJS module into ${hook.config.outdir}`;
+    self.title = `Transform to CommonJS module into ${relativeCWD(hook.config.outdir)}`;
 
     const output: Readable[] = [];
 

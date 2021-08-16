@@ -7,7 +7,7 @@ import type t from 'types-lib';
 import type { TypeScriptDeclarationConfig } from '../config';
 import { loadTypeScriptCompileConfig, loadTypeScriptDeclarationConfig } from '../config';
 import { createCopyPipeline, filterByExtname } from '../pipelines';
-import { asArray, json, signale } from '../utils';
+import { asArray, json, relativeCWD, signale } from '../utils';
 import { withIO } from './io';
 
 export function dts(config?: t.Readonly<TypeScriptDeclarationConfig>): ListrTask<Listr2Ctx> {
@@ -28,7 +28,7 @@ export function dts(config?: t.Readonly<TypeScriptDeclarationConfig>): ListrTask
     if (!tsc?.parsed.options.declaration || tsc.parsed.options.noEmit)
       return self.skip('TypeScript declaration disabled');
 
-    self.title = `Generate TypeScript declaration into ${hook.config.outdir}`;
+    self.title = `Generate TypeScript declaration into ${relativeCWD(hook.config.outdir)}`;
 
     return hook.after(
       merge([
