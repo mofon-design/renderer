@@ -32,8 +32,8 @@ export function DefaultBundleIOConfig(): ResolvedBundleIOConfig {
     clean: true,
     entry: [
       'src/**/*',
-      '!**/*{demo,e2e,fixture,spec,test}?(s)*/**',
-      '!**/*.*(_){demo,e2e,fixture,spec,test}*(_).*',
+      '!**/*{demo,e2e,fixture,mock,spec,test}?(s)*/**',
+      '!**/*.*(_){demo,e2e,fixture,mock,spec,test}*(_).*',
     ],
     outdir: 'dist/',
   };

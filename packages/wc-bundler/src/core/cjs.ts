@@ -34,7 +34,7 @@ export function cjs(config?: t.Readonly<CommonJSModuleConfig>): ListrTask<Listr2
     signale.debug(() => ['Resolved tsc config:', json(tsc)]);
     signale.debug(() => ['Resolved babel config:', json(babel)]);
 
-    self.title = 'Transform to CommonJS module';
+    self.title = `Transform to CommonJS module into ${hook.config.outdir}`;
 
     const output: Readable[] = [];
 

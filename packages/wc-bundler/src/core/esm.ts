@@ -38,7 +38,7 @@ export function esm(config?: t.Readonly<ECMAScriptModuleConfig>): ListrTask<List
     signale.debug(() => ['Resolved tsc config:', json(tsc)]);
     signale.debug(() => ['Resolved babel config:', json(babel)]);
 
-    self.title = 'Transform to ECMAScript module';
+    self.title = `Transform to ECMAScript module into ${hook.config.outdir}`;
 
     const output: Readable[] = [];
 

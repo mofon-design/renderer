@@ -28,7 +28,7 @@ export function dts(config?: t.Readonly<TypeScriptDeclarationConfig>): ListrTask
     if (!tsc?.parsed.options.declaration || tsc.parsed.options.noEmit)
       return self.skip('TypeScript declaration disabled');
 
-    self.title = 'Generate TypeScript declaration';
+    self.title = `Generate TypeScript declaration into ${hook.config.outdir}`;
 
     return hook.after(
       merge([

@@ -13,6 +13,7 @@ export interface WithIOStreamHooks {
   after(upstream: Stream): Stream;
   before(upstream: Stream): Stream;
   prepare(): Promise<void>;
+  readonly config: t.Readonly<ResolvedBundleIOConfig>;
 }
 
 export function withIO<
@@ -69,6 +70,7 @@ export function withIO<Renderer extends typeof ListrRenderer>(
 
             return stream;
           },
+          config: resolved,
           async prepare() {
             self.title = 'Cleaning up...';
 
