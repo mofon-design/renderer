@@ -20,7 +20,6 @@ importers:
       eslint-import-resolver-node: ^0.3.4
       eslint-plugin-import: ^2.22.1
       eslint-plugin-prettier: ^3.3.1
-      is-ci: ^3.0.0
       jest: ^26.6.3
       lerna: ^4.0.0
       lint-staged: ^10.0.8
@@ -45,7 +44,6 @@ importers:
       eslint-import-resolver-node: 0.3.4
       eslint-plugin-import: 2.22.1_eslint@7.22.0
       eslint-plugin-prettier: 3.3.1_44b94358ac15c7c093df3d5421ccc811
-      is-ci: 3.0.0
       jest: 26.6.3
       lerna: 4.0.0
       lint-staged: 10.5.4
@@ -136,7 +134,7 @@ importers:
       semver: ^7.3.5
       temp-dir: ~2.0.0
       through2: 4.0.2
-      types-lib: ^0.9.0
+      types-lib: ^0.10.0
       typescript: ^4.3.2
       update-notifier: 5.1.0
       yargs-parser: 20.2.7
@@ -4518,10 +4516,6 @@ packages:
   /ci-info/2.0.0:
     resolution: {integrity: sha512-5tK7EtrZ0N+OLFMthtqOj4fI2Jeb88C4CAZPu25LDVUgXJ0A3Js4PMGqrn0JU1W0Mh1/Z8wZzYPxqUrXeBboCQ==}
 
-  /ci-info/3.1.1:
-    resolution: {integrity: sha512-kdRWLBIJwdsYJWYJFtAFFYxybguqeF91qpZaggjG5Nf8QKdizFG2hjqvaTXbxFIcYbSaD74KpAXv6BSm17DHEQ==}
-    dev: true
-
   /cjs-module-lexer/0.6.0:
     resolution: {integrity: sha512-uc2Vix1frTfnuzxxu1Hp4ktSvM3QaI4oXl4ZUqL1wjTu/BGki9TrCWoqLTg/drR1KwAEarXuRFCG2Svr1GxPFw==}
     dev: true
@@ -6765,13 +6759,6 @@ packages:
     hasBin: true
     dependencies:
       ci-info: 2.0.0
-
-  /is-ci/3.0.0:
-    resolution: {integrity: sha512-kDXyttuLeslKAHYL/K28F2YkM3x5jvFPEw3yXbRptXydjD9rpLEz+C5K5iutY9ZiUu6AP41JdvRQwF4Iqs4ZCQ==}
-    hasBin: true
-    dependencies:
-      ci-info: 3.1.1
-    dev: true
 
   /is-core-module/2.2.0:
     resolution: {integrity: sha512-XRAfAdyyY5F5cOXn7hYQDqh2Xmii+DEfIcQGxK/uNwMHhIkPWO0g8msXcbzLe+MpGoR951MlqM/2iIlU4vKDdQ==}
