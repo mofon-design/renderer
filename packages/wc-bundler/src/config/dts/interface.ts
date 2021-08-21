@@ -21,8 +21,8 @@ export interface TypeScriptDeclarationConfig extends BundleIOConfig, CoreSharedC
    * @default
    * [
    *   'src\/**\/*.{ts,tsx}',
-   *   '!**\/*{demo,e2e,fixture,mock,spec,test}?(s)*\/**',
-   *   '!**\/*{demo,e2e,fixture,mock,spec,test}.*',
+   *   '!**\/*{demo,e2e,fixture,mock,snapshot,spec,test}?(s)*\/**',
+   *   '!**\/*{demo,e2e,fixture,mock,snapshot,spec,test}.*',
    * ]
    */
   entry?: string | string[];
@@ -52,8 +52,8 @@ export function DefaultTypeScriptDeclarationConfig(): ResolvedTypeScriptDeclarat
     clean: true,
     entry: [
       'src/**/*',
-      '!**/*{demo,e2e,fixture,mock,spec,test}?(s)*/**',
-      '!**/*.*(_){demo,e2e,fixture,mock,spec,test}*(_).*',
+      '!**/*{demo,e2e,fixture,mock,snapshot,spec,test}?(s)*/**',
+      '!**/*.*(_){demo,e2e,fixture,mock,snapshot,spec,test}*(_).*',
     ],
     exts: {
       copy: ['.json'],

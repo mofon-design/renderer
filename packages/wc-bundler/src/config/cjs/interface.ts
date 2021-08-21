@@ -49,8 +49,8 @@ export function DefaultCommonJSModuleConfig(): ResolvedCommonJSModuleConfig {
     clean: true,
     entry: [
       'src/**/*',
-      '!**/*{demo,e2e,fixture,mock,spec,test}?(s)*/**',
-      '!**/*.*(_){demo,e2e,fixture,mock,spec,test}*(_).*',
+      '!**/*{demo,e2e,fixture,mock,snapshot,spec,test}?(s)*/**',
+      '!**/*.*(_){demo,e2e,fixture,mock,snapshot,spec,test}*(_).*',
     ],
     exts: {
       babel: ['.js', '.jsx', '.es6', '.es', '.mjs'],

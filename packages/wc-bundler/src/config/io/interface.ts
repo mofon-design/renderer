@@ -16,8 +16,8 @@ export interface BundleIOConfig {
    * @default
    * [
    *   'src\/**\/*',
-   *   '!**\/*{demo,e2e,fixture,mock,spec,test}?(s)*\/**',
-   *   '!**\/*{demo,e2e,fixture,mock,spec,test}.*',
+   *   '!**\/*{demo,e2e,fixture,mock,snapshot,spec,test}?(s)*\/**',
+   *   '!**\/*{demo,e2e,fixture,mock,snapshot,spec,test}.*',
    * ]
    */
   entry?: string | string[];
@@ -36,8 +36,8 @@ export function DefaultBundleIOConfig(): ResolvedBundleIOConfig {
     clean: true,
     entry: [
       'src/**/*',
-      '!**/*{demo,e2e,fixture,mock,spec,test}?(s)*/**',
-      '!**/*.*(_){demo,e2e,fixture,mock,spec,test}*(_).*',
+      '!**/*{demo,e2e,fixture,mock,snapshot,spec,test}?(s)*/**',
+      '!**/*.*(_){demo,e2e,fixture,mock,snapshot,spec,test}*(_).*',
     ],
     outdir: 'dist/',
   };
