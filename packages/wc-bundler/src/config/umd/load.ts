@@ -1,5 +1,5 @@
 import type t from 'types-lib';
-import { asArray, loadPackageJSON } from '../../utils';
+import { asArray, detectFile, loadPackageJSON } from '../../utils';
 import { loadBabelConfig } from '../babel';
 import { DefaultCoreSharedConfigGetterMap } from '../core';
 import type { ResolvedRollupConfig, RollupBabelConfig } from '../rollup';
@@ -41,8 +41,11 @@ export function loadUMDModuleConfig(
       ...(typeof config.rollupBabel === 'object' ? config.rollupBabel : null),
     };
 
+    if (detectFile('tsconfig.json')) babel.unshift({ typescript: true });
+
     if (!extra.babelHelpers) extra.babelHelpers = 'bundled';
     if (extra.babelHelpers !== 'external') babel.push({ 'plugin-transform-runtime': false });
+
     try {
       const corejs = loadPackageJSON(require.resolve('core-js'))?.version;
       babel.unshift({
