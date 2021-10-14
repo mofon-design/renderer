@@ -1,6 +1,7 @@
 {
   "command": {
-    "publish": {
+    "version": {
+      "allowBranch": "next",
       "message": "release(%v): publish %s"
     }
   },
