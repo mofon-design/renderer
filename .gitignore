@@ -14,9 +14,13 @@ node_modules/
 /es
 /lib
 /*.umd.js
-/packages/*/*dist
-/packages/*/*es
-/packages/*/*lib
+/packages/*/dist
+/packages/*/es
+/packages/*/lib
+/packages/*/types
+/packages/*/*-dist
+/packages/*/*-es
+/packages/*/*-lib
 /packages/*/*.umd.js
 
 # test
