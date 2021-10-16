@@ -53,14 +53,13 @@ export function loadCoreConfig(): ResolvedCoreConfig {
   for (const key in DefaultCoreTaskConfigGetterMap) {
     if (!isKey.call(DefaultCoreTaskConfigGetterMap, key)) continue;
 
-    const target = merged[key] as t.UnknownRecord | undefined;
-    if (target !== undefined) {
+    asArray<t.AnyRecord>(merged[key] ?? []).forEach((target) => {
       for (const sharedKey in DefaultCoreSharedConfigGetterMap) {
         if (isKey.call(DefaultCoreSharedConfigGetterMap, sharedKey)) {
           target[sharedKey] = (merged[sharedKey] as t.AnyArray).concat(target[sharedKey] || []);
         }
       }
-    }
+    });
   }
 
   return merged;
