@@ -132,7 +132,13 @@ export type ResolvedCoreTaskConfig = {
 
 export const DefaultCoreTaskConfigGetterMap: Required<ResolvedCoreTaskConfig> = ExtendableCoreTaskConfigGetterMap;
 
-export interface CoreConfig extends CoreGroupedConfig, CoreSharedConfig, CoreTaskConfig {}
+export interface CoreConfig extends CoreGroupedConfig, CoreSharedConfig, CoreTaskConfig {
+  /**
+   * @internal
+   * Source absolute path of config file.
+   */
+  __configSourcePath?: string;
+}
 
 export interface ResolvedCoreConfig
   extends ResolvedCoreGroupedConfig,

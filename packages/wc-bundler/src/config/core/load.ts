@@ -1,5 +1,5 @@
-import { resolve } from 'path';
-import { asArray, iterargs, loadModuleByBabel } from '../../utils';
+import { dirname, relative, resolve } from 'path';
+import { asArray, iterargs, loadModuleByBabel, resolveModuleByBabel } from '../../utils';
 import type t from 'types-lib';
 import type {
   CoreConfig,
@@ -21,14 +21,21 @@ const isKey = Object.prototype.hasOwnProperty as t.Object.prototype.hasOwnProper
 export function loadCoreConfig(configs: t.Readonly<CoreConfig[]>): ResolvedCoreConfig;
 export function loadCoreConfig(...configs: t.Readonly<CoreConfig>[]): ResolvedCoreConfig;
 export function loadCoreConfig(): ResolvedCoreConfig {
+  const cwd = process.cwd();
   const merged = DefaultCoreConfig();
   const extendableTaskConfigMap = Object.assign({}, ExtendableCoreTaskConfigGetterMap);
 
   for (const config of iterargs<t.Readonly<CoreConfig>>(arguments)) {
+    const configSourceDirectory = config.__configSourcePath
+      ? dirname(config.__configSourcePath)
+      : null;
+
     for (const key in config) {
       if (!isKey.call(config, key)) continue;
 
       if (isKey.call(DefaultCoreGroupedConfigGetterMap, key)) {
+        if (configSourceDirectory && relative(configSourceDirectory, cwd) !== '') continue;
+
         if (config[key] === undefined) {
           // ignore void config
         } else if (!config[key]) {
@@ -135,14 +142,26 @@ export function loadCoreConfigFiles(
   files: boolean | string | null | undefined | readonly string[],
 ): t.Readonly<CoreConfig[]> {
   if (typeof files === 'string') {
-    const config = loadModuleByBabel(files) as t.UnknownRecord<'default'> | null;
-    return typeof config === 'object' && typeof config?.default === 'object' && config.default
-      ? [config.default]
-      : [];
+    const abspath = resolveModuleByBabel(files);
+    if (!abspath) return [];
+
+    const exports = loadModuleByBabel(abspath);
+    if (!isAnyRecord(exports)) return [];
+
+    let config: t.AnyRecord;
+    if (isAnyRecord(exports.config)) config = exports.config;
+    else if (isAnyRecord(exports.default)) config = exports.default;
+    else return [];
+
+    return [Object.assign({}, config, { __configSourcePath: abspath })];
   }
 
   if (!files) return [];
   if ((Array.isArray as t.Array.isArray)(files))
     return files.map((file) => loadCoreConfigFiles(file)).flat(1);
   return loadCoreConfigFiles([resolve('.wc-bundlerrc'), resolve('wc-bundler.config')]);
+
+  function isAnyRecord(input: unknown): input is t.AnyRecord {
+    return typeof input === 'object' && input !== null;
+  }
 }

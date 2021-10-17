@@ -1,5 +1,6 @@
 import type { ListrTask } from 'listr2';
 import { Listr } from 'listr2';
+import { join } from 'path';
 import type t from 'types-lib';
 import YargsParser from 'yargs-parser';
 import { CoreConfig, loadCoreConfigFiles } from '../config';
@@ -13,14 +14,15 @@ import { workspace } from './wrokspace';
 
 export function core(
   overrideConfigs?: t.Readonly<CoreConfig> | t.Readonly<CoreConfig[]>,
-  configFile?: boolean | string | string[],
+  configFile?: boolean | string[],
+  extendConfigs?: t.Readonly<CoreConfig> | t.Readonly<CoreConfig[]>,
 ): ListrTask<Listr2Ctx>['task'] {
   const cwd = process.cwd();
   const configsFromFile = loadCoreConfigFiles(configFile);
   signale.debug(() => ['Loaded core config from file:', json(configsFromFile)]);
 
-  const configs = configsFromFile.concat(overrideConfigs ?? []);
-  const resolved = loadCoreConfig(configs);
+  const configs = asArray(extendConfigs ?? []).concat(configsFromFile);
+  const resolved = loadCoreConfig(configs.concat(overrideConfigs ?? []));
   signale.debug(() => ['Resolved core config:', json(resolved)]);
 
   const coreTask: ListrTask<Listr2Ctx>['task'] = function coreTask(_ctx, self) {
@@ -47,20 +49,27 @@ export function core(
   }
 
   const createCoreTask: ListrTask<Listr2Ctx>['task'] = function createCoreTask(ctx, self) {
-    return core(configs, configFile === true)(ctx, self);
+    return core(overrideConfigs, !!configFile, configs)(ctx, self);
   };
 
-  return workspace(resolved.workspace, createCoreTask, coreTask);
+  return workspace(
+    resolved.workspace,
+    createCoreTask,
+    resolved.workspace.skipRootTasks ? undefined : coreTask,
+  );
 }
 
 export async function bin(
   configs?: t.Readonly<CoreConfig> | t.Readonly<CoreConfig[]>,
   configFile = true,
 ): Promise<void> {
-  const configFromCLI = YargsParser(process.argv.slice(2));
-  const configFilesFromCLI = configFile && configFromCLI._.length ? configFromCLI._ : configFile;
+  const configFromCLI = Object.assign(YargsParser(process.argv.slice(2)), {
+    __configSourcePath: join(process.cwd(), '<cli>'),
+  });
+
   signale.debug(() => ['Parsed config from CLI:', json(configFromCLI)]);
 
-  const task = core(asArray(configs ?? []).concat(configFromCLI as CoreConfig), configFilesFromCLI);
+  const configFilesFromCLI = configFile && configFromCLI._.length ? configFromCLI._ : configFile;
+  const task = core(asArray(configs ?? []).concat(configFromCLI), configFilesFromCLI);
   await new Listr({ task }, loadListr2Config({})).run();
 }

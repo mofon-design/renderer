@@ -22,6 +22,12 @@ export interface WorkspaceConfig {
    * Take the intersection with other configurations as the final result.
    */
   packages?: string | string[];
+  /**
+   * Skip workspace root tasks.
+   *
+   * @default false
+   */
+  skipRootTasks?: boolean;
 }
 
 export interface WorkspacePackageInfo {
