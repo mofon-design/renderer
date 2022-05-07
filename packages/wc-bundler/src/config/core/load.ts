@@ -76,7 +76,7 @@ function mergeCoreTaskConfig<Task extends keyof ResolvedCoreTaskConfig>(
   task: Task,
   target: ResolvedCoreTaskConfig,
   source: CoreTaskConfig,
-  extendableTaskConfigMap: Required<SingleCoreTaskConfigMap>,
+  extendableTaskConfigMap: t.Required<SingleCoreTaskConfigMap>,
 ): void {
   let targetValue = target[task];
   const sourceValue = source[task];
@@ -110,9 +110,8 @@ function mergeCoreTaskConfig<Task extends keyof ResolvedCoreTaskConfig>(
     });
   }
 
-  const extendsSource: NonNullable<
-    SingleCoreTaskConfigMap[keyof SingleCoreTaskConfigMap]
-  > = Array.isArray(targetValue) ? extendableTaskConfigMap[task] : targetValue;
+  const extendsSource: NonNullable<SingleCoreTaskConfigMap[keyof SingleCoreTaskConfigMap]> =
+    Array.isArray(targetValue) ? extendableTaskConfigMap[task] : targetValue;
 
   target[task] = sourceValue.map((sourceItem) => {
     return mergeCoreTaskConfigContent(mergeCoreTaskConfigContent({}, extendsSource), sourceItem);

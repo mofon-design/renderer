@@ -1,3 +1,5 @@
+import type t from 'types-lib';
+
 export interface BundleIOConfig {
   /**
    * Clean output before start io task.
@@ -29,7 +31,7 @@ export interface BundleIOConfig {
   outdir?: string;
 }
 
-export interface ResolvedBundleIOConfig extends Required<BundleIOConfig> {}
+export interface ResolvedBundleIOConfig extends t.Required<BundleIOConfig> {}
 
 export function DefaultBundleIOConfig(): ResolvedBundleIOConfig {
   return {

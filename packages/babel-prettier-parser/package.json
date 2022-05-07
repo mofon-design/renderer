@@ -21,13 +21,13 @@
     "parser"
   ],
   "dependencies": {
-    "@babel/parser": "~7.15.0",
-    "@babel/runtime": "~7.15.0",
+    "@babel/parser": "~7.17.0",
+    "@babel/runtime": "~7.17.0",
     "jest-docblock": "~26.0.0"
   },
   "devDependencies": {
-    "@babel/types": "~7.15.0",
-    "prettier": "^2.2.1"
+    "@babel/types": "~7.17.0",
+    "prettier": "^2.6.2"
   },
   "peerDependencies": {
     "prettier": "^2.2.1"

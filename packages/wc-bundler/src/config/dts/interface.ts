@@ -1,4 +1,5 @@
 import { dirname } from 'path';
+import type t from 'types-lib';
 import type { ExtSatisfiesRange } from '../../utils';
 import { loadPackageJSON } from '../../utils';
 import type { CoreSharedConfig } from '../core';
@@ -43,7 +44,7 @@ export interface TypeScriptDeclarationConfig extends BundleIOConfig, CoreSharedC
 export interface ResolvedTypeScriptDeclarationConfig
   extends ResolvedBundleIOConfig,
     Omit<TypeScriptDeclarationConfig, keyof ResolvedBundleIOConfig> {
-  exts: NonNullable<Required<TypeScriptDeclarationConfig['exts']>>;
+  exts: NonNullable<t.Required<TypeScriptDeclarationConfig['exts']>>;
 }
 
 export function DefaultTypeScriptDeclarationConfig(): ResolvedTypeScriptDeclarationConfig {

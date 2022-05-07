@@ -27,6 +27,8 @@ export const CompilerOptionsEnumMap = {
   moduleResolution: {
     [ts.ModuleResolutionKind.Classic]: 'classic',
     [ts.ModuleResolutionKind.NodeJs]: 'node',
+    [ts.ModuleResolutionKind.Node12]: 'node12',
+    [ts.ModuleResolutionKind.NodeNext]: 'nodenext',
   },
   newLine: {
     [ts.NewLineKind.CarriageReturnLineFeed]: 'crlf',
@@ -48,9 +50,11 @@ export const CompilerOptionsEnumMap = {
   // },
 } as const;
 
-export type ImportsNotUsedAsValues = typeof CompilerOptionsEnumMap['importsNotUsedAsValues'][ts.ImportsNotUsedAsValues];
+export type ImportsNotUsedAsValues =
+  typeof CompilerOptionsEnumMap['importsNotUsedAsValues'][ts.ImportsNotUsedAsValues];
 // export type JsxEmit = typeof CompilerOptionsEnumMap['jsx'][ts.JsxEmit];
 // export type ModuleKind = typeof CompilerOptionsEnumMap['module'][ts.ModuleKind];
-export type ModuleResolutionKind = typeof CompilerOptionsEnumMap['moduleResolution'][ts.ModuleResolutionKind];
+export type ModuleResolutionKind =
+  typeof CompilerOptionsEnumMap['moduleResolution'][ts.ModuleResolutionKind];
 export type NewLineKind = typeof CompilerOptionsEnumMap['newLine'][ts.NewLineKind];
 // export type ScriptTarget = typeof CompilerOptionsEnumMap['target'][ts.ScriptTarget];

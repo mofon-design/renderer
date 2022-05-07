@@ -21,7 +21,7 @@ export type ResolvedCoreGroupedConfig = {
   [Key in keyof CoreGroupedConfig]: Exclude<CoreGroupedConfig[Key], boolean>;
 };
 
-export const DefaultCoreGroupedConfigGetterMap: Required<ResolvedCoreGroupedConfig> = {
+export const DefaultCoreGroupedConfigGetterMap: t.Required<ResolvedCoreGroupedConfig> = {
   get workspace() {
     return DefaultWorkspaceConfig();
   },
@@ -111,7 +111,7 @@ export type SingleCoreTaskConfigMap = {
     : CoreTaskConfig[Key];
 };
 
-export const ExtendableCoreTaskConfigGetterMap: Required<SingleCoreTaskConfigMap> = {
+export const ExtendableCoreTaskConfigGetterMap: t.Required<SingleCoreTaskConfigMap> = {
   get cjs() {
     return {};
   },
@@ -130,7 +130,8 @@ export type ResolvedCoreTaskConfig = {
   [Key in keyof CoreTaskConfig]: Exclude<CoreTaskConfig[Key], boolean>;
 };
 
-export const DefaultCoreTaskConfigGetterMap: Required<ResolvedCoreTaskConfig> = ExtendableCoreTaskConfigGetterMap;
+export const DefaultCoreTaskConfigGetterMap: t.Required<ResolvedCoreTaskConfig> =
+  ExtendableCoreTaskConfigGetterMap;
 
 export interface CoreConfig extends CoreGroupedConfig, CoreSharedConfig, CoreTaskConfig {
   /**

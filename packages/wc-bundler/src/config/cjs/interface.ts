@@ -1,4 +1,5 @@
 import { dirname, extname } from 'path';
+import type t from 'types-lib';
 import type { ExtSatisfiesRange } from '../../utils';
 import { loadPackageJSON } from '../../utils';
 import type { CoreSharedConfig } from '../core';
@@ -39,7 +40,7 @@ export interface CommonJSModuleConfig extends BundleIOConfig, CoreSharedConfig {
 export interface ResolvedCommonJSModuleConfig
   extends ResolvedBundleIOConfig,
     Omit<CommonJSModuleConfig, keyof ResolvedBundleIOConfig> {
-  exts: NonNullable<Required<CommonJSModuleConfig['exts']>>;
+  exts: NonNullable<t.Required<CommonJSModuleConfig['exts']>>;
   outext: NonNullable<CommonJSModuleConfig['outext']>;
 }
 

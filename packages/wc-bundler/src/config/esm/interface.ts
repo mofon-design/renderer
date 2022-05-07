@@ -1,4 +1,5 @@
 import { dirname, extname } from 'path';
+import type t from 'types-lib';
 import type { ExtSatisfiesRange } from '../../utils';
 import { loadPackageJSON } from '../../utils';
 import type { CoreSharedConfig } from '../core';
@@ -50,7 +51,7 @@ export interface ECMAScriptModuleConfig extends BundleIOConfig, CoreSharedConfig
 export interface ResolvedECMAScriptModuleConfig
   extends ResolvedBundleIOConfig,
     Omit<ECMAScriptModuleConfig, keyof ResolvedBundleIOConfig> {
-  exts: NonNullable<Required<ECMAScriptModuleConfig['exts']>>;
+  exts: NonNullable<t.Required<ECMAScriptModuleConfig['exts']>>;
   outext: NonNullable<ECMAScriptModuleConfig['outext']>;
 }
 

@@ -25,6 +25,10 @@ declare namespace t {
 
   type UnknownRecord<Key extends PropertyKey = PropertyKey> = Record<Key, unknown>;
 
+  // Required
+
+  type Required<T> = { [Key in keyof T]-?: Exclude<T[Key], undefined> };
+
   // Readonly
 
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -91,8 +95,9 @@ declare namespace t {
 
     interface defineProperty {
       <T, U extends keyof T>(o: T, p: U, a: t.PropertyDescriptor<T[U]> & ThisType<T>): T;
-      <T, U extends PropertyKey, V>(o: T, p: U, a: t.PropertyDescriptor<V> & ThisType<T>): T &
-        { [key in U]: V };
+      <T, U extends PropertyKey, V>(o: T, p: U, a: t.PropertyDescriptor<V> & ThisType<T>): T & {
+        [key in U]: V;
+      };
     }
 
     interface entries {

@@ -19,22 +19,38 @@ import { assertInstance, loadPackageJSON, resolveModuleByBabel, root } from '../
 
 export interface BabelPluginProposalDecoratorsConfig {
   /**
-   * This option was added to help tc39 collect feedback from the community by
-   * allowing experimentation with both possible syntaxes.
-   *
-   * For more information, check out: tc39/proposal-decorators#69.
+   * This option:
+   * - is disallowed when using version: 'legacy';
+   * - is required when using version: '2018-09';
+   * - is optional and defaults to false when using version: '2021-12'.
    */
   decoratorsBeforeExport?: boolean;
   /**
    * Use the legacy (stage 1) decorators syntax and behavior.
+   *
+   * @deprecated Use version: "legacy" instead. This option is a legacy alias.
    */
   legacy?: boolean;
+  /**
+   * '2021-12', '2018-09' or 'legacy'
+   *
+   * Selects the decorators proposal to use:
+   * - '2021-12' is the proposal version as it was presented to TC39 in Dec 2021. You can read more about it at
+   *   [tc39/proposal-decorators@d6c056fa06](https://github.com/tc39/proposal-decorators/tree/d6c056fa061646178c34f361bad33d583316dc85).
+   * - '2018-09' is the proposal version that was initially promoted to Stage 2 presented to TC39 in Sept 2018.
+   *   You can read more about it at [tc39/proposal-decorators@7fa580b40f](https://github.com/tc39/proposal-decorators/tree/7fa580b40f2c19c561511ea2c978e307ae689a1b).
+   * - 'legacy' is the original Stage 1 proposal, defined at
+   *   [wycats/javascript-decorators@e1bf8d41bf](https://github.com/wycats/javascript-decorators/blob/e1bf8d41bfa2591d949dd3bbf013514c8904b913/README.md).
+   *
+   * @default 'legacy'
+   */
+  version?: string;
 }
 
 export function DefaultBabelPluginProposalDecoratorsConfig():
   | BabelPluginProposalDecoratorsConfig
   | boolean {
-  return { decoratorsBeforeExport: true, legacy: false };
+  return { version: 'legacy' };
 }
 
 export type BabelPluginProposalPipelineOperatorConfig =
@@ -275,7 +291,7 @@ export interface BabelMinifyConfig extends BabelMinifyPlugins {
   keepFnName?: boolean;
 }
 
-export function DefaultBabelMinifyPluginsConfig(): Required<BabelMinifyPlugins> {
+export function DefaultBabelMinifyPluginsConfig(): t.Required<BabelMinifyPlugins> {
   return {
     booleans: true,
     builtIns: true,
@@ -303,7 +319,7 @@ export function DefaultBabelMinifyPluginsConfig(): Required<BabelMinifyPlugins> 
 }
 
 DefaultBabelMinifyPluginsConfig.readonly = DefaultBabelMinifyPluginsConfig() as t.Readonly<
-  Required<BabelMinifyPlugins>
+  t.Required<BabelMinifyPlugins>
 >;
 
 export function DefaultBabelMinifyConfig(): BabelMinifyConfig {
@@ -500,6 +516,11 @@ export function DefaultBabelPluginsConfig(): BabelPluginItem[] {
 
 export interface BuiltinBabelPluginsConfig {
   ['plugin-proposal-async-do-expressions']?: boolean;
+  /**
+   * @deprecated
+   * Static blocks has already [reached Stage 4](https://github.com/tc39/notes/blob/HEAD/meetings/2021-08/aug-31.md#class-static-initialization-blocks-for-stage-4),
+   * so this config will be removed in the next major version.
+   */
   ['plugin-proposal-class-static-block']?: boolean;
   ['plugin-proposal-decorators']?: BabelPluginProposalDecoratorsConfig | boolean;
   ['plugin-proposal-do-expressions']?: boolean;
@@ -515,16 +536,20 @@ export interface BuiltinBabelPluginsConfig {
    */
   ['plugin-proposal-private-property-in-object']?: boolean;
   ['plugin-proposal-throw-expressions']?: boolean;
+  /**
+   * @deprecated
+   * This proposal has already reached Stage 4, so this config will be removed in the next major version.
+   */
   ['plugin-syntax-dynamic-import']?: boolean;
   ['plugin-transform-runtime']?: BabelPluginTransformRuntimeConfig | boolean;
 }
 
-export const DefaultBuiltinBabelPluginsConfigGetterMap: Required<BuiltinBabelPluginsConfig> = {
+export const DefaultBuiltinBabelPluginsConfigGetterMap: t.Required<BuiltinBabelPluginsConfig> = {
   get ['plugin-proposal-async-do-expressions']() {
     return true;
   },
   get ['plugin-proposal-class-static-block']() {
-    return true;
+    return false;
   },
   get ['plugin-proposal-decorators']() {
     return DefaultBabelPluginProposalDecoratorsConfig();
@@ -554,7 +579,7 @@ export const DefaultBuiltinBabelPluginsConfigGetterMap: Required<BuiltinBabelPlu
     return true;
   },
   get ['plugin-syntax-dynamic-import']() {
-    return true;
+    return false;
   },
   get ['plugin-transform-runtime']() {
     return DefaultBabelPluginTransformRuntimeConfig();
@@ -564,12 +589,10 @@ export const DefaultBuiltinBabelPluginsConfigGetterMap: Required<BuiltinBabelPlu
 export function DefaultBuiltinBabelPluginsConfig(): BuiltinBabelPluginsConfig {
   const DefaultEnabledPlugins: (keyof BuiltinBabelPluginsConfig)[] = [
     'plugin-proposal-async-do-expressions',
-    'plugin-proposal-class-static-block',
     'plugin-proposal-decorators',
     'plugin-proposal-do-expressions',
     'plugin-proposal-export-default-from',
     'plugin-proposal-throw-expressions',
-    'plugin-syntax-dynamic-import',
     'plugin-transform-runtime',
   ];
 
@@ -583,7 +606,7 @@ export const BuiltinBabelPluginsNameMap: Readonly<
   Record<keyof BuiltinBabelPluginsConfig, string | null>
 > = {
   ['plugin-proposal-async-do-expressions']: '@babel/plugin-proposal-async-do-expressions',
-  ['plugin-proposal-class-static-block']: '@babel/plugin-proposal-class-static-block',
+  ['plugin-proposal-class-static-block']: null,
   ['plugin-proposal-decorators']: '@babel/plugin-proposal-decorators',
   ['plugin-proposal-do-expressions']: '@babel/plugin-proposal-do-expressions',
   ['plugin-proposal-export-default-from']: '@babel/plugin-proposal-export-default-from',
@@ -593,7 +616,7 @@ export const BuiltinBabelPluginsNameMap: Readonly<
   ['plugin-proposal-pipeline-operator']: '@babel/plugin-proposal-pipeline-operator',
   ['plugin-proposal-private-property-in-object']: null,
   ['plugin-proposal-throw-expressions']: '@babel/plugin-proposal-throw-expressions',
-  ['plugin-syntax-dynamic-import']: '@babel/plugin-syntax-dynamic-import',
+  ['plugin-syntax-dynamic-import']: null,
   ['plugin-transform-runtime']: '@babel/plugin-transform-runtime',
 };
 
@@ -628,20 +651,21 @@ export type ResolvedBuiltinBabelPresetsConfig = {
   [Key in keyof BuiltinBabelPresetsConfig]: Exclude<BuiltinBabelPresetsConfig[Key], boolean>;
 };
 
-export const DefaultBuiltinBabelPresetsConfigGetterMap: Required<ResolvedBuiltinBabelPresetsConfig> = {
-  get env() {
-    return DefaultBabelEnvConfig();
-  },
-  get minify() {
-    return DefaultBabelMinifyConfig();
-  },
-  get react() {
-    return DefaultBabelReactConfig();
-  },
-  get typescript() {
-    return DefaultBabelTypeScriptConfig();
-  },
-};
+export const DefaultBuiltinBabelPresetsConfigGetterMap: t.Required<ResolvedBuiltinBabelPresetsConfig> =
+  {
+    get env() {
+      return DefaultBabelEnvConfig();
+    },
+    get minify() {
+      return DefaultBabelMinifyConfig();
+    },
+    get react() {
+      return DefaultBabelReactConfig();
+    },
+    get typescript() {
+      return DefaultBabelTypeScriptConfig();
+    },
+  };
 
 export function DefaultBuiltinBabelPresetsConfig(): ResolvedBuiltinBabelPresetsConfig {
   return {
@@ -650,14 +674,13 @@ export function DefaultBuiltinBabelPresetsConfig(): ResolvedBuiltinBabelPresetsC
   };
 }
 
-export const BuiltinBabelPresetsNameMap: Readonly<
-  Record<keyof BuiltinBabelPresetsConfig, string>
-> = {
-  env: '@babel/preset-env',
-  minify: 'babel-preset-minify',
-  react: '@babel/preset-react',
-  typescript: '@babel/preset-typescript',
-};
+export const BuiltinBabelPresetsNameMap: Readonly<Record<keyof BuiltinBabelPresetsConfig, string>> =
+  {
+    env: '@babel/preset-env',
+    minify: 'babel-preset-minify',
+    react: '@babel/preset-react',
+    typescript: '@babel/preset-typescript',
+  };
 
 export interface BabelConfig
   extends Omit<BabelTransformOptions, 'env'>,

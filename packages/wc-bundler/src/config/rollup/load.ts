@@ -20,7 +20,7 @@ import {
 
 const isKey = Object.prototype.hasOwnProperty as t.Object.prototype.hasOwnProperty;
 
-const BuiltinRollupPluginConfigGetterMap: Required<ResolvedBuiltinRollupPluginsConfig> = {
+const BuiltinRollupPluginConfigGetterMap: t.Required<ResolvedBuiltinRollupPluginsConfig> = {
   get babel() {
     return DefaultRollupBabelConfig();
   },
