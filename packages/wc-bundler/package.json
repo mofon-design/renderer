@@ -1,6 +1,6 @@
 {
   "name": "wc-bundler",
-  "version": "0.10.8-alpha.0",
+  "version": "0.10.8",
   "description": "Web Component bundler",
   "author": "imhele <work@imhele.com>",
   "license": "MIT",
@@ -58,7 +58,7 @@
     "@types/babel__core": "~7.1.19",
     "@types/babel__plugin-transform-runtime": "~7.9.2",
     "@types/babel__preset-env": "~7.9.2",
-    "types-lib": "^0.10.8-alpha.0"
+    "types-lib": "^0.10.8"
   },
   "devDependencies": {
     "@types/babel__core": "~7.1.19",
