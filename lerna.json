@@ -1,5 +1,8 @@
 {
   "command": {
+    "publish": {
+      "registry": "https://registry.npmjs.org"
+    },
     "version": {
       "allowBranch": "next",
       "message": "release(%v): publish %s"
